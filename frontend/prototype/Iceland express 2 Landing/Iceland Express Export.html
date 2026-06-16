@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iceland Express — Car Rental</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <!-- Web components -->
+  <script src="image-slot.js"></script>
+
+
+  <!-- Resource URL initialiser — overridden by bundler with blob: URLs -->
+  <script>
+    window.__resources = window.__resources || {};
+    window.__resources.carSuv   = window.__resources.carSuv   || 'assets/car-suv.png';
+    window.__resources.carRav4  = window.__resources.carRav4  || 'assets/car-rav4.png';
+    window.__resources.carTesla = window.__resources.carTesla || 'assets/car-tesla.png';
+  </script>
+
+  <!-- Design system — foundation layer -->
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel" src="data.jsx"></script>
+  <script type="text/babel" src="tokens.jsx"></script>
+
+  <!-- Design system — component layers (atoms → molecules → organisms) -->
+  <script type="text/babel" src="ds-atoms.jsx"></script>
+  <script type="text/babel" src="ds-molecules.jsx"></script>
+  <script type="text/babel" src="ds-organisms.jsx"></script>
+  <script type="text/babel" src="components.jsx"></script>
+
+  <!-- Shared UI shell & search bar -->
+  <script type="text/babel" src="ui.jsx"></script>
+  <script type="text/babel" src="searchbar.jsx"></script>
+
+  <!-- Blog content data -->
+  <script type="text/babel" src="blog-data.jsx"></script>
+
+  <!-- Screens — Figma naming: A1 → A7, MB, BL, BP -->
+  <script type="text/babel" src="screen-A1-home.jsx"></script>
+  <script type="text/babel" src="screen-A2-results.jsx"></script>
+  <script type="text/babel" src="screen-A3-detail.jsx"></script>
+  <script type="text/babel" src="screen-A5-extras.jsx"></script>
+  <script type="text/babel" src="screen-A6-checkout.jsx"></script>
+  <script type="text/babel" src="screen-A7-confirm.jsx"></script>
+  <script type="text/babel" src="screen-MB-manage.jsx"></script>
+  <script type="text/babel" src="screen-BL-blog-list.jsx"></script>
+  <script type="text/babel" src="screen-BP-blog-post.jsx"></script>
+
+  <!-- App entry point -->
+  <script type="text/babel" src="app.jsx"></script>
+
+  <!-- Resource dependencies for offline bundling -->
+  <meta name="ext-resource-dependency" content="assets/car-suv.png"   data-resource-id="carSuv" />
+  <meta name="ext-resource-dependency" content="assets/car-rav4.png"  data-resource-id="carRav4" />
+  <meta name="ext-resource-dependency" content="assets/car-tesla.png" data-resource-id="carTesla" />
+
+  <!-- Thumbnail for bundler splash -->
+  <template id="__bundler_thumbnail" data-bg-color="#050610">
+    <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background -->
+      <rect width="120" height="80" fill="#050610"/>
+      <!-- Road -->
+      <rect x="0" y="52" width="120" height="28" fill="#0a0e18"/>
+      <rect x="56" y="54" width="8" height="4" rx="1" fill="#1e293b"/>
+      <rect x="56" y="62" width="8" height="4" rx="1" fill="#1e293b"/>
+      <rect x="56" y="70" width="8" height="4" rx="1" fill="#1e293b"/>
+      <!-- Car silhouette -->
+      <rect x="30" y="38" width="60" height="18" rx="4" fill="#111827"/>
+      <rect x="38" y="30" width="44" height="14" rx="4" fill="#0e1626"/>
+      <!-- Wheels -->
+      <circle cx="44" cy="57" r="5" fill="#0a0e18" stroke="#1e293b" stroke-width="1.5"/>
+      <circle cx="76" cy="57" r="5" fill="#0a0e18" stroke="#1e293b" stroke-width="1.5"/>
+      <!-- Cyan accent glow -->
+      <circle cx="30" cy="44" r="3" fill="#06b6d4" opacity="0.9"/>
+      <rect x="30" y="43" width="16" height="2" rx="1" fill="#06b6d4" opacity="0.7"/>
+      <!-- Logo mark -->
+      <rect x="6" y="6" width="14" height="14" rx="3" fill="#06b6d4"/>
+      <path d="M10 16l2-5 2 3 2-6 2 8H10Z" fill="#04121a"/>
+    </svg>
+  </template>
+
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>

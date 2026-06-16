@@ -271,6 +271,7 @@ const T = Object.freeze({
   text: {
     xs:   'var(--text-xs)',
     sm:   'var(--text-sm)',
+    base: 'var(--text-base)',
     md:   'var(--text-md)',
     lg:   'var(--text-lg)',
     xl:   'var(--text-xl)',
@@ -283,10 +284,10 @@ const T = Object.freeze({
 
   // ── Weight scale (1G-2) ───────────────────────────────────────
   weight: {
-    400: 'var(--weight-400)',
-    500: 'var(--weight-500)',
-    600: 'var(--weight-600)',
-    700: 'var(--weight-700)',
+    regular:  'var(--weight-regular)',
+    medium:   'var(--weight-medium)',
+    semibold: 'var(--weight-semibold)',
+    bold:     'var(--weight-bold)',
   },
 
   // ── Leading scale (1G-2) ──────────────────────────────────────
@@ -305,7 +306,7 @@ const T = Object.freeze({
     md:   'var(--shadow-md)',
     lg:   'var(--shadow-lg)',
     xl:   'var(--shadow-xl)',
-    card: 'var(--shadow-card)',
+    card: 'var(--shadow-card)',  /* = shadow-sm */
     pop:  'var(--shadow-pop)',
     glow: 'var(--glow)',
   },
@@ -319,6 +320,7 @@ const T = Object.freeze({
     overlay:  'var(--z-overlay)',
     modal:    'var(--z-modal)',
     popover:  'var(--z-popover)',
+    tooltip:  'var(--z-tooltip)',
     toast:    'var(--z-toast)',
   },
 

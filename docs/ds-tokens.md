@@ -105,10 +105,14 @@ Tiers 2 and 3 never contain raw values. Breaking this breaks the theme system.
 
 ### Tier 2: Shadows
 ```css
---shadow-card: 0 2px 8px rgba(0,0,0,0.4)        ← used by .card class
+--shadow-xs: 0 1px 2px rgba(0,0,0,0.40)
+--shadow-sm: 0 2px 6px rgba(0,0,0,0.45)
+--shadow-md: 0 4px 16px rgba(0,0,0,0.50)
+--shadow-lg: 0 8px 28px rgba(0,0,0,0.55)
+--shadow-xl: 0 16px 48px rgba(0,0,0,0.65)
+--shadow-card: var(--shadow-sm)   ← used by .card class
 --shadow-pop:  0 20px 50px -12px rgba(0,0,0,0.7) ← popovers
 --glow:        0 0 0 1px rgba(6,182,212,0.25)...  ← btn-primary hover
---shadow-xs thru --shadow-xl                      ← elevation scale
 ```
 
 ### Tier 1: Spacing (base 4px)

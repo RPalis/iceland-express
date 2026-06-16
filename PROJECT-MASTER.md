@@ -17,14 +17,11 @@ Last session: 2026-06-16
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   1A-7 (Sprint 1A complete)
+Last completed task:   Sprint 1A complete (all UI fixes committed c779b3e)
 In-progress task:      none
 Stopped mid-step:      no
-Files modified:        screen-A6-checkout.jsx (vertical prop refactor)
-                       screen-A7-confirm.jsx (vertical prop refactor)
-                       flights.config.js (new stub)
-                       docs/SPRINTS.md
-Uncommitted changes:   yes — 1A-4 through 1A-7 changes
+Files modified:        none — clean working tree
+Uncommitted changes:   none
 Blocker:               .t-lg not migrated — 17px has no exact var match (--text-lg = 18px). Needs design decision.
 ```
 

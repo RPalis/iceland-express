@@ -58,11 +58,18 @@ function CheckoutScreen({ search, setSearch, car, days, qty, go, vertical }) {
     agree: false, marketing: false,
   });
   const [submitting, setSubmitting] = useS3(false);
+  const [sameAsDriver, setSameAsDriver] = useS3(false);
   const set = (k) => (e) => setForm({ ...form, [k]: e.target ? e.target.value : e });
+
+  function toggleSameAsDriver() {
+    const next = !sameAsDriver;
+    setSameAsDriver(next);
+    setForm(f => ({ ...f, cardName: next ? (f.first + " " + f.last).trim() : "" }));
+  }
 
   const allPayOpts = [
     { id: "full",    label: "Pay in Full",    desc: "One payment now",           amt: total,                      tag: null },
-    { id: "deposit", label: "Pay Deposit",    desc: "25% now, rest on pickup",   amt: Math.ceil(total * 0.25),    tag: "Flexible" },
+    { id: "deposit", label: "Pay Deposit",    desc: "50% now, rest on pickup",   amt: Math.ceil(total * 0.50),    tag: "Flexible" },
     { id: "pickup",  label: "Pay at Pickup",  desc: "No charge today",           amt: 0,                          tag: "Free Today" },
   ];
   const payOpts = v.payment.hasPickupOption
@@ -90,17 +97,7 @@ function CheckoutScreen({ search, setSearch, car, days, qty, go, vertical }) {
             <div className="form-grid">
               <FormField label="First name" required><Fld type="text" placeholder="Anna" value={form.first} onChange={set("first")} /></FormField>
               <FormField label="Last name" required><Fld type="text" placeholder="Sigurðardóttir" value={form.last} onChange={set("last")} /></FormField>
-              <FormField label="Email address" required><Fld type="email" placeholder="anna@example.com" value={form.email} onChange={set("email")} /></FormField>
-              <FormField label="Phone number" required><Fld type="tel" placeholder="+354 800 1234" value={form.phone} onChange={set("phone")} /></FormField>
-              <FormField label="Date of birth" required><Fld type="date" value={form.dob} onChange={set("dob")} /></FormField>
-              {v.traveller.hasLicense && (
-                <FormField label={v.traveller.licenseLabel}>
-                  <SelFld value={form.licenseCountry} onChange={set("licenseCountry")}>
-                    {v.traveller.licenseCountries.map(c => <option key={c} value={c}>{c}</option>)}
-                  </SelFld>
-                </FormField>
-              )}
-              <FormField label="Arriving flight number" helper={v.traveller.flightHelper} span><Fld type="text" placeholder="WW101" value={form.flight} onChange={set("flight")} /></FormField>
+              <FormField label="Email address" required span><Fld type="email" placeholder="anna@example.com" value={form.email} onChange={set("email")} /></FormField>
               <FormField label="Special requests" span><TxtArea placeholder={v.traveller.requestsPlaceholder} value={form.requests} onChange={set("requests")} rows={3} /></FormField>
             </div>
           </div>
@@ -136,7 +133,14 @@ function CheckoutScreen({ search, setSearch, car, days, qty, go, vertical }) {
                 <FormField label="Card number" required span><Fld type="text" placeholder="4242 4242 4242 4242" maxLength={19} value={form.card} onChange={set("card")} /></FormField>
                 <FormField label="Expiry" required><Fld type="text" placeholder="MM/YY" maxLength={5} value={form.expiry} onChange={set("expiry")} /></FormField>
                 <FormField label="CVV" required><Fld type="text" placeholder="•••" maxLength={4} value={form.cvv} onChange={set("cvv")} /></FormField>
-                <FormField label="Name on card" required span><Fld type="text" placeholder="Anna Sigurðardóttir" value={form.cardName} onChange={set("cardName")} /></FormField>
+                <FormField label="Name on card" required span>
+                  <Fld type="text" placeholder="Anna Sigurðardóttir" value={form.cardName} onChange={set("cardName")} readOnly={sameAsDriver} style={sameAsDriver ? { opacity: 0.6 } : {}} />
+                  <div style={{ marginTop: 8 }}>
+                    <Chk checked={sameAsDriver} onChange={toggleSameAsDriver}>
+                      <span style={{ fontSize: 13, color: "var(--muted)" }}>Same as driver</span>
+                    </Chk>
+                  </div>
+                </FormField>
               </div>
             </div>
           )}

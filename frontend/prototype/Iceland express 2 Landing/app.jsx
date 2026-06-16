@@ -18,6 +18,7 @@ function defaultSearch() {
     returnDate: r,
     pickupTime: "10:00",
     returnTime: "10:00",
+    ageConfirmed: false,
   };
 }
 

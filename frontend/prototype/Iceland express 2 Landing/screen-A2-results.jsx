@@ -84,7 +84,7 @@ function ResultsScreen({ search, setSearch, go, onSelectCar }) {
 
             <div className="filter-group">
               <div className="eyebrow">Transmission</div>
-              <div className="segmented accent" style={{ width: "100%" }}>
+              <div className="segmented accent">
                 {TRANSMISSIONS.map((tm) => (
                   <button key={tm} className={trans === tm ? "on" : ""} style={{ flex: 1 }} onClick={() => setTrans(tm)}>{tm}</button>
                 ))}

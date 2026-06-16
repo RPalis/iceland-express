@@ -555,10 +555,18 @@ a { color: inherit; text-decoration: none; }
 .checkbox.on { background: var(--primary); border-color: var(--primary); }
 
 /* segmented control */
-.segmented { display: inline-flex; padding: 4px; gap: 4px; background: var(--inner); border: 1px solid var(--border); border-radius: var(--r-sm); }
+.segmented {
+  display: flex; width: 100%; box-sizing: border-box; overflow: hidden;
+  padding: 3px; gap: 3px;
+  background: var(--inner); border: 1px solid var(--border); border-radius: var(--r-sm);
+  min-width: 0;
+}
 .segmented button {
-  padding: 7px 16px; border-radius: calc(var(--r-sm) - 2px); font-size: 13px; font-weight: 600;
-  font-family: var(--font-display); color: var(--muted); transition: all .14s;
+  flex: 1 1 0%; min-width: 0; box-sizing: border-box;
+  padding: 7px 4px; border-radius: calc(var(--r-sm) - 2px);
+  font-size: 12px; font-weight: 600; font-family: var(--font-display);
+  color: var(--muted); transition: all .14s; white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; text-align: center;
 }
 .segmented button.on { background: var(--fill); color: var(--fg); }
 .segmented.accent button.on { background: var(--primary); color: var(--primary-fg); }
@@ -1008,6 +1016,17 @@ input[type="range"].range::-moz-range-thumb { width: 16px; height: 16px; border-
 .sb-value.accent { color: var(--fg); }
 .sb-chev { color: var(--dim); margin-left: auto; flex: none; transition: transform .18s; }
 .sb-search { margin-left: 8px; align-self: stretch; height: auto; padding: 0 22px; flex: none; border-radius: var(--r-sm); white-space: nowrap; }
+
+.sb-age-check {
+  display: flex; align-items: center; gap: 10px; margin-top: 12px;
+  padding: 10px 16px; border-radius: var(--r-sm);
+  background: var(--inner); border: 1px solid var(--border);
+  cursor: pointer; user-select: none; transition: border-color .14s;
+}
+.sb-age-check:hover { border-color: var(--primary); }
+.sb-age-check.error { border-color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, transparent); }
+@keyframes sb-shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} }
+.sb-age-check.error { animation: sb-shake .35s ease; }
 
 @media (max-width: 860px) {
   .searchbar { grid-template-columns: 1fr 1fr; gap: 6px; padding: 10px; }

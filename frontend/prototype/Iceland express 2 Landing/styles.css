@@ -227,52 +227,52 @@
 /* ============================================================
    Type scale — replaces inline fontSize overrides
    ============================================================ */
-.t-xs  { font-size: 11px; }
-.t-sm  { font-size: 13px; }
-.t-md  { font-size: 15px; }
-.t-lg  { font-size: 17px; }
-.t-xl  { font-size: 20px; }
-.t-2xl { font-size: 24px; }
-.t-3xl { font-size: 30px; }
-.t-4xl { font-size: 36px; }
-.t-5xl { font-size: 46px; }
-.t-6xl { font-size: 56px; }
+.t-xs  { font-size: var(--text-xs); }
+.t-sm  { font-size: var(--text-sm); }
+.t-md  { font-size: var(--text-base); }  /* 15px — maps to --text-base, not --text-md (16px) */
+.t-lg  { font-size: 17px; }              /* ⚠️ no exact var (--text-lg = 18px) — migrate after design review */
+.t-xl  { font-size: var(--text-xl); }
+.t-2xl { font-size: var(--text-2xl); }
+.t-3xl { font-size: var(--text-3xl); }
+.t-4xl { font-size: var(--text-4xl); }
+.t-5xl { font-size: var(--text-5xl); }
+.t-6xl { font-size: var(--text-6xl); }
 
-.fw-400 { font-weight: 400; }
-.fw-500 { font-weight: 500; }
-.fw-600 { font-weight: 600; }
-.fw-700 { font-weight: 700; }
+.fw-400 { font-weight: var(--weight-regular); }
+.fw-500 { font-weight: var(--weight-medium); }
+.fw-600 { font-weight: var(--weight-semibold); }
+.fw-700 { font-weight: var(--weight-bold); }
 
-.lh-tight  { line-height: 1.15; }
-.lh-snug   { line-height: 1.35; }
-.lh-normal { line-height: 1.55; }
-.lh-relaxed { line-height: 1.7; }
-.lh-loose  { line-height: 1.85; }
+.lh-tight   { line-height: var(--leading-tight); }
+.lh-snug    { line-height: var(--leading-snug); }
+.lh-normal  { line-height: var(--leading-normal); }
+.lh-relaxed { line-height: var(--leading-relaxed); }
+.lh-loose   { line-height: var(--leading-loose); }
 
 /* ============================================================
    Spacing scale — gap, padding, margin utilities
    ============================================================ */
-.p-2 { padding: 8px; }
-.p-3 { padding: 12px; }
-.p-4 { padding: 16px; }
-.p-5 { padding: 20px; }
-.p-6 { padding: 24px; }
-.p-8 { padding: 32px; }
+.p-2 { padding: var(--space-2); }
+.p-3 { padding: var(--space-3); }
+.p-4 { padding: var(--space-4); }
+.p-5 { padding: var(--space-5); }
+.p-6 { padding: var(--space-6); }
+.p-8 { padding: var(--space-8); }
 
-.mt-2 { margin-top: 8px; }
-.mt-3 { margin-top: 12px; }
-.mt-4 { margin-top: 16px; }
-.mt-6 { margin-top: 24px; }
-.mt-8 { margin-top: 32px; }
-.mt-10 { margin-top: 40px; }
-.mt-12 { margin-top: 48px; }
-.mt-16 { margin-top: 64px; }
+.mt-2  { margin-top: var(--space-2); }
+.mt-3  { margin-top: var(--space-3); }
+.mt-4  { margin-top: var(--space-4); }
+.mt-6  { margin-top: var(--space-6); }
+.mt-8  { margin-top: var(--space-8); }
+.mt-10 { margin-top: var(--space-10); }
+.mt-12 { margin-top: var(--space-12); }
+.mt-16 { margin-top: var(--space-16); }
 
-.mb-2 { margin-bottom: 8px; }
-.mb-3 { margin-bottom: 12px; }
-.mb-4 { margin-bottom: 16px; }
-.mb-6 { margin-bottom: 24px; }
-.mb-8 { margin-bottom: 32px; }
+.mb-2 { margin-bottom: var(--space-2); }
+.mb-3 { margin-bottom: var(--space-3); }
+.mb-4 { margin-bottom: var(--space-4); }
+.mb-6 { margin-bottom: var(--space-6); }
+.mb-8 { margin-bottom: var(--space-8); }
 
 /* ============================================================
    Hover patterns — CSS-only, no JS onMouseEnter needed
@@ -304,12 +304,12 @@
    ============================================================ */
 .cluster { display: flex; flex-wrap: wrap; gap: var(--gap); align-items: center; }
 .stack   { display: flex; flex-direction: column; }
-.stack-2 { gap: 8px; }
-.stack-3 { gap: 12px; }
-.stack-4 { gap: 16px; }
-.stack-5 { gap: 20px; }
-.stack-6 { gap: 24px; }
-.stack-8 { gap: 32px; }
+.stack-2 { gap: var(--space-2); }
+.stack-3 { gap: var(--space-3); }
+.stack-4 { gap: var(--space-4); }
+.stack-5 { gap: var(--space-5); }
+.stack-6 { gap: var(--space-6); }
+.stack-8 { gap: var(--space-8); }
 
 /* ============================================================
    Overlay pattern

@@ -1,5 +1,46 @@
 // screen-A6-checkout.jsx — A6 Checkout
 // Figma: A6-Checkout
+//
+// ─── 1A-1 AUDIT: CAR-SPECIFIC STRINGS ──────────────────────────────────────
+// Every item below must move to a `vertical` prop config before Phase 2.
+// vertical.*  =  the key this string will live under in cars.config.js
+//
+// SECTION TITLES
+//   "Driver Details"                     → vertical.traveller.sectionLabel
+//      (flights: "Passenger Details")
+//
+// FORM FIELDS (inside "Driver Details" card)
+//   label: "License issued in"           → vertical.traveller.licenseLabel
+//   SelFld with country list             → vertical.traveller.hasLicense (bool)
+//      (flights: no license field at all)
+//   helper: "We monitor your flight and adjust pickup automatically."
+//                                        → vertical.traveller.flightHelper
+//      (generic intent, but "pickup" wording is car-specific)
+//   placeholder: "Child seat installed on arrival, camping kit assembly, etc."
+//                                        → vertical.traveller.requestsPlaceholder
+//      (flights: "Meal preference, extra legroom, wheelchair assistance, etc.")
+//
+// TERMS CHECKBOX
+//   "Rental Conditions"                  → vertical.legal.conditionsLabel
+//      (flights: "Fare Rules" / "Booking Conditions")
+//   "Send me Iceland travel tips…"       → vertical.legal.marketingCopy
+//      (partially Iceland-specific; keep generic or move to vertical)
+//
+// PAYMENT OPTIONS
+//   { id: "pickup", label: "Pay at Pickup", desc: "No charge today" }
+//                                        → vertical.payment.hasPickupOption (bool)
+//      (flights: no physical pickup — remove this option entirely)
+//
+// SUMMARY NOTE (PriceSummaryCard note prop)
+//   "Pickup at {search.pickupTime} · {search.pickupLoc.name}"
+//                                        → vertical.checkout.summaryNote(search)
+//      (flights: "Departure {time} · {airport}" — different label + data shape)
+//
+// INFO BANNER
+//   "Your booking is protected · Free cancellation within 48h"
+//                                        → vertical.checkout.protectionBanner
+//      (flights: "Your fare is protected · Free cancellation within 24h")
+// ────────────────────────────────────────────────────────────────────────────
 const { useState: useS3 } = React;
 
 /* ============================================================

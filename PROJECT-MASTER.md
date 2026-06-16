@@ -8,7 +8,7 @@
 ```
 Phase:        1 — Relaunch
 Sprint:       1A — A6/A7 Abstraction (Sprint 1G complete)
-Task:         1A-1 (next)
+Task:         1A-4 (next)
 Last session: 2026-06-16
 ```
 
@@ -17,13 +17,14 @@ Last session: 2026-06-16
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   1G-6 (Sprint 1G COMPLETE)
+Last completed task:   1A-3
 In-progress task:      none
 Stopped mid-step:      no
-Files modified:        frontend/prototype/Iceland express 2 Landing/Iceland Express.html
-                       frontend/prototype/Iceland express 2 Landing/radix-primitives.jsx (new)
-                       docs/SPRINTS.md · docs/DECISIONS.md
-Uncommitted changes:   none (committed sprint-1G task-1G-4/5/6)
+Files modified:        screen-A6-checkout.jsx (audit comments)
+                       screen-A7-confirm.jsx (audit comments)
+                       cars.config.js (new) · Iceland Express.html
+                       docs/SPRINTS.md
+Uncommitted changes:   none (committed sprint-1A task-1A-1/2/3)
 Blocker:               .t-lg not migrated — 17px has no exact var match (--text-lg = 18px). Needs design decision.
 ```
 

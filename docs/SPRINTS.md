@@ -35,12 +35,20 @@
 ### Sprint 1A — A6/A7 Abstraction
 *Goal: checkout + confirmation accept any vertical — prerequisite for Phase 2*
 
-- [ ] **1A-1** Audit `screen-A6-checkout.jsx`: list every car-specific string
-      (labels, field names, copy). Output as comments at top of file.
+- [x] **1A-1** ✅ 2026-06-16 — audited screen-A6-checkout.jsx: 8 car-specific items
+      in 5 groups (traveller labels · license field · payment pickup option ·
+      terms copy · summary note). All tagged with vertical.* keys in file header.
 
-- [ ] **1A-2** Audit `screen-A7-confirm.jsx`: same process.
+- [x] **1A-2** ✅ 2026-06-16 — audited screen-A7-confirm.jsx: 13 car-specific items
+      in 6 groups (ref prefix · item summary card · trip detail labels · all 4
+      next-steps · CTA label · add-ons title). All tagged with vertical.* keys.
 
-- [ ] **1A-3** Create `verticals/cars.config.js`:
+- [x] **1A-3** ✅ 2026-06-16 — created `cars.config.js` (prototype flat dir): full schema
+      with all 19 keys from 1A-1/2 audits. 5 groups: checkout · traveller · legal ·
+      payment · confirmation · item. All function-valued keys (summaryNote, displayName,
+      nextSteps[2].desc) use plain JS functions. window.carsConfig verified in browser.
+      Script tag added to Iceland Express.html after data.jsx.
+      Original spec line:
       Reference implementation of the vertical config schema.
       Populate every field from the existing car rental screens.
 

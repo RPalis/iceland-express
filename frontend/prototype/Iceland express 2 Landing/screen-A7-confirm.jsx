@@ -1,5 +1,61 @@
 // screen-A7-confirm.jsx — A7 Booking Confirmation
 // Figma: A7-Booking-Confirmation
+//
+// ─── 1A-2 AUDIT: CAR-SPECIFIC STRINGS ──────────────────────────────────────
+// Every item below must move to a `vertical` prop config before Phase 2.
+// vertical.*  =  the key this string will live under in cars.config.js
+//
+// BOOKING REFERENCE
+//   ref has no prefix (e.g. "A3F9KX")   → vertical.confirmation.refPrefix
+//      (cars: "ICE-", flights: "FL-")
+//
+// ITEM SUMMARY CARD (the card showing what was booked)
+//   car.catLabel, car.provider           → vertical.item.categoryLabel, item.provider
+//   car.year + car.name                  → vertical.item.displayName(item)
+//   car.rating, car.reviews              → vertical.item.rating, item.reviews
+//   car.img                              → vertical.item.image
+//   spec badges — transmission/seats/drive
+//     Icons.Gear  + car.transmission     → vertical.item.specs[0] → {icon, value}
+//     Icons.Users + car.seats            → vertical.item.specs[1] → {icon, value}
+//     Icons.Drive + car.drive            → vertical.item.specs[2] → {icon, value}
+//      (flights: airline/class/stops · hotels: star-rating/rooms/board)
+//
+// TRIP DETAILS LABELS
+//   "Pickup"  (row label)                → vertical.confirmation.originLabel
+//      (flights: "Departure" · hotels: "Check-in")
+//   "Return"  (row label)                → vertical.confirmation.destinationLabel
+//      (flights: "Arrival"   · hotels: "Check-out")
+//   "Duration" (row label)               → vertical.confirmation.durationLabel
+//      (generic enough but included for completeness)
+//   "Trip Details" (section title)       → vertical.confirmation.tripSectionLabel
+//      (flights: "Flight Details" · hotels: "Stay Details")
+//
+// NEXT STEPS (all 4 steps are car-specific)
+//   step 1  "Confirmation email" desc:
+//     "Your voucher and full itinerary will arrive within 5 minutes."
+//                                        → vertical.confirmation.nextSteps[0].desc
+//      (generic — same for all verticals)
+//   step 2  "Track your flight" + desc   → vertical.confirmation.nextSteps[1]
+//      (generic travel — reusable if phrasing stays neutral)
+//   step 3  "Pick up your car" title     → vertical.confirmation.nextSteps[2].title
+//      (flights: "Board your flight" · hotels: "Check in")
+//   step 3  desc: "Head to {loc} at {time} with your driving license."
+//                                        → vertical.confirmation.nextSteps[2].desc(search)
+//      (car-specific: driving license · flights: boarding pass · hotels: ID)
+//   step 4  "Hit the Ring Road" title    → vertical.confirmation.nextSteps[3].title
+//      (Iceland + car specific — flights: "Enjoy your flight")
+//   step 4  desc: "CDW, unlimited mileage and 24/7 support."
+//                                        → vertical.confirmation.nextSteps[3].desc
+//      (car: CDW/mileage · flights: fare includes/excludes · hotels: amenities)
+//
+// CTA BUTTONS
+//   "Book another car"                   → vertical.confirmation.bookAgainLabel
+//      (flights: "Book another flight" · hotels: "Book another hotel")
+//
+// ADD-ONS SECTION
+//   "Add-ons Booked" (section title)     → vertical.confirmation.addonsLabel
+//      (generic enough to keep, but move for full flexibility)
+// ────────────────────────────────────────────────────────────────────────────
 
 /* ============================================================
    CONFIRMATION

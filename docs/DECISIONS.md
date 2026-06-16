@@ -124,6 +124,50 @@ the promise visible while setting honest expectations.
 
 ---
 
+## 2026-06-16 — Checkout form simplified to mandatory fields only
+
+**What:** A6 Checkout driver details section contains only: First name, Last name,
+Email (full-width), Special requests. Phone, date of birth, license country, and
+flight number fields were removed.
+
+**Why:** Phone and DOB are not required by Caren API at booking time. License
+country is validated at pickup, not online — collecting it creates form friction
+with zero backend benefit. Flight number is optional (Caren already monitors
+flights via booking ref). Removing non-mandatory fields reduces abandonment.
+The form is now 4 fields vs 8, a 50% reduction in perceived effort.
+
+**Alternatives rejected:**
+- Keep all fields but mark optional — still adds visual complexity and implies
+  the data matters. If we collect it, users expect us to use it.
+
+---
+
+## 2026-06-16 — Pay Deposit set to 50%; age gate added to SearchBar
+
+**What:** "Pay Deposit" option changed from 25% to 50% of total. A mandatory
+"Driver aged between 25–70" checkbox added below the SearchBar; Search is blocked
+with shake animation + red error state if unchecked.
+
+**Why (deposit):** 25% is below the floor required by Caren and most Icelandic
+operators. 50% aligns with standard deposit practice across Blue Car, GO Iceland,
+and Lava Auto. A lower deposit also exposes the operator to higher no-show risk
+on expensive 4×4 vehicles.
+
+**Why (age gate):** Icelandic rental operators universally restrict rentals to
+drivers aged 25–70. Displaying this as a mandatory confirmation before Search
+prevents users from completing a multi-step booking funnel only to be rejected
+at pickup. Failing fast at Search is a better UX than failing at A6 checkout.
+The gate is a checkbox (self-declaration), not identity verification — it sets
+legal expectation and reduces operator support load.
+
+**Alternatives rejected:**
+- Age gate on A6 checkout only — too late; user has already invested time selecting
+  a car and filling extras. Failing at step 5 is much more frustrating than step 1.
+- Hard DOB field instead of checkbox — DOB verification is out of scope for Phase 1
+  and adds GDPR surface area. The checkbox achieves the same legal notice function.
+
+---
+
 ## 2026-06-16 — Radix CDN abandoned; custom lightweight wrappers in prototype
 
 **What:** 1G-4 was planned as 8 Radix CDN `<script>` tags for UMD globals.

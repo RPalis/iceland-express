@@ -77,12 +77,24 @@
         "Check in online" step, "Your e-ticket..." copy.
       Both rendered zero errors. Sprint 1A complete.
 
+**Ad-hoc UI fixes — 2026-06-16 (committed c779b3e, after 1A-7):**
+- A6 checkout: removed non-mandatory fields (phone · DOB · license country · flight#)
+- A6 checkout: email field set full-width (span)
+- A6 checkout: Pay Deposit changed from 25% → 50% ("50% now, rest on pickup")
+- A6 checkout: "Same as driver" checkbox auto-fills cardName from first+last; clears on uncheck
+- A2 results: fixed segmented control (Any/Manual/Auto) overflow in filter sidebar
+  (flex:1 1 0% · font-size:12px · padding:7px 4px · overflow:hidden)
+- SearchBar: mandatory "Driver aged between 25–70" age gate below search bar;
+  blocks Search with red border + shake animation + "Required to search" label if unchecked
+- styles.css: segmented flex/overflow fix · sb-age-check styles · sb-shake @keyframes
+- app.jsx: ageConfirmed:false added to defaultSearch()
+
 ---
 
 ### Sprint 2 — Claude API Chatbot
 *Goal: "Ask Anything" chatbot live on all pages*
 
-- [ ] **2-1** Create `components/Chatbot.jsx`:
+- [ ] **2-1** Create `Chatbot.jsx` (prototype flat dir → production: `chatbot/Chatbot.jsx`):
       Floating button (56px · bottom-right · `--primary` bg · chat icon).
       Opens `IESheet` slide-over (360px · full height · dark theme).
       Chat UI: message history · input field · send button.
@@ -91,6 +103,8 @@
       System prompt: Iceland travel rules + `{PAGE_CONTEXT}` + `{LANG}`
       Conversation history maintained in component state.
       Error: friendly message, never expose raw API errors.
+      Add `<script type="text/babel" src="Chatbot.jsx">` to Iceland Express.html
+      after radix-primitives.jsx, before screen scripts.
 
 - [ ] **2-2** Integrate `<Chatbot />` into `app.jsx`:
       Mounts once at App level. Receives `currentScreen` + `detectedLanguage`.

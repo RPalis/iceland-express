@@ -8,7 +8,7 @@
 ```
 Phase:        1 — Relaunch
 Sprint:       1G — Foundation Hardening
-Task:         1G-3 (next)
+Task:         1G-4 (next)
 Last session: 2026-06-16
 ```
 
@@ -17,14 +17,12 @@ Last session: 2026-06-16
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   1G-2 + corrections
+Last completed task:   1G-3
 In-progress task:      none
 Stopped mid-step:      no
 Files modified:        frontend/prototype/Iceland express 2 Landing/styles.css
-                       frontend/prototype/Iceland express 2 Landing/tokens.jsx
-                       docs/ds-tokens.md
 Uncommitted changes:   none
-Blocker:               —
+Blocker:               .t-lg not migrated — 17px has no exact var match (--text-lg = 18px). Needs design decision.
 ```
 
 If `in-progress task` is not blank → resume it before starting anything new.

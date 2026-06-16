@@ -13,10 +13,7 @@
 
 - [x] **1G-2** ✅ 2026-06-16 — added T.space/text/weight/leading/shadow/z/modal · extended T.input + T.card with semantic var mirrors · no raw values in new code
 
-- [ ] **1G-3** Migrate `styles.css` utility classes to reference vars:
-      `.t-sm { font-size: var(--text-sm) }` etc. for all `.t-*`, `.fw-*`,
-      `.lh-*`, `.p-*`, `.mt-*`, `.mb-*`, `.stack-*`
-      Visual output must be identical. Non-breaking only.
+- [x] **1G-3** ✅ 2026-06-16 — migrated t-*/fw-*/lh-*/p-*/mt-*/mb-*/stack-* to var() refs · .t-lg kept raw (17px has no exact var match — needs design review before migrating)
 
 - [ ] **1G-4** Add Radix CDN scripts to `Iceland Express.html` `<head>`:
       dialog · popover · select · tabs · checkbox · switch · tooltip · dropdown-menu

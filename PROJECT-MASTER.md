@@ -17,12 +17,12 @@ Last session: 2026-06-16
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   1G-2
+Last completed task:   1G-2 + corrections
 In-progress task:      none
 Stopped mid-step:      no
 Files modified:        frontend/prototype/Iceland express 2 Landing/styles.css
                        frontend/prototype/Iceland express 2 Landing/tokens.jsx
-                       docs/SPRINTS.md
+                       docs/ds-tokens.md
 Uncommitted changes:   none
 Blocker:               —
 ```

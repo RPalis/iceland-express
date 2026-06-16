@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "iceland-express-prototype",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "frontend/prototype/Iceland express 2 Landing", "-p", "3457", "--no-clipboard"],
+      "port": 3457
+    }
+  ]
+}

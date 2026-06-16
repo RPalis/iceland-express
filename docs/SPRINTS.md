@@ -15,17 +15,20 @@
 
 - [x] **1G-3** ✅ 2026-06-16 — migrated t-*/fw-*/lh-*/p-*/mt-*/mb-*/stack-* to var() refs · .t-lg kept raw (17px has no exact var match — needs design review before migrating)
 
-- [ ] **1G-4** Add Radix CDN scripts to `Iceland Express.html` `<head>`:
-      dialog · popover · select · tabs · checkbox · switch · tooltip · dropdown-menu
+- [x] **1G-4** ✅ 2026-06-16 — Radix UMD unavailable (v1+ ESM/CJS only). Revised: added
+      one `<script type="text/babel" src="radix-primitives.jsx">` tag to prototype HTML
+      (after blog-data, before screens). Custom wrappers replace CDN approach.
+      Decision logged in DECISIONS.md.
 
-- [ ] **1G-5** Create `foundation/radix-primitives.jsx`:
-      `IEDialog / IESheet / IEPopover / IESelect / IETabs /
-       IECheckbox / IESwitch / IETooltip / IEDropdown`
-      Every wrapper: IE tokens only. No Tailwind. No shadcn classes.
-      Test: keyboard nav · focus ring = var(--stroke-focus) · z-index stacking
+- [x] **1G-5** ✅ 2026-06-16 — created `radix-primitives.jsx` (prototype): IEDialog ·
+      IESheet · IEPopover · IESelect · IETabs · IECheckbox · IESwitch · IETooltip ·
+      IEDropdown. Custom wrappers: portal rendering, focus trap, scroll lock, Escape/click-
+      outside dismissal, keyboard nav (Arrow+Enter+Tab), ARIA roles. All visual styles via
+      IE CSS custom properties only. Zero errors in browser.
 
-- [ ] **1G-6** Smoke test: open prototype, verify no visual regressions,
-      verify all 9 existing screens still render correctly.
+- [x] **1G-6** ✅ 2026-06-16 — smoke test passed: zero console errors, all 9 screens
+      defined (HomeScreen→BlogPostScreen), all 9 primitives defined (IEDialog→IEDropdown),
+      createElement smoke test clean. A1 home renders correctly in browser.
 
 ---
 

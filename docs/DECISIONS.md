@@ -124,6 +124,34 @@ the promise visible while setting honest expectations.
 
 ---
 
+## 2026-06-16 — Radix CDN abandoned; custom lightweight wrappers in prototype
+
+**What:** 1G-4 was planned as 8 Radix CDN `<script>` tags for UMD globals.
+Radix UI v1+ ships only CommonJS (`index.js`) and ESM (`index.mjs`) — no UMD
+builds exist for any of the 8 required packages. Neither unpkg nor jsDelivr serve
+a browser-compatible bundle. `radix-primitives.jsx` instead ships 9 custom
+lightweight wrappers (IEDialog / IESheet / IEPopover / IESelect / IETabs /
+IECheckbox / IESwitch / IETooltip / IEDropdown) using only React + ReactDOM.createPortal.
+
+**Why:** The prototype runs on Babel CDN (no bundler). Loading Radix as ESM from
+esm.sh requires `<script type="module">`, which executes before Babel processes
+`type="text/babel"` scripts — correct order — but esm.sh still imports its own
+React instance, creating a second React copy. React hooks throw when called across
+two React instances. The only clean path is a single React instance, which requires
+a bundler. The wrappers mirror the exact same API surface (Root/Trigger/Content
+composition, keyboard nav, focus trap, ARIA), so the production swap to real Radix
+is a CDN-line change in the HTML, not a component refactor.
+
+**Alternatives rejected:**
+- esm.sh + importmap + window.React shim — works in theory but two-React-copy
+  risk is unacceptable. Would fail silently on any screen that uses a Radix
+  component inside a React tree that also uses useState.
+- Downgrade to Radix v0.x — v0.x packages also have no UMD builds.
+- Build local UMD bundles with webpack/esbuild — introduces a build step,
+  defeating the no-bundler prototype goal.
+
+---
+
 
 ---
 

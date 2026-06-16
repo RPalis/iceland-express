@@ -8,8 +8,8 @@
 ```
 Phase:        1 — Relaunch
 Sprint:       1G — Foundation Hardening
-Task:         Not started
-Last session: —
+Task:         1G-3 (next)
+Last session: 2026-06-16
 ```
 
 ---
@@ -17,10 +17,12 @@ Last session: —
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   none
+Last completed task:   1G-2
 In-progress task:      none
 Stopped mid-step:      no
-Files modified:        none
+Files modified:        frontend/prototype/Iceland express 2 Landing/styles.css
+                       frontend/prototype/Iceland express 2 Landing/tokens.jsx
+                       docs/SPRINTS.md
 Uncommitted changes:   none
 Blocker:               —
 ```

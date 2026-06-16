@@ -9,16 +9,9 @@
 ### Sprint 1G — Foundation Hardening
 *Goal: bulletproof token system + Radix primitive layer before anything else*
 
-- [ ] **1G-1** Add to `styles.css`: spacing scale `--space-1→16`, type scale
-      `--text-xs→6xl / --weight-* / --leading-*`, shadow scale `--shadow-xs→xl`,
-      z-index scale `--z-base→toast`, component semantic tokens
-      `--input-* / --btn-* / --card-* / --modal-*`, Radix bridge vars
-      `--background / --foreground / --ring / --popover`
+- [x] **1G-1** ✅ 2026-06-16 — added spacing/type/weight/leading/shadow/z-index/semantic/Radix vars to styles.css · fixed missing --shadow-card alias
 
-- [ ] **1G-2** Add to `foundation/tokens.jsx`:
-      `T.space / T.text / T.weight / T.leading / T.shadow / T.z / T.card / T.modal`
-      Extend existing `T.input` — do not replace it.
-      All values reference `var(--)` only — no raw values.
+- [x] **1G-2** ✅ 2026-06-16 — added T.space/text/weight/leading/shadow/z/modal · extended T.input + T.card with semantic var mirrors · no raw values in new code
 
 - [ ] **1G-3** Migrate `styles.css` utility classes to reference vars:
       `.t-sm { font-size: var(--text-sm) }` etc. for all `.t-*`, `.fw-*`,

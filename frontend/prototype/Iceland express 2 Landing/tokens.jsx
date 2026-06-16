@@ -148,6 +148,18 @@ const T = Object.freeze({
       success: { border: 'var(--success)',  shadow: '0 0 0 3px rgba(52,211,153,0.10)' },
       disabled:{ opacity: 0.45 },
     },
+    // semantic var mirrors (1G-2) — use in new code; existing raw values kept for compat
+    bgVar:         'var(--input-bg)',
+    borderColor:   'var(--input-border)',
+    borderFocus:   'var(--input-border-focus)',
+    borderError:   'var(--input-border-error)',
+    borderSuccess: 'var(--input-border-success)',
+    borderDisabled:'var(--input-border-disabled)',
+    heightVar:     'var(--input-height)',
+    radiusVar:     'var(--input-radius)',
+    paddingXVar:   'var(--input-px)',
+    textVar:       'var(--input-text)',
+    placeholderVar:'var(--input-placeholder)',
   },
 
   badge: {
@@ -192,6 +204,9 @@ const T = Object.freeze({
     radius:  'var(--r-lg)',
     padding: 'var(--pad-card)',
     shadow:  'var(--shadow-card)',
+    // semantic var mirrors (1G-2)
+    borderColor: 'var(--card-border)',
+    shadowVar:   'var(--card-shadow)',
   },
 
   specCell: {
@@ -236,6 +251,84 @@ const T = Object.freeze({
     a12: 'var(--alpha-12)',
     a20: 'var(--alpha-20)',
     a30: 'var(--alpha-30)',
+  },
+
+  // ── Spacing scale (1G-2) ──────────────────────────────────────
+  space: {
+    1:  'var(--space-1)',
+    2:  'var(--space-2)',
+    3:  'var(--space-3)',
+    4:  'var(--space-4)',
+    5:  'var(--space-5)',
+    6:  'var(--space-6)',
+    8:  'var(--space-8)',
+    10: 'var(--space-10)',
+    12: 'var(--space-12)',
+    16: 'var(--space-16)',
+  },
+
+  // ── Type scale (1G-2) ─────────────────────────────────────────
+  text: {
+    xs:   'var(--text-xs)',
+    sm:   'var(--text-sm)',
+    md:   'var(--text-md)',
+    lg:   'var(--text-lg)',
+    xl:   'var(--text-xl)',
+    '2xl':'var(--text-2xl)',
+    '3xl':'var(--text-3xl)',
+    '4xl':'var(--text-4xl)',
+    '5xl':'var(--text-5xl)',
+    '6xl':'var(--text-6xl)',
+  },
+
+  // ── Weight scale (1G-2) ───────────────────────────────────────
+  weight: {
+    400: 'var(--weight-400)',
+    500: 'var(--weight-500)',
+    600: 'var(--weight-600)',
+    700: 'var(--weight-700)',
+  },
+
+  // ── Leading scale (1G-2) ──────────────────────────────────────
+  leading: {
+    tight:   'var(--leading-tight)',
+    snug:    'var(--leading-snug)',
+    normal:  'var(--leading-normal)',
+    relaxed: 'var(--leading-relaxed)',
+    loose:   'var(--leading-loose)',
+  },
+
+  // ── Shadow scale (1G-2) ───────────────────────────────────────
+  shadow: {
+    xs:   'var(--shadow-xs)',
+    sm:   'var(--shadow-sm)',
+    md:   'var(--shadow-md)',
+    lg:   'var(--shadow-lg)',
+    xl:   'var(--shadow-xl)',
+    card: 'var(--shadow-card)',
+    pop:  'var(--shadow-pop)',
+    glow: 'var(--glow)',
+  },
+
+  // ── Z-index scale (1G-2) ──────────────────────────────────────
+  z: {
+    base:     'var(--z-base)',
+    raised:   'var(--z-raised)',
+    dropdown: 'var(--z-dropdown)',
+    sticky:   'var(--z-sticky)',
+    overlay:  'var(--z-overlay)',
+    modal:    'var(--z-modal)',
+    popover:  'var(--z-popover)',
+    toast:    'var(--z-toast)',
+  },
+
+  // ── Modal component tokens (1G-2) ─────────────────────────────
+  modal: {
+    bg:     'var(--modal-bg)',
+    border: 'var(--modal-border)',
+    radius: 'var(--modal-radius)',
+    shadow: 'var(--modal-shadow)',
+    z:      'var(--modal-z)',
   },
 
 });

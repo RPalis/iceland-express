@@ -7,8 +7,8 @@
 
 ```
 Phase:        1 — Relaunch
-Sprint:       1A — A6/A7 Abstraction (Sprint 1G complete)
-Task:         1A-4 (next)
+Sprint:       2 — Claude API Chatbot (Sprint 1A complete)
+Task:         2-1 (next)
 Last session: 2026-06-16
 ```
 
@@ -17,14 +17,14 @@ Last session: 2026-06-16
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   1A-3
+Last completed task:   1A-7 (Sprint 1A complete)
 In-progress task:      none
 Stopped mid-step:      no
-Files modified:        screen-A6-checkout.jsx (audit comments)
-                       screen-A7-confirm.jsx (audit comments)
-                       cars.config.js (new) · Iceland Express.html
+Files modified:        screen-A6-checkout.jsx (vertical prop refactor)
+                       screen-A7-confirm.jsx (vertical prop refactor)
+                       flights.config.js (new stub)
                        docs/SPRINTS.md
-Uncommitted changes:   none (committed sprint-1A task-1A-1/2/3)
+Uncommitted changes:   yes — 1A-4 through 1A-7 changes
 Blocker:               .t-lg not migrated — 17px has no exact var match (--text-lg = 18px). Needs design decision.
 ```
 

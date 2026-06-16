@@ -52,21 +52,30 @@
       Reference implementation of the vertical config schema.
       Populate every field from the existing car rental screens.
 
-- [ ] **1A-4** Refactor `screen-A6-checkout.jsx` to accept `vertical` prop.
-      Default = `carsConfig`. Visual output identical when passed `carsConfig`.
-      All car-specific strings replaced with `vertical.checkout.*` references.
+- [x] **1A-4** ✅ 2026-06-16 — refactored screen-A6-checkout.jsx: `vertical` prop added,
+      defaults to `window.carsConfig`. All 8 car-specific strings replaced with
+      `v.checkout.*` / `v.traveller.*` / `v.legal.*` / `v.payment.*` refs.
+      Visual output verified identical in browser.
 
-- [ ] **1A-5** Refactor `screen-A7-confirm.jsx` same way.
-      Booking ref prefix, summary title, email subject from config.
+- [x] **1A-5** ✅ 2026-06-16 — refactored screen-A7-confirm.jsx: `vertical` prop added,
+      defaults to `window.carsConfig`. All 13 car-specific items replaced:
+      refPrefix · tripSectionLabel · originLabel · destinationLabel · durationLabel ·
+      addonsLabel · bookAgainLabel · nextSteps (array, fn-valued desc resolved) ·
+      item.displayName · item.categoryKey · item.providerKey · item.imageKey · item.specs.
+      Rendered in-browser via eval test — zero errors, all values correct.
 
-- [ ] **1A-6** Create `verticals/flights.config.js` as a stub.
-      Same schema. `traveller_label: 'Passenger details'`, `ref_prefix: 'FL-'`.
-      API endpoints as placeholder strings.
+- [x] **1A-6** ✅ 2026-06-16 — created `flights.config.js` stub (prototype flat dir):
+      full schema matching cars.config.js. Key differences: sectionLabel='Passenger Details' ·
+      hasLicense=false · hasPickupOption=false · refPrefix='FL-' · conditionsLabel='Fare Rules' ·
+      tripSectionLabel='Flight Details' · originLabel='Departure' · destinationLabel='Arrival' ·
+      nextSteps with flight-specific copy. window.flightsConfig assigned.
 
-- [ ] **1A-7** Verification test:
-      Render `<Checkout vertical={flightsConfig} />` → shows "Passenger details".
-      Render `<Confirmation vertical={flightsConfig} />` → shows "FL-" prefix.
-      Both pass without errors → abstraction complete.
+- [x] **1A-7** ✅ 2026-06-16 — abstraction verified in browser:
+      CheckoutScreen + flightsConfig → "Passenger Details", no license field,
+        flights banner, flights helper + placeholder, 2-option payment (no pickup).
+      ConfirmScreen + flightsConfig → "FL-" prefix, "Flight Details", "Departure"/"Arrival",
+        "Check in online" step, "Your e-ticket..." copy.
+      Both rendered zero errors. Sprint 1A complete.
 
 ---
 

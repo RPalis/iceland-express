@@ -60,9 +60,16 @@
 /* ============================================================
    CONFIRMATION
    ============================================================ */
-function ConfirmScreen({ search, car, days, qty, go }) {
-  const ref = Math.random().toString(36).substr(2, 8).toUpperCase();
+function ConfirmScreen({ search, car, days, qty, go, vertical }) {
+  const v = vertical || window.carsConfig;
+  const ref = v.confirmation.refPrefix + Math.random().toString(36).substr(2, 8).toUpperCase();
   const { total, lines } = computeTotals(car, days, qty);
+
+  const tripRows = [
+    { ico: "Pin",      label: v.confirmation.originLabel,      val: search.pickupLoc.name,  sub: fmtDateLong(search.pickupDate) + " · " + search.pickupTime },
+    { ico: "Pin",      label: v.confirmation.destinationLabel, val: search.dropoffLoc.name, sub: fmtDateLong(search.returnDate) + " · " + search.returnTime },
+    { ico: "Calendar", label: v.confirmation.durationLabel,    val: days + " day" + (days !== 1 ? "s" : ""), sub: fmtDate(search.pickupDate) + " → " + fmtDate(search.returnDate) },
+  ];
 
   return (
     <div className="flow" style={{ paddingBottom: 60 }}>
@@ -82,32 +89,29 @@ function ConfirmScreen({ search, car, days, qty, go }) {
       <div className="shell" style={{ paddingTop: 40 }}>
         <div className="layout-2col">
           <div className="col gap20">
-            {/* Car summary */}
+            {/* Item summary */}
             <div className="card card-pad row gap20" style={{ alignItems: "center" }}>
               <div style={{ width: 140, borderRadius: "var(--r-md)", overflow: "hidden", flex: "none", aspectRatio: "4/3", background: "var(--inner)" }}>
-                <img src={car.img} alt={car.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src={car[v.item.imageKey]} alt={car.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
               <div className="grow col gap6">
-                <div className="eyebrow">{car.catLabel} · {car.provider}</div>
-                <h3 className="h3" style={{ fontSize: 22 }}>{car.year} {car.name}</h3>
+                <div className="eyebrow">{car[v.item.categoryKey]} · {car[v.item.providerKey]}</div>
+                <h3 className="h3" style={{ fontSize: 22 }}>{v.item.displayName(car)}</h3>
                 <div className="row center gap6"><Stars value={car.rating} size={13} /><span className="muted" style={{ fontSize: 13 }}>{car.rating} · {car.reviews} reviews</span></div>
                 <div className="row center gap8" style={{ marginTop: 4 }}>
-                  <span className="badge badge-outline"><Icons.Gear size={12} /> {car.transmission}</span>
-                  <span className="badge badge-outline"><Icons.Users size={12} /> {car.seats}</span>
-                  <span className="badge badge-outline"><Icons.Drive size={12} /> {car.drive}</span>
+                  {v.item.specs.map(function(spec) {
+                    const I = Icons[spec.icon];
+                    return <span key={spec.key} className="badge badge-outline">{I && <I size={12} />} {car[spec.key]}</span>;
+                  })}
                 </div>
               </div>
             </div>
 
             {/* Trip details */}
             <div className="card card-pad">
-              <h3 className="h3" style={{ marginBottom: 18 }}>Trip Details</h3>
+              <h3 className="h3" style={{ marginBottom: 18 }}>{v.confirmation.tripSectionLabel}</h3>
               <div className="col gap14">
-                {[
-                  { ico: "Pin", label: "Pickup", val: search.pickupLoc.name, sub: fmtDateLong(search.pickupDate) + " · " + search.pickupTime },
-                  { ico: "Pin", label: "Return", val: search.dropoffLoc.name, sub: fmtDateLong(search.returnDate) + " · " + search.returnTime },
-                  { ico: "Calendar", label: "Duration", val: days + " day" + (days !== 1 ? "s" : ""), sub: fmtDate(search.pickupDate) + " → " + fmtDate(search.returnDate) },
-                ].map((row) => {
+                {tripRows.map((row) => {
                   const I = Icons[row.ico];
                   return (
                     <div key={row.label} className="row center gap14" style={{ paddingBottom: 14, borderBottom: "1px solid var(--border)" }}>
@@ -126,7 +130,7 @@ function ConfirmScreen({ search, car, days, qty, go }) {
             {/* Add-ons */}
             {lines.length > 0 && (
               <div className="card card-pad">
-                <h3 className="h3" style={{ marginBottom: 16 }}>Add-ons Booked</h3>
+                <h3 className="h3" style={{ marginBottom: 16 }}>{v.confirmation.addonsLabel}</h3>
                 <div className="col gap12">
                   {lines.map((l) => (
                     <div key={l.id} className="row between center" style={{ fontSize: 14 }}>
@@ -142,25 +146,23 @@ function ConfirmScreen({ search, car, days, qty, go }) {
             <div className="card card-pad">
               <h3 className="h3" style={{ marginBottom: 16 }}>What Happens Next</h3>
               <div className="col gap14">
-                {[
-                  { n: "1", t: "Confirmation email", d: "Your voucher and full itinerary will arrive within 5 minutes." },
-                  { n: "2", t: "Track your flight", d: "If you added a flight number, we'll auto-adjust your pickup time." },
-                  { n: "3", t: "Pick up your car", d: "Head to " + search.pickupLoc.name + " at " + search.pickupTime + " with your driving license." },
-                  { n: "4", t: "Hit the Ring Road", d: "All set! Your rental includes CDW, unlimited mileage and 24/7 support." },
-                ].map((step) => (
-                  <div key={step.n} className="row gap14 center">
-                    <span style={{ width: 32, height: 32, display: "grid", placeItems: "center", borderRadius: "99px", background: "var(--primary-tint)", color: "var(--primary-strong)", fontWeight: 700, fontSize: 14, flex: "none" }}>{step.n}</span>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: 14.5 }}>{step.t}</div>
-                      <div className="muted" style={{ fontSize: 13 }}>{step.d}</div>
+                {v.confirmation.nextSteps.map(function(step, i) {
+                  const desc = typeof step.desc === "function" ? step.desc(search) : step.desc;
+                  return (
+                    <div key={i} className="row gap14 center">
+                      <span style={{ width: 32, height: 32, display: "grid", placeItems: "center", borderRadius: "99px", background: "var(--primary-tint)", color: "var(--primary-strong)", fontWeight: 700, fontSize: 14, flex: "none" }}>{i + 1}</span>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: 14.5 }}>{step.title}</div>
+                        <div className="muted" style={{ fontSize: 13 }}>{desc}</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
             <div className="row center gap12" style={{ flexWrap: "wrap" }}>
-              <button className="btn btn-primary" onClick={() => go("home")}><Icons.ArrowL size={16} /> Book another car</button>
+              <button className="btn btn-primary" onClick={() => go("home")}><Icons.ArrowL size={16} /> {v.confirmation.bookAgainLabel}</button>
               <button className="btn btn-ghost"><Icons.Download size={16} /> Download voucher</button>
             </div>
           </div>

@@ -116,6 +116,107 @@
   --shadow-pop: 0 20px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--border);
   --glow: 0 0 0 1px rgba(6, 182, 212, 0.25), 0 8px 30px -8px rgba(6, 182, 212, 0.35);
   --maxw: 1280px;
+
+  /* ── spacing scale ─────────────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ── type scale ─────────────────────────────────────────────── */
+  --text-xs:  11px;
+  --text-sm:  13px;
+  --text-md:  15px;
+  --text-lg:  17px;
+  --text-xl:  20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  --text-4xl: 36px;
+  --text-5xl: 46px;
+  --text-6xl: 56px;
+
+  /* ── weight scale ───────────────────────────────────────────── */
+  --weight-400: 400;
+  --weight-500: 500;
+  --weight-600: 600;
+  --weight-700: 700;
+
+  /* ── leading scale ──────────────────────────────────────────── */
+  --leading-tight:   1.15;
+  --leading-snug:    1.35;
+  --leading-normal:  1.55;
+  --leading-relaxed: 1.7;
+  --leading-loose:   1.85;
+
+  /* ── shadow scale ───────────────────────────────────────────── */
+  --shadow-xs: 0 1px 2px  rgba(0,0,0,0.40);
+  --shadow-sm: 0 2px 6px  rgba(0,0,0,0.45);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.50);
+  --shadow-lg: 0 8px 28px rgba(0,0,0,0.55);
+  --shadow-xl: 0 16px 48px rgba(0,0,0,0.65);
+
+  /* ── z-index scale ──────────────────────────────────────────── */
+  --z-base:     0;
+  --z-raised:   10;
+  --z-dropdown: 30;
+  --z-sticky:   40;
+  --z-overlay:  50;
+  --z-modal:    60;
+  --z-popover:  70;
+  --z-toast:    90;
+
+  /* ── component tokens — input ───────────────────────────────── */
+  --input-bg:              var(--inner);
+  --input-border:          var(--border);
+  --input-border-focus:    var(--primary);
+  --input-border-error:    var(--danger);
+  --input-border-success:  var(--success);
+  --input-border-disabled: var(--stroke-disabled);
+  --input-height:          var(--row-h);
+  --input-radius:          var(--r-sm);
+  --input-px:              15px;
+  --input-text:            var(--fg);
+  --input-placeholder:     var(--dim);
+
+  /* ── component tokens — button ──────────────────────────────── */
+  --btn-height:    44px;
+  --btn-height-xs: 28px;
+  --btn-height-sm: 36px;
+  --btn-height-lg: 54px;
+  --btn-height-xl: 60px;
+  --btn-px:        20px;
+  --btn-radius:    var(--r-md);
+  --btn-font:      var(--font-display);
+  --btn-weight:    600;
+  --btn-size:      var(--text-md);
+
+  /* ── component tokens — card ────────────────────────────────── */
+  --card-bg:     var(--card);
+  --card-border: var(--border);
+  --card-radius: var(--r-lg);
+  --card-pad:    var(--pad-card);
+  --card-shadow: var(--shadow-md);
+  --shadow-card: var(--shadow-md);   /* alias — used by .card rule */
+
+  /* ── component tokens — modal ───────────────────────────────── */
+  --modal-bg:     var(--card);
+  --modal-border: var(--border);
+  --modal-radius: var(--r-xl);
+  --modal-shadow: var(--shadow-xl);
+  --modal-z:      var(--z-modal);
+
+  /* ── Radix bridge vars ──────────────────────────────────────── */
+  --background:         var(--bg);
+  --foreground:         var(--fg);
+  --ring:               var(--primary);
+  --popover:            var(--card-2);
+  --popover-foreground: var(--fg);
 }
 
 /* ============================================================

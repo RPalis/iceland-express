@@ -117,6 +117,13 @@
   --glow: 0 0 0 1px rgba(6, 182, 212, 0.25), 0 8px 30px -8px rgba(6, 182, 212, 0.35);
   --maxw: 1280px;
 
+  /* nav — floating pill */
+  --nav-frost-bg:    rgba(7, 10, 24, 0.65);   /* Tier 1 — raw frost colour */
+  --nav-blur:        24px;                      /* Tier 1 — backdrop blur amount */
+  --nav-max-w:       1200px;                    /* Tier 1 — max pill width */
+  --nav-offset:      88px;                      /* Tier 1 — page top padding (64h + 16top + 8gap) */
+  --nav-border-color: var(--alpha-08);          /* Tier 2 — uses alpha scale */
+
   /* ── spacing scale ─────────────────────────────────────────── */
   --space-1:  4px;
   --space-2:  8px;
@@ -377,7 +384,7 @@ a { color: inherit; text-decoration: none; }
 /* ============================================================
    Layout
    ============================================================ */
-.page { min-height: 100vh; display: flex; flex-direction: column; }
+.page { min-height: 100vh; display: flex; flex-direction: column; padding-top: var(--nav-offset); }
 .shell { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 32px; }
 .flow { flex: 1; }
 
@@ -399,20 +406,34 @@ a { color: inherit; text-decoration: none; }
    Nav
    ============================================================ */
 .nav {
-  position: sticky; top: 0; z-index: 40;
-  height: 72px; display: flex; align-items: center;
-  background: rgba(5, 6, 16, 0.82);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border);
+  position: fixed;
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  max-width: var(--nav-max-w);
+  z-index: var(--z-sticky);
+  height: 64px;
+  display: flex;
+  align-items: center;
+  background: var(--nav-frost-bg);
+  backdrop-filter: blur(var(--nav-blur));
+  -webkit-backdrop-filter: blur(var(--nav-blur));
+  border: 1px solid var(--nav-border-color);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+  transition: background var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out);
 }
 .nav-inner { display: flex; align-items: center; gap: 36px; width: 100%; }
-.logo { font-family: var(--font-display); font-weight: 700; font-size: 21px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 9px; white-space: nowrap; }
+.logo { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: -0.02em; display: flex; align-items: center; white-space: nowrap; }
+.logo-accent { color: var(--primary); }
 .logo-mark { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(140deg, var(--primary-strong), var(--primary)); display: grid; place-items: center; color: var(--primary-fg); }
 .nav-links { display: flex; gap: 28px; }
-.nav-links a { font-size: 15px; color: var(--muted); font-weight: 500; transition: color .15s; }
+.nav-links a { font-size: 15px; color: var(--muted); font-weight: 500; transition: color var(--dur-fast) var(--ease-out); cursor: pointer; }
 .nav-links a:hover { color: var(--fg); }
 .nav-spacer { flex: 1; }
-@media (max-width: 720px) { .nav-links { display: none; } .nav { height: 62px; } }
+@media (max-width: 720px) { .nav-links { display: none; } .nav { height: 58px; width: calc(100% - 24px); } }
 
 /* ============================================================
    Buttons

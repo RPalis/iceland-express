@@ -19,17 +19,16 @@ function NavBar({ go }) {
   return (
     <nav className="nav">
       <div className="shell nav-inner">
-        <div className="logo" onClick={() => go("home")} style={{ cursor: "pointer" }}>
-          <span className="logo-mark"><Icons.Bolt size={16} /></span>
-          Iceland Express
-        </div>
+        <a className="logo" href="/" style={{ textDecoration: "none", color: "inherit" }}>
+          Iceland<span className="logo-accent">Express</span>
+        </a>
         <div className="nav-links">
           <a onClick={() => go("home")}>Book a car</a>
           <a onClick={() => go('blog')}>Travel Guides</a>
           <a>Help</a>
         </div>
         <div className="nav-spacer"></div>
-        <button className="btn btn-ghost btn-sm" onClick={() => go('manage')}>Manage Booking</button>
+        <button className="btn btn-primary btn-sm" onClick={() => go('manage')}>Manage Booking</button>
       </div>
     </nav>
   );

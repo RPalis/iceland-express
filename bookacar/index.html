@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iceland Express — Car Rental</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="../frontend/prototype/Iceland express 2 Landing/styles.css" />
+
+  <!-- React + Babel -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <!-- Web components -->
+  <script src="../frontend/prototype/Iceland express 2 Landing/image-slot.js"></script>
+
+  <template id="__bundler_thumbnail">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+      <rect width="200" height="200" fill="#0b2540"></rect>
+      <g transform="translate(60,60)">
+        <path d="M11.6 1 L3 28 H20 L9 79 L77 24 H47 L72 1 Z" transform="scale(1.0)" fill="#06b6d4"></path>
+      </g>
+      <text x="100" y="158" font-family="sans-serif" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">ICELAND EXPRESS</text>
+    </svg>
+  </template>
+
+  <!-- Design system — foundation layer -->
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/tweaks-panel.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/data.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/tokens.jsx"></script>
+
+  <!-- Vertical configs (Sprint 1A) -->
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/cars.config.js"></script>
+
+  <!-- Design system — component layers (atoms → molecules → organisms) -->
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/ds-atoms.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/ds-molecules.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/ds-organisms.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/components.jsx"></script>
+
+  <!-- Shared UI shell & search bar -->
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/ui.jsx?v=3"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/searchbar.jsx"></script>
+
+  <!-- Blog content data -->
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/blog-data.jsx"></script>
+
+  <!-- Radix-compatible behaviour primitives -->
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/radix-primitives.jsx"></script>
+
+  <!-- Screens — Figma naming: A1 → A7, MB, BL, BP -->
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/screen-A1-home.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/screen-A2-results.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/screen-A3-detail.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/screen-A5-extras.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/screen-A6-checkout.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/screen-A7-confirm.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/screen-MB-manage.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/screen-BL-blog-list.jsx"></script>
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/screen-BP-blog-post.jsx"></script>
+
+  <!-- App entry point -->
+  <script type="text/babel" src="../frontend/prototype/Iceland express 2 Landing/app.jsx"></script>
+</head>
+<body>
+  <div id="root"></div>
+</body>
+</html>

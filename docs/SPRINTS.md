@@ -91,6 +91,17 @@
 
 ---
 
+### ⏳ Pending — First Production Migration (cross-cutting · not started)
+*Gate 2 passed for NavBar 2026-06-17, but `frontend/production/` is still EMPTY.*
+
+- [ ] **PM-1** Migrate the complete approved prototype baseline → `frontend/production/`
+      in correct script load order: foundation (tokens.jsx) → design-system (ds-atoms /
+      ds-molecules / ds-organisms / components) → shared (ui.jsx / searchbar.jsx) →
+      data → verticals → screens. Production must be runnable end-to-end after migration.
+      Do NOT migrate NavBar files in isolation — see DECISIONS.md 2026-06-17.
+
+---
+
 ### Sprint 2 — Claude API Chatbot
 *Goal: "Ask Anything" chatbot live on all pages*
 

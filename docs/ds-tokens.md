@@ -133,6 +133,17 @@ Tiers 2 and 3 never contain raw values. Breaking this breaks the theme system.
 --leading-relaxed: 1.70  --leading-loose: 1.85
 ```
 
+### Tier 1: Nav (floating pill)
+```css
+--nav-frost-bg: rgba(7,10,24,0.65)   --nav-blur: 24px
+--nav-max-w: 1200px                   --nav-offset: 88px
+```
+
+### Tier 2: Nav
+```css
+--nav-border-color: var(--alpha-08)
+```
+
 ### Tier 1: Z-Index
 ```css
 --z-base: 0       --z-raised: 10     --z-dropdown: 100  --z-sticky: 200

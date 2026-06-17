@@ -104,6 +104,15 @@ const T = Object.freeze({
   shadowPop:  'var(--shadow-pop)',
   glow:       'var(--glow)',
 
+  // ── Nav ───────────────────────────────────────────────────
+  nav: {
+    bg:     'var(--nav-frost-bg)',      // frosted dark background
+    border: 'var(--nav-border-color)',  // alpha-08 border
+    blur:   'var(--nav-blur)',          // 24px backdrop blur
+    maxW:   'var(--nav-max-w)',         // 1200px pill max-width
+    offset: 'var(--nav-offset)',        // 88px page top padding
+  },
+
   // ── Component Specs ───────────────────────────────────────
   // These describe the intended anatomy of each component in token terms.
 

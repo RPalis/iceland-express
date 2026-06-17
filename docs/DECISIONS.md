@@ -124,6 +124,31 @@ the promise visible while setting honest expectations.
 
 ---
 
+## 2026-06-17 — NavBar approved (Gate 2); first production migration deferred to its own task
+
+**What:** The redesigned global NavBar (floating frosted-glass pill, two-color wordmark,
+btn-primary CTA) is approved at Gate 2. However, it is NOT migrated to
+`frontend/production/` this session. `frontend/production/` is entirely empty — no
+foundation, DS, data, or screens have ever been migrated. The NavBar stays in
+`prototype/` and the root pages (`index.html`, `bookacar/`) ship as-is. A full baseline
+migration to `production/` is scheduled as a dedicated task.
+
+**Why:** Migrating only the NavBar files (`ui.jsx`, `styles.css`, `tokens.jsx`) into an
+empty production tree would create a broken, non-runnable build — `shared/ui.jsx` depends
+on `foundation/tokens.jsx`, `ds-atoms`, `Icons`, and `data.jsx`, none of which exist in
+production yet. The first-ever production migration must move the complete approved
+baseline in correct script load order; it is real, scoped work, not a NavBar add-on.
+The gate is still honored: the NavBar is approved; only the migration sequencing is
+deferred.
+
+**Alternatives rejected:**
+- Migrate NavBar files only now — produces an incomplete production tree that can't run
+  and silently violates the "frontend never ahead of a coherent baseline" intent.
+- Block the commit until full migration is done — needlessly couples today's approved
+  prototype + landing-page work to a much larger migration task.
+
+---
+
 ## 2026-06-16 — Checkout form simplified to mandatory fields only
 
 **What:** A6 Checkout driver details section contains only: First name, Last name,

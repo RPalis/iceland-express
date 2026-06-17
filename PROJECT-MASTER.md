@@ -8,8 +8,8 @@
 ```
 Phase:        1 — Relaunch
 Sprint:       2 — Claude API Chatbot (Sprint 1A complete)
-Task:         2-1 (next)
-Last session: 2026-06-16
+Task:         2-1 (next) · Platform homepage complete
+Last session: 2026-06-17
 ```
 
 ---
@@ -17,12 +17,21 @@ Last session: 2026-06-16
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   Sprint 1A complete (all UI fixes committed c779b3e)
-In-progress task:      none
+Last completed task:   Global NavBar redesign — floating frosted-glass pill, two-color wordmark,
+                       btn-primary CTA. Tokens added to styles.css → mirrored in tokens.jsx →
+                       documented in docs/ds-tokens.md → ui.jsx updated → index.html synced.
+                       Identical on landing page + bookacar + all prototype screens.
+In-progress task:      Website architecture — flights/ stays/ travel-guides/ experiences/ pages
 Stopped mid-step:      no
-Files modified:        none — clean working tree
-Uncommitted changes:   none
-Blocker:               .t-lg not migrated — 17px has no exact var match (--text-lg = 18px). Needs design decision.
+Files modified:        styles.css · tokens.jsx · ui.jsx · Iceland Express.html (v3 cache bust) ·
+                       bookacar/index.html (v3 cache bust) · index.html · docs/ds-tokens.md
+Uncommitted changes:   none — committed this session
+Blocker:               none
+Pending (not started):  Production migration — prototype baseline → frontend/production/ is
+                       still EMPTY. NavBar approved (Gate 2 passed) but NOT yet migrated.
+                       First-ever production migration = its own task (full baseline, correct
+                       load order). Do this before frontend/production/ can run.
+Project path:          /Users/raquelsantospalis/Desktop/iceland-express/
 ```
 
 If `in-progress task` is not blank → resume it before starting anything new.
@@ -91,6 +100,7 @@ docs/ARCHITECTURE.md     adding screens, verticals, or folders
 
 ```
 iceland-express/
+├── index.html                    ← icelandexpress.com/ — production landing page
 ├── PROJECT-MASTER.md
 ├── docs/
 │   ├── SPRINTS.md                task board
@@ -104,18 +114,19 @@ iceland-express/
 │   └── exports/                  PNG / SVG exports from Figma
 ├── frontend/
 │   ├── CLAUDE.md
-│   ├── prototype/                ACTIVE — iterate here before production
-│   ├── foundation/               tokens.jsx · i18n.js · radix-primitives.jsx
-│   ├── design-system/            ds-atoms · ds-molecules · ds-organisms · components
-│   ├── shared/                   ui.jsx · searchbar.jsx
-│   ├── data/                     data.jsx · blog-data.jsx
-│   ├── verticals/                cars · flights · hotels · experiences configs
-│   ├── chatbot/                  Chatbot.jsx
-│   ├── screens/                  approved screens built for production
-│   └── assets/
-├── backend/
+│   ├── prototype/                DEMO + TESTING only — never production code
+│   └── production/               FINAL FRONTEND — screens migrate here when approved
+│       ├── foundation/           tokens.jsx · i18n.js · radix-primitives.jsx
+│       ├── design-system/        ds-atoms · ds-molecules · ds-organisms · components
+│       ├── shared/               ui.jsx · searchbar.jsx
+│       ├── data/                 data.jsx · blog-data.jsx
+│       ├── verticals/            cars · flights · hotels · experiences configs
+│       ├── chatbot/              Chatbot.jsx
+│       ├── screens/              approved screens built for production
+│       └── assets/
+├── backend/                      FINAL BACKEND — Express server + routes + services
 │   └── CLAUDE.md
-└── apis/
+└── apis/                         INTEGRATIONS — providers · contracts · mocks
     └── CLAUDE.md
 ```
 

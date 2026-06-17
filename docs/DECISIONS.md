@@ -190,6 +190,36 @@ prototype screens." Status was being written from intent, not from verification.
 
 ---
 
+## 2026-06-17 — Tooling & Skills Protocol adopted (Design / Frontend / Backend)
+
+**What:** Agreed an explicit toolkit of skills + MCP plugins per discipline, written in
+PROJECT-MASTER.md → "Tooling & Skills Protocol". Highlights:
+- Design: Figma MCP + figma-use/implement for Gate-1 work; figma-code-connect /
+  cc-figma-tokens to bind code DS ↔ Figma DS (single source); design-critique +
+  general-design-review + ux-heuristics-review + accessibility-review for quality;
+  ux-copy, persuasive-ux/cognitive-load-conversion, wireframe/rad-spacing.
+- Frontend: Claude Preview (every observable change), verify/run, code-review, simplify.
+  Shadcn MCP only as a Radix behaviour reference (no Tailwind).
+- Backend: create-api/extract-api, security-review, code-review. Supabase tooling
+  deliberately EXCLUDED for now — DB is undecided; add it if/when Supabase is adopted.
+- Quality Gate: after EVERY UI change (not just substantial ones) run browser-verify +
+  code-review + design-critique + accessibility-review before "done".
+
+**Why:** The user observed I was duplicating UI and not using the existing design-system
+library or any UI/design skills. Naming the right tool per task — and binding code DS to
+Figma DS via Code Connect — makes reuse the default and prevents the drift seen with the
+NavBar. The "every UI change" gate strictness was chosen explicitly over "substantial only".
+
+**Alternatives rejected:**
+- List the Figma DS-audit skills as if they cover the code DS — dishonest; they audit
+  Figma, not HTML/CSS. The code DS is audited with grep + Law 13 / Definition of Done.
+- Include Supabase now — backend DB isn't chosen yet; listing it would imply a decision
+  that hasn't been made.
+- "Substantial changes only" gate — rejected; the missed NavBar issues were exactly the
+  kind a routine per-change gate would have caught.
+
+---
+
 ## 2026-06-16 — Checkout form simplified to mandatory fields only
 
 **What:** A6 Checkout driver details section contains only: First name, Last name,

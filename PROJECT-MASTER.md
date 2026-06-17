@@ -103,6 +103,69 @@ docs/ARCHITECTURE.md     adding screens, verticals, or folders
 
 ---
 
+## Tooling & Skills Protocol
+> Which skills / MCP plugins to use, and when. Agreed 2026-06-17.
+> Honesty rule: don't invoke a skill that doesn't fit (e.g. Figma DS skills ≠ code DS).
+
+### 🎨 Design
+```
+mcp__figma__* + figma-use / figma-implement-design   read approved Figma → implement (Gate 1)
+figma-code-connect / cc-figma-tokens / cc-figma-component   bind code DS ↔ Figma DS (ONE source — fights duplication)
+audit-design-system / apply-design-system            the FIGMA DS only — NOT the code DS
+design:design-critique + general-design-review + ux-heuristics-review   quality pass on built screens
+design:accessibility-review                          contrast · focus · ARIA — before "done"
+design:ux-copy                                       CTAs · error/helper microcopy
+persuasive-ux / cognitive-load-conversion            conversion screens (see Conversion Rules)
+wireframe / rad-spacing                              early layout · spacing rhythm
+```
+
+### 💻 Frontend
+```
+Claude Preview (preview_*)   verify render · measure geometry · console · screenshot — EVERY observable UI change
+verify / run                 launch app · confirm behavior — before reporting done
+code-review                  bugs + duplication/reuse — runs after EVERY UI change (see Gate below)
+simplify                     remove duplication · reuse DS — cleanup pass
+Shadcn UI MCP                Radix BEHAVIOUR patterns only · rare (custom Radix wrappers exist · NO Tailwind)
+```
+
+### ⚙️ Backend (backend/ Express + apis/)
+```
+create-api / extract-api     API contracts (Icelandair · providers) — apis/ work
+security-review              auth · email · payment paths — before backend merges
+code-review                  routes/services correctness
+Supabase MCP + supabase-postgres-best-practices   DB — NOT YET (DB undecided; add here if Supabase is adopted)
+```
+Honest gap: no dedicated Express/Node skill — backend leans on create-api + code-review + security-review.
+
+### Quality Gate — after EVERY UI change (not just substantial ones)
+```
+1. Claude Preview — verify in browser (render + measured geometry + zero console errors)
+2. code-review    — bugs + duplication/reuse
+3. design-critique + accessibility-review — pattern + a11y pass
+Only then is it "done". (Ties to: verify-before-claiming + use-DS-library-never-duplicate.)
+```
+
+### Anti-Duplication — BEFORE building any component
+```
+1. CHECK the catalog      docs/ds-components.md lists every atom/molecule/organism.
+2. GREP the codebase      bash scripts/ds-audit.sh  (dup component defs · DS CSS
+                          re-declared · raw hex in JSX · token drift)
+3. exists → REUSE it.  missing → it is NEW → lifecycle below.
+```
+New-component lifecycle (how the DS keeps growing):
+```
+1. Build in the right layer   ds-atoms / ds-molecules / ds-organisms  (never inline in a screen/page)
+2. Tokens-first               new values → styles.css → tokens.jsx → ds-tokens.md
+3. Export once                Object.assign(window, { New })
+4. REGISTER in ds-components.md   ← not "done" until catalogued
+5. Wire consumers             screens/pages import it; zero raw atoms in screens (Law 13)
+```
+Enforcement: `scripts/ds-audit.sh` (warn mode now → `--strict` once the baseline is
+clean; "accepted mirrors" = standalone static pages that can't import the JS DS, e.g.
+root index.html). Run it in the Quality Gate above.
+
+---
+
 ## Folder Map
 
 ```

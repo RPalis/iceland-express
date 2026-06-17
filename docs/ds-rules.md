@@ -4,7 +4,7 @@
 
 ---
 
-## The 12 Laws
+## The 13 Laws
 
 ```
 1.  No raw values in components
@@ -52,6 +52,13 @@
 12. New vertical = 3 screens + A1 update only
     XX2 + XX3 + XX4 + homepage search tab
     More than this = something is being duplicated
+
+13. Shared UI has ONE source of truth
+    NavBar · Footer · etc. → defined once (ds-organisms.jsx / shared/ui.jsx)
+    Static pages MIRROR it; never re-implement with new classes or copied markup
+    ✗ a second <nav> hand-written in index.html with its own .nav-* CSS
+    ✓ one canonical component; static pages match its markup + tokens exactly
+    Duplication = drift. Grep every implementation before claiming consistency.
 ```
 
 ---
@@ -103,6 +110,41 @@ T.status.success.bg                ✓
 
 ---
 
+## Consistency & Verification — Definition of Done
+
+> A UI/component change is "done" only when verified in the browser — not when
+> the code is written. Status is reported from measurement, never from intent.
+
+```
+1. Single source of truth first
+   Grep for ALL implementations of shared UI before claiming consistency.
+   Duplication = not done.
+
+2. Audit = structure + render
+   Every consistency claim needs a code check AND a browser measurement
+   (preview_inspect / getBoundingClientRect). Markup matching ≠ visual matching.
+   (This is the check that catches things like logo-position drift.)
+
+3. No "identical / synced / done" without proof
+   If not verified this session, say "intended — not yet verified".
+
+4. Verify the substrate
+   Before reporting on folders / migrations (e.g. production/, gitignored
+   paths), confirm they actually exist / are non-empty / are tracked.
+
+5. Distrust inherited status
+   At session start, spot-check the strongest Session-State claims
+   ("identical everywhere") rather than accepting them.
+
+6. Zero console errors
+   Confirmed in-browser on every consuming page.
+```
+
+Why: the NavBar was once marked "identical everywhere" while duplicated across
+4+ files with a drifting logo position — status written from intent, not checked.
+
+---
+
 ## Conversion Rules — Never Weaken
 
 ```
@@ -125,4 +167,4 @@ Stable: if this file changes every week, decisions are being revisited
 
 ---
 
-*IcelandExpress · docs/ds-rules.md · v1.2 · June 2026*
+*IcelandExpress · docs/ds-rules.md · v1.3 · June 2026*

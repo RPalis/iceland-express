@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# ─────────────────────────────────────────────────────────────────────────
+# IcelandExpress pre-commit hook — blocks commits that introduce DS duplication.
+#
+# Runs scripts/ds-audit.sh in --strict mode (0 = clean, 1 = duplication found).
+# Enabled via:  git config core.hooksPath .githooks   (run once per clone)
+# Bypass (rare, intentional):  git commit --no-verify
+# ─────────────────────────────────────────────────────────────────────────
+repo="$(git rev-parse --show-toplevel)"
+audit="$repo/scripts/ds-audit.sh"
+
+[ -f "$audit" ] || exit 0   # audit not present → don't block
+
+if ! bash "$audit" --strict; then
+  echo ""
+  echo "✗ pre-commit blocked: design-system duplication found (see above)."
+  echo "  Reuse the DS (atoms/molecules/organisms + tokens) instead of duplicating."
+  echo "  Intentional exception? Re-run with:  git commit --no-verify"
+  exit 1
+fi
+exit 0

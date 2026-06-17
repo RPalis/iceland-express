@@ -84,15 +84,16 @@ done < <(grep -rlE "style=\{\{[^}]*#[0-9a-fA-F]{3,6}" --include="*.jsx" "$ROOT" 
 section "4. Tokens defined in >1 CODE source (docs + accepted mirrors excluded)"
 before=$findings
 for tok in --primary --nav-frost-bg --nav-pad-x --shadow-lg --maxw; do
-  # real drift = defined in >1 .css/.html source, minus legacy, minus accepted mirrors
-  real=""; acc=""
+  # real drift = defined in >1 .css/.html CODE source, minus docs, legacy, accepted mirrors
+  rn=0; reallist=""; acc=""
   while IFS= read -r f; do
     [ -z "$f" ] && continue
-    if is_accepted "$f"; then acc+="$(rel "$f") "; else real+="$(rel "$f") "; fi
+    case "$f" in *.md) continue;; esac          # docs document tokens — not code drift
+    if is_accepted "$f"; then acc+="$(rel "$f") "; continue; fi
+    rn=$((rn+1)); reallist+="    $(rel "$f")"$'\n'
   done < <(grep -rlE -- "$tok:" --include="*.css" --include="*.html" "$ROOT" 2>/dev/null | grep -vE "$EXCLUDE")
-  rn=$(printf '%s' "$real" | wc -w | tr -d ' ')
-  [ "$rn" -gt 1 ] && flag "$tok defined in $rn code sources: $real"
-  [ -n "$acc" ] && [ "$rn" -le 1 ] && note "$tok also in: $acc"
+  [ "$rn" -gt 1 ] && flag "$tok in $rn code sources:"$'\n'"$reallist"
+  [ "$rn" -le 1 ] && [ -n "$acc" ] && note "$tok also in: $acc"
 done
 [ "$findings" -eq "$before" ] && ok "tokens single-sourced (canonical: styles.css)"
 

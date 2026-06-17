@@ -161,9 +161,14 @@ New-component lifecycle (how the DS keeps growing):
 4. REGISTER in ds-components.md   ← not "done" until catalogued
 5. Wire consumers             screens/pages import it; zero raw atoms in screens (Law 13)
 ```
-Enforcement: `scripts/ds-audit.sh` (warn mode now → `--strict` once the baseline is
-clean; "accepted mirrors" = standalone static pages that can't import the JS DS, e.g.
-root index.html). Run it in the Quality Gate above.
+Enforcement: `scripts/ds-audit.sh` runs in the Quality Gate AND as a **pre-commit hook**
+(`.githooks/pre-commit`, `--strict`) that BLOCKS commits introducing duplication.
+Baseline is clean (0 findings). "Accepted mirrors" = standalone static pages that can't
+import the JS DS (e.g. root index.html) — reported, not failed.
+```
+One-time per clone:   git config core.hooksPath .githooks
+Intentional bypass:   git commit --no-verify
+```
 
 ---
 

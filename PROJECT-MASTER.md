@@ -17,22 +17,23 @@ Last session: 2026-06-17
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   NavBar consistency unification. NavBar promoted to a single canonical
-                       DS organism in ds-organisms.jsx (removed duplicate from ui.jsx). Aligned
-                       index.html, Landing Page.html, offroad-blog to the canonical spec
-                       (frosted pill · two-color wordmark · btn-primary "Manage Booking").
-                       Fixed logo-position drift: added --nav-pad-x token + `.nav .shell`
-                       gutter rule so the nav gutter (32px) is decoupled from each page's
-                       .shell padding. Verified in browser: logo offset 33px on BOTH landing
-                       and booking app. Documented NavBar organism in ds-components.md.
+Last completed task:   DS consolidation + governance. (1) NavBar unified to one canonical DS
+                       organism; logo-position drift fixed via --nav-pad-x. (2) Removed the
+                       redundant offroad-blog parallel DS (27 files) after porting its richer
+                       F-Roads copy into blog-data.jsx — the active screen-BP blog (main DS,
+                       4 articles) is now the single travel blog. (3) Adopted Tooling & Skills
+                       Protocol + anti-duplication lifecycle in PROJECT-MASTER; added
+                       scripts/ds-audit.sh (warn mode). ds-audit: 26 → 0 real findings
+                       (index.html = accepted static mirror). Repo on GitHub (private):
+                       RPalis/iceland-express. Commits 5c6fd50, 1ff45d5.
 In-progress task:      Website architecture — flights/ stays/ travel-guides/ experiences/ pages
 Stopped mid-step:      no
-Files modified:        ds-organisms.jsx · ui.jsx · styles.css · tokens.jsx · index.html ·
-                       Landing Page.html · offroad-blog/{NavBar.jsx,blog-post.css,tokens.css} ·
-                       docs/ds-tokens.md · docs/ds-components.md
-Uncommitted changes:   none — committed this session
-Known issues:          none. (offroad-blog crash FIXED 2026-06-17 — components/data now
-                       export to window; open via offroad-blog/ or /index.html, not bare path.)
+Files modified:        DELETED offroad-blog/ · blog-data.jsx · PROJECT-MASTER.md ·
+                       docs/DECISIONS.md · scripts/ds-audit.sh (new)
+Uncommitted changes:   none — committed + pushed this session
+Known issues:          none.
+Pending governance:    Flip ds-audit pre-commit hook to --strict once any remaining accepted
+                       mirrors are reviewed (hook not yet installed — see Anti-Duplication).
 Blocker:               none
 Pending (not started):  Production migration — prototype baseline → frontend/production/ is
                        still EMPTY. NavBar approved (Gate 2 passed) but NOT yet migrated.

@@ -60,8 +60,21 @@ function BlogPostTemplate({ post, car, relatedPosts, onBook, onHome, onPost }) {
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', paddingBottom: 80 }}>
 
-      {/* ── Organism 1: NavBar ── */}
-      <NavBar breadcrumbs={breadcrumbs} onHome={onHome} />
+      {/* ── Organism 1: NavBar (canonical global nav — no breadcrumb) ── */}
+      <NavBar onHome={onHome} />
+
+      {/* ── Page-level breadcrumb — below the global nav, not inside it ── */}
+      <nav className="page-breadcrumb shell" aria-label="Breadcrumb">
+        {breadcrumbs.map((crumb, i) => (
+          <React.Fragment key={crumb.label}>
+            {i > 0 && <Icons.ChevronR size={13} />}
+            {i < breadcrumbs.length - 1
+              ? <a onClick={e => { e.preventDefault(); crumb.onClick && crumb.onClick(); }}>{crumb.label}</a>
+              : <span aria-current="page">{crumb.label}</span>
+            }
+          </React.Fragment>
+        ))}
+      </nav>
 
       {/* ── Organism 2: PostHero (includes reading progress bar) ── */}
       <PostHero post={post} readingPct={readingPct} />

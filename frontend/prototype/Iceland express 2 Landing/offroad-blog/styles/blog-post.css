@@ -249,16 +249,19 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .nav-spacer { flex: 1; }
 /* Nav gutter pinned to --nav-pad-x, independent of page .shell padding. */
 .nav .shell { padding-left: var(--nav-pad-x); padding-right: var(--nav-pad-x); }
-.nav-breadcrumb {
-  display: flex; align-items: center; gap: 6px;
-  font-size: 13px; color: var(--dim);
-}
-.nav-breadcrumb a { cursor: pointer; transition: color var(--dur-fast); }
-.nav-breadcrumb a:hover { color: var(--primary-strong); }
-.nav-breadcrumb span { color: var(--dim); }
 /* Offset for the fixed floating nav (64px pill + 16px top + breathing room) */
 body { padding-top: 96px; }
 @media (max-width: 720px) { .nav-links { display: none; } .nav { height: 58px; width: calc(100% - 24px); } body { padding-top: 86px; } }
+
+/* Page-level breadcrumb — sits below the global nav, NOT inside it. */
+.page-breadcrumb {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--dim);
+  padding-top: 18px; padding-bottom: 12px;
+}
+.page-breadcrumb a { cursor: pointer; transition: color var(--dur-fast); }
+.page-breadcrumb a:hover { color: var(--primary-strong); }
+.page-breadcrumb span { color: var(--fg); font-weight: 600; }
 
 /* Reading progress bar */
 .reading-progress {

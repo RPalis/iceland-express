@@ -1,18 +1,17 @@
 // organisms/NavBar.jsx
 // ─────────────────────────────────────────────────────────────
-// Iceland Express DS — NavBar organism
-// Sticky top nav with logo, breadcrumb trail, and CTA.
-// Atoms used: Btn, Icons
+// Iceland Express DS — NavBar organism (canonical mirror)
+// Byte-for-byte mirror of the canonical global NavBar in the main
+// app's ds-organisms.jsx: frosted pill · two-color text wordmark ·
+// links Book a car / Travel Guides / Help · btn-primary "Manage Booking".
+// NO breadcrumb — the global nav is identical on every page (Law 13).
+// Page-level context (breadcrumbs) belongs in the page, not the nav.
 //
 // Props:
-//   breadcrumbs : [{ label, href }]  — trail shown in desktop
-//   onHome      : function — navigates to homepage
+//   onHome : function — navigates to homepage
 // ─────────────────────────────────────────────────────────────
 
-// Canonical DS NavBar (mirrors main ds-organisms.jsx). Frosted pill,
-// two-color text wordmark, btn-primary "Manage Booking". The breadcrumb
-// is an offroad-only extension; pass `breadcrumbs` to show it.
-function NavBar({ breadcrumbs = [], onHome }) {
+function NavBar({ onHome }) {
   return (
     <nav className="nav">
       <div className="shell nav-inner">
@@ -22,21 +21,6 @@ function NavBar({ breadcrumbs = [], onHome }) {
            style={{ textDecoration: 'none', color: 'inherit' }}>
           Iceland<span className="logo-accent">Express</span>
         </a>
-
-        {/* Breadcrumb (offroad-only extension) */}
-        {breadcrumbs.length > 0 && (
-          <nav className="nav-breadcrumb" aria-label="Breadcrumb">
-            {breadcrumbs.map((crumb, i) => (
-              <React.Fragment key={crumb.label}>
-                {i > 0 && <Icons.ChevronR size={13} />}
-                {i < breadcrumbs.length - 1
-                  ? <a href={crumb.href || '#'} onClick={e => { e.preventDefault(); crumb.onClick && crumb.onClick(); }}>{crumb.label}</a>
-                  : <span>{crumb.label}</span>
-                }
-              </React.Fragment>
-            ))}
-          </nav>
-        )}
 
         {/* Canonical nav links */}
         <div className="nav-links">

@@ -31,8 +31,8 @@ Files modified:        ds-organisms.jsx · ui.jsx · styles.css · tokens.jsx ·
                        Landing Page.html · offroad-blog/{NavBar.jsx,blog-post.css,tokens.css} ·
                        docs/ds-tokens.md · docs/ds-components.md
 Uncommitted changes:   none — committed this session
-Known issues:          offroad-blog/index.html crashes on mount (pre-existing <App> error,
-                       orphan micro-site, nothing links to it). Flagged as a background task.
+Known issues:          none. (offroad-blog crash FIXED 2026-06-17 — components/data now
+                       export to window; open via offroad-blog/ or /index.html, not bare path.)
 Blocker:               none
 Pending (not started):  Production migration — prototype baseline → frontend/production/ is
                        still EMPTY. NavBar approved (Gate 2 passed) but NOT yet migrated.

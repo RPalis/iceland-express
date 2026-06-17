@@ -149,6 +149,47 @@ deferred.
 
 ---
 
+## 2026-06-17 — NavBar is a single canonical DS organism; nav gutter decoupled from page .shell
+
+**What:** The NavBar now has ONE source of truth: `NavBar` in `ds-organisms.jsx`
+(`window.NavBar`). `ui.jsx` no longer defines it. Static pages (`index.html`,
+`Landing Page.html`) and the offroad micro-site mirror the same spec: frosted-glass
+pill · two-color text wordmark `Iceland|Express` (no icon) · links Book a car / Travel
+Guides / Help · `btn-primary` "Manage Booking". A new token `--nav-pad-x`
+(= `var(--space-8)`, 32px) plus a `.nav .shell { padding: 0 var(--nav-pad-x) }` rule
+pins the nav's inner gutter independent of each page's `.shell` padding.
+
+**Why:** The NavBar had drifted into 3+ incompatible implementations (bolt-icon logos,
+`btn-secondary` CTAs, `.navbar`/`.lp-nav` class namespaces) because it was copy-pasted
+rather than sourced from one component. Separately, the logo sat in a different position
+per page because the shared `.shell` wrapper used 48px padding on the landing vs 32px in
+the booking app. Decoupling the nav gutter via a dedicated token fixes the position
+everywhere without forcing every page to use the same content gutter.
+
+**Alternatives rejected:**
+- Keep NavBar in ui.jsx — leaves index.html hand-mirroring markup; drift returns.
+- Change `.shell` to 32px globally on the landing — would shift ALL landing page
+  content, not just the nav.
+
+---
+
+## 2026-06-17 — Process: diligence protocol after this session's missed errors
+
+**What:** Adopting a verification discipline for IcelandExpress work (full detail in the
+session retrospective): (1) audit for duplication/consistency BEFORE claiming a component
+is "synced/identical"; (2) verify claims in the browser, not by file dates; (3) never
+write "identical everywhere" in Session State without measuring it; (4) check the real
+runtime state of folders/files referenced in status (e.g. empty production/, gitignored
+paths) before reporting them as done.
+
+**Why:** This session surfaced several issues that should have been caught when the
+NavBar was first called "done": NavBar duplicated across 4 files, logo-position drift
+between pages, an empty `frontend/production/`, and a pre-existing offroad crash — all
+while Session State claimed the NavBar was "identical on landing page + bookacar + all
+prototype screens." Status was being written from intent, not from verification.
+
+---
+
 ## 2026-06-16 — Checkout form simplified to mandatory fields only
 
 **What:** A6 Checkout driver details section contains only: First name, Last name,

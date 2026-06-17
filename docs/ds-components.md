@@ -78,6 +78,21 @@ Each layer only imports from the layer below it. Never skip layers.
 | `PageHero`          | Full-bleed hero + gradient                | image-slot                                   |
 | `EmptyState`        | No results                                | Ico Btn                                      |
 | `PriceSummaryCard`  | Price breakdown sidebar — calls computeTotals | PriceTag Btn Sep                         |
+| `NavBar`            | **Canonical** global navigation — single source of truth | `.nav` frosted pill · two-color wordmark · btn-primary CTA |
+
+**`NavBar` — the one canonical nav. All consumers must match it:**
+```
+Spec:     frosted-glass fixed pill · two-color text wordmark Iceland|Express (no icon mark)
+Links:    Book a car · Travel Guides · Help
+CTA:      btn-primary btn-sm "Manage Booking"
+Classes:  .nav / .nav-inner / .logo / .logo-accent / .nav-links / .nav-spacer
+Props:    go(route)  — 'home' | 'blog' | 'manage'
+Defined:  ds-organisms.jsx (window.NavBar). ui.jsx no longer defines it.
+Mirrors:  index.html (static) · Landing Page.html (static) · offroad-blog/NavBar.jsx
+          (offroad adds an optional breadcrumb extension + ports .nav CSS into its
+           own blog-post.css / tokens.css since it doesn't load the main styles.css)
+Rule:     never re-implement NavBar with a different logo/CTA/class namespace.
+```
 
 **Organisms to add:**
 - `VerticalSearchBar` — tabbed search across verticals — Sprint 5

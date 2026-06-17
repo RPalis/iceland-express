@@ -142,6 +142,10 @@ Tiers 2 and 3 never contain raw values. Breaking this breaks the theme system.
 ### Tier 2: Nav
 ```css
 --nav-border-color: var(--alpha-08)
+--nav-pad-x:        var(--space-8)   /* 32px nav inner gutter — pins logo position
+                                        independent of the page-level .shell padding,
+                                        applied via `.nav .shell { padding: 0 var(--nav-pad-x) }`.
+                                        Mirror: T.nav.padX */
 ```
 
 ### Tier 1: Z-Index

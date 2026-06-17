@@ -96,23 +96,21 @@
 <body>
 
   <!-- ── Nav ─────────────────────────────────────────────── -->
-  <header class="lp-nav" data-screen-label="Landing — Nav">
-    <div class="shell lp-nav-inner">
-      <a class="lp-logo" href="#top">
-        <span class="lp-logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"></path></svg></span>
-        Iceland Express
+  <!-- Static mirror of the canonical DS NavBar (ds-organisms.jsx). -->
+  <nav class="nav" data-screen-label="Landing — Nav">
+    <div class="shell nav-inner">
+      <a class="logo" href="#top" style="text-decoration:none;color:inherit;">
+        Iceland<span class="logo-accent">Express</span>
       </a>
-      <nav class="lp-nav-links">
-        <a href="#fleet">Fleet</a>
-        <a href="#included">What's included</a>
-        <a href="#guides">Road-trip guides</a>
-      </nav>
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <a class="btn btn-secondary" href="Iceland Express.html" data-comment-anchor="80638d6f:19">Manage booking</a>
-        <a class="btn btn-primary" href="Iceland Express.html">Book now</a>
+      <div class="nav-links">
+        <a href="Iceland Express.html">Book a car</a>
+        <a href="#guides">Travel Guides</a>
+        <a href="#included">Help</a>
       </div>
+      <div class="nav-spacer"></div>
+      <a class="btn btn-primary btn-sm" href="Iceland Express.html">Manage Booking</a>
     </div>
-  </header>
+  </nav>
 
   <!-- ── Hero ────────────────────────────────────────────── -->
   <section class="lp-hero" id="top" data-screen-label="Landing — Hero">

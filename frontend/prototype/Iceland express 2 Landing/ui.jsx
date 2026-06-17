@@ -13,26 +13,10 @@ function useOutside(onClose) {
 }
 
 /* ============================================================
-   NavBar
+   NavBar — moved to ds-organisms.jsx (canonical single source of
+   truth). It loads before ui.jsx and assigns window.NavBar.
+   Do not redefine NavBar here.
    ============================================================ */
-function NavBar({ go }) {
-  return (
-    <nav className="nav">
-      <div className="shell nav-inner">
-        <a className="logo" href="/" style={{ textDecoration: "none", color: "inherit" }}>
-          Iceland<span className="logo-accent">Express</span>
-        </a>
-        <div className="nav-links">
-          <a onClick={() => go("home")}>Book a car</a>
-          <a onClick={() => go('blog')}>Travel Guides</a>
-          <a>Help</a>
-        </div>
-        <div className="nav-spacer"></div>
-        <button className="btn btn-primary btn-sm" onClick={() => go('manage')}>Manage Booking</button>
-      </div>
-    </nav>
-  );
-}
 
 /* ============================================================
    Footer
@@ -257,6 +241,6 @@ function TripBarEditable({ search, setSearch }) {
 }
 
 Object.assign(window, {
-  useOutside, NavBar, Footer, Stars, TripBar, TripBarEditable, StepHead, Stepper,
+  useOutside, Footer, Stars, TripBar, TripBarEditable, StepHead, Stepper,
   Calendar, TimeList, LocationList, STEP_ORDER,
 });

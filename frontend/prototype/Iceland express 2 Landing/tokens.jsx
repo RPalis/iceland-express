@@ -111,6 +111,7 @@ const T = Object.freeze({
     blur:   'var(--nav-blur)',          // 24px backdrop blur
     maxW:   'var(--nav-max-w)',         // 1200px pill max-width
     offset: 'var(--nav-offset)',        // 88px page top padding
+    padX:   'var(--nav-pad-x)',         // 32px inner gutter, decoupled from page .shell
   },
 
   // ── Component Specs ───────────────────────────────────────

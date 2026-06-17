@@ -9,22 +9,23 @@
 //   onHome      : function — navigates to homepage
 // ─────────────────────────────────────────────────────────────
 
+// Canonical DS NavBar (mirrors main ds-organisms.jsx). Frosted pill,
+// two-color text wordmark, btn-primary "Manage Booking". The breadcrumb
+// is an offroad-only extension; pass `breadcrumbs` to show it.
 function NavBar({ breadcrumbs = [], onHome }) {
   return (
-    <header className="navbar">
-      <div className="shell navbar-inner">
+    <nav className="nav">
+      <div className="shell nav-inner">
 
-        {/* Logo */}
-        <div className="navbar-logo" onClick={onHome} aria-label="Iceland Express home">
-          <span className="navbar-logo-mark">
-            <Icons.Bolt size={14} />
-          </span>
-          Iceland Express
-        </div>
+        {/* Two-color text wordmark — no icon mark */}
+        <a className="logo" onClick={onHome} aria-label="Iceland Express home"
+           style={{ textDecoration: 'none', color: 'inherit' }}>
+          Iceland<span className="logo-accent">Express</span>
+        </a>
 
-        {/* Breadcrumb (desktop) */}
+        {/* Breadcrumb (offroad-only extension) */}
         {breadcrumbs.length > 0 && (
-          <nav className="navbar-breadcrumb" aria-label="Breadcrumb">
+          <nav className="nav-breadcrumb" aria-label="Breadcrumb">
             {breadcrumbs.map((crumb, i) => (
               <React.Fragment key={crumb.label}>
                 {i > 0 && <Icons.ChevronR size={13} />}
@@ -37,19 +38,20 @@ function NavBar({ breadcrumbs = [], onHome }) {
           </nav>
         )}
 
-        {/* Nav links */}
-        <nav className="navbar-links" aria-label="Site navigation">
+        {/* Canonical nav links */}
+        <div className="nav-links">
+          <a onClick={onHome}>Book a car</a>
           <a href="#">Travel Guides</a>
           <a href="#">Help</a>
-        </nav>
+        </div>
 
-        <span className="navbar-spacer" />
+        <div className="nav-spacer" />
 
-        {/* CTA */}
-        <Btn variant="primary" size="sm" icon={Icons.Search} onClick={onHome}>
-          Book a car
+        {/* Canonical CTA */}
+        <Btn variant="primary" size="sm" onClick={onHome}>
+          Manage Booking
         </Btn>
       </div>
-    </header>
+    </nav>
   );
 }

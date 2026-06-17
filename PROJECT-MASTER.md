@@ -17,15 +17,22 @@ Last session: 2026-06-17
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   Global NavBar redesign — floating frosted-glass pill, two-color wordmark,
-                       btn-primary CTA. Tokens added to styles.css → mirrored in tokens.jsx →
-                       documented in docs/ds-tokens.md → ui.jsx updated → index.html synced.
-                       Identical on landing page + bookacar + all prototype screens.
+Last completed task:   NavBar consistency unification. NavBar promoted to a single canonical
+                       DS organism in ds-organisms.jsx (removed duplicate from ui.jsx). Aligned
+                       index.html, Landing Page.html, offroad-blog to the canonical spec
+                       (frosted pill · two-color wordmark · btn-primary "Manage Booking").
+                       Fixed logo-position drift: added --nav-pad-x token + `.nav .shell`
+                       gutter rule so the nav gutter (32px) is decoupled from each page's
+                       .shell padding. Verified in browser: logo offset 33px on BOTH landing
+                       and booking app. Documented NavBar organism in ds-components.md.
 In-progress task:      Website architecture — flights/ stays/ travel-guides/ experiences/ pages
 Stopped mid-step:      no
-Files modified:        styles.css · tokens.jsx · ui.jsx · Iceland Express.html (v3 cache bust) ·
-                       bookacar/index.html (v3 cache bust) · index.html · docs/ds-tokens.md
+Files modified:        ds-organisms.jsx · ui.jsx · styles.css · tokens.jsx · index.html ·
+                       Landing Page.html · offroad-blog/{NavBar.jsx,blog-post.css,tokens.css} ·
+                       docs/ds-tokens.md · docs/ds-components.md
 Uncommitted changes:   none — committed this session
+Known issues:          offroad-blog/index.html crashes on mount (pre-existing <App> error,
+                       orphan micro-site, nothing links to it). Flagged as a background task.
 Blocker:               none
 Pending (not started):  Production migration — prototype baseline → frontend/production/ is
                        still EMPTY. NavBar approved (Gate 2 passed) but NOT yet migrated.

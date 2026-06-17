@@ -342,8 +342,33 @@ function PriceSummaryCard({ car, days, qty, cta, onCta, note, compact }) {
   );
 }
 
+/* ============================================================
+   NavBar — canonical global navigation (single source of truth)
+   Frosted-glass pill · two-color text wordmark · btn-primary CTA.
+   All consumers (ui.jsx, screens, static pages) must match this.
+   Styling: .nav / .nav-inner / .logo / .logo-accent / .nav-links
+   ============================================================ */
+function NavBar({ go }) {
+  return (
+    <nav className="nav">
+      <div className="shell nav-inner">
+        <a className="logo" href="/" style={{ textDecoration: "none", color: "inherit" }}>
+          Iceland<span className="logo-accent">Express</span>
+        </a>
+        <div className="nav-links">
+          <a onClick={() => go && go("home")}>Book a car</a>
+          <a onClick={() => go && go("blog")}>Travel Guides</a>
+          <a>Help</a>
+        </div>
+        <div className="nav-spacer"></div>
+        <button className="btn btn-primary btn-sm" onClick={() => go && go("manage")}>Manage Booking</button>
+      </div>
+    </nav>
+  );
+}
+
 Object.assign(window, {
   // Organisms
   CarCardV2, ExtraCardV2, BlogCardV2, ManageActionCard,
-  PageHero, EmptyState, PriceSummaryCard,
+  PageHero, EmptyState, PriceSummaryCard, NavBar,
 });

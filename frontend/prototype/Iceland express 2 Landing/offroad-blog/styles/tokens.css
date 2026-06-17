@@ -76,6 +76,17 @@
   --r-xl:   calc(22px * var(--r));   /* hero cards, modals           */
   --r-pill: 9999px;                  /* badges, tags — never scales  */
 
+  /* ── Canonical NavBar tokens (ported from main DS) ───────────
+     Keep in sync with the main styles.css NavBar token values. */
+  --space-4:          16px;
+  --z-sticky:         200;
+  --nav-max-w:        1200px;
+  --nav-frost-bg:     rgba(7, 10, 24, 0.65);
+  --nav-blur:         24px;
+  --nav-border-color: rgba(255,255,255,0.08);
+  --nav-pad-x:        32px;
+  --shadow-lg:        0 8px 28px rgba(0,0,0,0.55);
+
   /* ── Shadows ──────────────────────────────────────────────── */
   --shadow-card: 0 1px 0 rgba(255,255,255,0.02) inset,
                  0 18px 40px -24px rgba(0,0,0,0.8);

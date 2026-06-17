@@ -68,6 +68,7 @@
       --nav-max-w:        1200px;
       --nav-offset:       88px;
       --nav-border-color: var(--alpha-08);
+      --nav-pad-x:        32px;
     }
 
     /* ─── RESET ──────────────────────────────────────────────── */
@@ -133,6 +134,9 @@
     }
     .nav-links a:hover { color: var(--fg); }
     .nav-spacer { flex: 1; }
+    /* Nav gutter pinned to --nav-pad-x (32px), independent of the page .shell
+       (48px here). Keeps the logo position identical to the booking app. */
+    .nav .shell { padding-left: var(--nav-pad-x); padding-right: var(--nav-pad-x); }
     /* Buttons — exact DS */
     .btn {
       display: inline-flex; align-items: center; justify-content: center;
@@ -613,6 +617,9 @@
 <canvas id="cvs"></canvas>
 
 <!-- ═══ NAV ════════════════════════════════════════════════════ -->
+<!-- Static mirror of the canonical DS NavBar (ds-organisms.jsx).
+     Keep markup in sync: .nav frosted pill · two-color wordmark ·
+     links Book a car/Travel Guides/Help · btn-primary "Manage Booking". -->
 <nav class="nav" id="nav">
   <div class="shell nav-inner">
     <a href="/" class="logo">Iceland<span class="logo-accent">Express</span></a>

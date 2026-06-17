@@ -17,23 +17,24 @@ Last session: 2026-06-17
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   DS consolidation + governance. (1) NavBar unified to one canonical DS
-                       organism; logo-position drift fixed via --nav-pad-x. (2) Removed the
-                       redundant offroad-blog parallel DS (27 files) after porting its richer
-                       F-Roads copy into blog-data.jsx — the active screen-BP blog (main DS,
-                       4 articles) is now the single travel blog. (3) Adopted Tooling & Skills
-                       Protocol + anti-duplication lifecycle in PROJECT-MASTER; added
-                       scripts/ds-audit.sh (warn mode). ds-audit: 26 → 0 real findings
-                       (index.html = accepted static mirror). Repo on GitHub (private):
-                       RPalis/iceland-express. Commits 5c6fd50, 1ff45d5.
-In-progress task:      Website architecture — flights/ stays/ travel-guides/ experiences/ pages
-Stopped mid-step:      no
-Files modified:        DELETED offroad-blog/ · blog-data.jsx · PROJECT-MASTER.md ·
-                       docs/DECISIONS.md · scripts/ds-audit.sh (new)
+Last completed task:   FOUNDATION HOUSE-CLEANING (foundation rounded before any feature work).
+                       (1) DS consolidation: NavBar unified to one canonical DS organism;
+                       logo-drift fixed via --nav-pad-x; removed redundant offroad-blog
+                       parallel DS (copy ported to blog-data.jsx first). (2) Governance:
+                       Tooling & Skills Protocol + anti-duplication lifecycle in PROJECT-MASTER;
+                       scripts/ds-audit.sh + STRICT pre-commit hook (.githooks, tested both
+                       ways). (3) Hygiene: removed 6 dead legacy files (screens1-5.jsx +
+                       Standalone.html); kept ds-app.jsx/Design System.html (live DS reference).
+                       ds-audit = 0 findings · DS catalog (ds-components.md) verified 100%
+                       complete. All pushed to GitHub private RPalis/iceland-express.
+NEXT TASK (tomorrow):  Finish the PLATFORM LANDING (root index.html) — UX/UI polish.
+                       Scoped gaps already found: ~11 dead links (href="#") to wire · check
+                       the few "coming soon" strings · responsive + dark + a11y pass ·
+                       DS-consistency. NO Figma linked (figma-links.md empty) → polish-to-done,
+                       not match-a-Figma. Run the per-change Quality Gate before "done".
+Stopped mid-step:      no — clean stop. Home-screen UX/UI deferred to next session by owner.
 Uncommitted changes:   none — committed + pushed this session
 Known issues:          none.
-Pending governance:    Flip ds-audit pre-commit hook to --strict once any remaining accepted
-                       mirrors are reviewed (hook not yet installed — see Anti-Duplication).
 Blocker:               none
 Pending (not started):  Production migration — prototype baseline → frontend/production/ is
                        still EMPTY. NavBar approved (Gate 2 passed) but NOT yet migrated.

@@ -62,3 +62,8 @@ const Icons = {
   Sparkle:   mkIcon(['M12 3l1.8 4.7L18.5 9.5 13.8 11.3 12 16l-1.8-4.7L5.5 9.5l4.7-1.8L12 3Z'], { fill: true }),
   Doc:       mkIcon(['M7 3h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z', 'M13 3v5h5', 'M9 13h6', 'M9 16h4']),
 };
+
+
+/* Export to window — Babel-standalone runs each script in an isolated
+   scope, so cross-script references require explicit global assignment. */
+Object.assign(window, { mkIcon,Icons });

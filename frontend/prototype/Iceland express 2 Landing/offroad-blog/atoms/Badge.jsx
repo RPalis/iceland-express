@@ -17,3 +17,8 @@ function Badge({ variant = 'soft', icon: Icon, children, style }) {
     </span>
   );
 }
+
+
+/* Export to window — Babel-standalone runs each script in an isolated
+   scope, so cross-script references require explicit global assignment. */
+Object.assign(window, { Badge });

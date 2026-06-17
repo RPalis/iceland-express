@@ -121,3 +121,8 @@ const RELATED_POSTS = [
     heroPlaceholder: 'Packed car boot — Iceland road trip gear',
   },
 ];
+
+
+/* Export to window — Babel-standalone runs each script in an isolated
+   scope, so cross-script references require explicit global assignment. */
+Object.assign(window, { POST_DATA, RECOMMENDED_CAR, RELATED_POSTS });

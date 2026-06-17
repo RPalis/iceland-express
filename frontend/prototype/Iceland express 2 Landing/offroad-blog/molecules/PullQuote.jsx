@@ -15,3 +15,8 @@ function PullQuote({ text }) {
     </blockquote>
   );
 }
+
+
+/* Export to window — Babel-standalone runs each script in an isolated
+   scope, so cross-script references require explicit global assignment. */
+Object.assign(window, { PullQuote });

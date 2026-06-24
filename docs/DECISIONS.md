@@ -314,6 +314,34 @@ scope within polish-to-done (no Figma file for platform landing).
 
 ---
 
+## 2026-06-24 — Platform landing: AI planner moved into the hero; standalone #ai section removed
+
+**What:** Restructured the root `index.html` hero. It is now left-aligned (was centered) and
+the AI Trip Planner input now lives **inside the hero** — a glowing bordered card with a
+trust-badge row above it (Free cancellation · CDW included · Local experts · 4.8★ rated) and
+the "Book a car" button retained as a secondary CTA. The previously separate full-height
+`#ai` strip section was **deleted**, not duplicated: the single `#ai-input`, `handleAI()`,
+`fillPrompt()`, and the `.ai-*`/`.prompt-chip` classes were moved into the hero, and `id="ai"`
+was placed on the hero AI card so the nav "Help" and footer "Contact" anchors still resolve.
+
+**Why:** Reference iteration (`iceland-express-anaidea.lovable.app`) puts the AI planner and
+trust signals directly in the hero, which front-loads the primary action and credibility
+instead of burying the AI input a full screen down. Moving (not copying) the input keeps a
+single source for the AI entry point — no duplicate `#ai-input`, consistent with Law 13.
+Net diff was +100/−112 lines (consolidation). Verified: ds-audit --strict = 0 findings;
+left-alignment measured at 150px with a 600px AI card; 0 console errors; no horizontal
+overflow at 375/320; prompt-chip → input wiring functional.
+
+**Alternatives rejected:**
+- Keep the standalone `#ai` section AND add an AI box to the hero — two `#ai-input` elements,
+  duplicate markup/CSS, guaranteed drift. Rejected outright.
+- Drop "Book a car" to match the reference exactly (AI-only hero) — removes the only LIVE
+  booking entry point from the hero; kept as secondary for conversion.
+- Rewrite the headline/eyebrow to match the reference copy — out of scope; this was a
+  layout iteration only, copy unchanged.
+
+---
+
 ## Update Rules for This File
 
 ```

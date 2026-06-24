@@ -232,10 +232,10 @@
     #hero {
       position: relative; min-height: 100svh;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: space-between;
-      text-align: center; overflow: hidden;
-      padding-top: var(--nav-offset);
-      padding-bottom: var(--space-10);
+      align-items: stretch; justify-content: center;
+      text-align: left; overflow: hidden;
+      padding-top: calc(var(--nav-offset) + var(--space-6));
+      padding-bottom: calc(var(--space-16) + var(--space-10));
     }
     .aurora {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
@@ -264,9 +264,9 @@
     }
     .hero-content {
       position: relative; z-index: 2;
-      flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      max-width: 920px; width: 100%; padding: 0 var(--space-6);
+      display: flex; flex-direction: column;
+      align-items: flex-start;
+      max-width: 680px; width: 100%;
       will-change: transform;
     }
     .hero-eyebrow {
@@ -309,27 +309,14 @@
     .hero-sub {
       font-size: clamp(15px,1.8vw,19px);
       color: var(--muted); line-height: 1.65;
-      max-width: 540px; margin: 0 auto 52px;
+      max-width: 540px; margin: 0 0 var(--space-8);
       animation: fade-up .9s .2s ease both;
     }
     .hero-sub strong { color: var(--fg); font-weight: 500; }
     .hero-btns {
-      display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
-      animation: fade-up .9s .3s ease both;
-    }
-    .btn-hero-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 17px 40px; border-radius: var(--r-pill);
-      background: var(--primary); color: var(--primary-fg);
-      font-family: var(--font-display); font-weight: 800; font-size: 15px;
-      text-decoration: none; border: none; cursor: pointer;
-      box-shadow: 0 0 48px rgba(6,182,212,.35), 0 0 100px rgba(6,182,212,.1);
-      transition: transform var(--dur-normal) var(--ease-default),
-                  box-shadow var(--dur-normal) var(--ease-out);
-    }
-    .btn-hero-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 72px rgba(6,182,212,.5), 0 0 140px rgba(6,182,212,.15);
+      display: flex; gap: 14px; justify-content: flex-start; flex-wrap: wrap;
+      margin-top: var(--space-5);
+      animation: fade-up .9s .55s ease both;
     }
     .btn-hero-secondary {
       display: inline-flex; align-items: center; gap: 8px;
@@ -346,9 +333,9 @@
       background: rgba(240,248,255,.04);
     }
     .scroll-cue {
-      position: relative; z-index: 2; flex-shrink: 0;
+      position: absolute; z-index: 2; left: 50%; bottom: var(--space-10);
+      transform: translateX(-50%);
       display: flex; flex-direction: column; align-items: center; gap: var(--space-2);
-      margin-top: var(--space-8);
       text-decoration: none; color: inherit;
       animation: fade-up .9s .7s ease both;
       transition: color var(--dur-fast) var(--ease-out);
@@ -448,38 +435,39 @@
     .badge-live { background: rgba(52,211,153,.15); color: var(--success); }
     .badge-soon { background: rgba(255,255,255,.06); color: var(--label); }
 
-    /* ─── AI STRIP ───────────────────────────────────────────── */
-    #ai {
-      position: relative; min-height: 100vh;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      text-align: center; padding: var(--section-y-md) var(--space-6);
-      overflow: hidden;
+    /* ─── HERO TRUST BADGES ──────────────────────────────────── */
+    .hero-trust {
+      display: flex; flex-wrap: wrap; align-items: center;
+      gap: var(--space-3) var(--space-5);
+      margin-bottom: var(--space-8);
+      animation: fade-up .9s .35s ease both;
     }
-    .ai-pulse {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      width: 700px; height: 700px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(6,182,212,.06) 0%, transparent 70%);
-      pointer-events: none;
-      animation: ai-breathe 5s ease-in-out infinite;
+    .hero-trust-item {
+      display: inline-flex; align-items: center; gap: var(--space-2);
+      font-size: var(--text-sm); color: var(--muted);
+      font-family: var(--font-body);
     }
-    @keyframes ai-breathe {
-      0%,100% { transform:translate(-50%,-50%) scale(1);    opacity:.7; }
-      50%      { transform:translate(-50%,-50%) scale(1.15); opacity:1;  }
+    .hero-trust-item .mi { font-size: 16px; color: var(--primary); }
+
+    /* ─── HERO AI PLANNER — single AI input (moved from #ai) ──── */
+    .hero-ai {
+      position: relative; width: 100%; max-width: 600px;
+      padding: var(--space-6);
+      border-radius: var(--r-xl);
+      border: 1px solid rgba(6,182,212,.25);
+      background: rgba(255,255,255,.025);
+      box-shadow: 0 0 48px rgba(6,182,212,.08),
+                  inset 0 1px 0 rgba(255,255,255,.04);
+      animation: fade-up .9s .45s ease both;
     }
-    .ai-title {
-      font-family: var(--font-display);
-      font-size: clamp(34px,4.8vw,62px);
-      font-weight: 900; line-height: 1.1; letter-spacing: -.02em;
-      max-width: 680px; margin-bottom: 16px;
-    }
-    .ai-sub {
-      font-size: 17px; color: var(--label);
-      max-width: 460px; line-height: 1.65; margin-bottom: var(--space-12);
+    .hero-ai-label {
+      display: block; font-size: var(--text-xs);
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--label); font-weight: 600;
+      margin-bottom: var(--space-4);
     }
     .ai-box {
-      position: relative; width: 100%; max-width: 640px;
+      position: relative; width: 100%;
     }
     .ai-input {
       width: 100%; padding: var(--space-5) 130px var(--space-5) var(--space-6);
@@ -730,14 +718,16 @@
       .shell { padding: 0 var(--space-4); }
       .nav-links { display: none; }
       .nav { height: 58px; width: calc(100% - 24px); }
-      #hero { min-height: 100svh; padding-top: var(--nav-offset); padding-bottom: var(--space-8); }
-      .hero-content { padding: var(--space-4) var(--space-4) 0; }
-      .scroll-cue { margin-top: var(--space-6); }
+      #hero { min-height: 100svh; padding-top: calc(var(--nav-offset) + var(--space-2)); padding-bottom: var(--space-10); }
+      .hero-content { max-width: 100%; }
+      .scroll-cue { display: none; }
       .hero-title { font-size: clamp(44px, 12vw, 72px); margin-bottom: var(--space-6); }
-      .hero-sub { margin-bottom: var(--space-10); }
-      .hero-btns { flex-direction: column; width: 100%; max-width: 360px; margin: 0 auto; }
-      .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
-      #statement, #ai { min-height: auto; padding: var(--space-16) var(--space-4); }
+      .hero-sub { margin-bottom: var(--space-6); }
+      .hero-trust { gap: var(--space-2) var(--space-4); margin-bottom: var(--space-6); }
+      .hero-ai { max-width: 100%; padding: var(--space-5); }
+      .hero-btns { width: 100%; max-width: 360px; }
+      .btn-hero-secondary { width: 100%; justify-content: center; }
+      #statement { min-height: auto; padding: var(--space-16) var(--space-4); }
       .chips-row { margin-top: var(--space-10); }
       .ai-box { display: flex; flex-direction: column; gap: var(--space-3); }
       .ai-input { padding: var(--space-4) var(--space-5); }
@@ -769,8 +759,9 @@
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      .aurora, .eyebrow-dot, .scroll-cue .mi, .ai-pulse { animation: none !important; }
-      .hero-eyebrow, .hero-title, .hero-sub, .hero-btns, .scroll-cue { animation: none !important; }
+      .aurora, .eyebrow-dot, .scroll-cue .mi { animation: none !important; }
+      .hero-eyebrow, .hero-title, .hero-sub, .hero-btns, .scroll-cue,
+      .hero-trust, .hero-ai { animation: none !important; }
       .reveal, .v-chip { opacity: 1 !important; transform: none !important; transition: none !important; }
       .interactive-lift.is-interactive:hover,
       .interactive-lift.is-interactive:focus-visible { transform: none; }
@@ -812,29 +803,53 @@
   <div class="aurora" id="aurora"></div>
   <div class="grid-bg" id="grid"></div>
 
-  <div class="hero-content" id="hero-content">
-    <div class="hero-eyebrow">
-      <div class="eyebrow-dot"></div>
-      Iceland's complete travel platform
-    </div>
-    <h1 class="hero-title">
-      <span class="line1">Discover Iceland.</span>
-      <span class="line2">Every way.</span>
-    </h1>
-    <p class="hero-sub">
-      <strong>Flights · Car rental · Stays · Experiences.</strong><br>
-      One platform. Your entire trip, planned by AI.
-    </p>
-    <div class="hero-btns">
-      <a href="#ai" class="btn-hero-primary interactive-glow">
-        <span class="mi" style="font-size:18px">auto_awesome</span>
-        Plan my trip with AI
-      </a>
-      <a href="/bookacar/"
-         class="btn-hero-secondary">
-        Book a car
-        <span class="mi" style="font-size:18px">arrow_forward</span>
-      </a>
+  <div class="shell">
+    <div class="hero-content" id="hero-content">
+      <div class="hero-eyebrow">
+        <div class="eyebrow-dot"></div>
+        Iceland's complete travel platform
+      </div>
+      <h1 class="hero-title">
+        <span class="line1">Discover Iceland.</span>
+        <span class="line2">Every way.</span>
+      </h1>
+      <p class="hero-sub">
+        <strong>Flights · Car rental · Stays · Experiences.</strong><br>
+        One platform. Your entire trip, planned by AI.
+      </p>
+
+      <div class="hero-trust">
+        <span class="hero-trust-item"><span class="mi" aria-hidden="true">check</span> Free cancellation</span>
+        <span class="hero-trust-item"><span class="mi" aria-hidden="true">check</span> CDW included</span>
+        <span class="hero-trust-item"><span class="mi" aria-hidden="true">check</span> Local experts</span>
+        <span class="hero-trust-item"><span class="mi" aria-hidden="true">check</span> 4.8★ rated</span>
+      </div>
+
+      <div class="hero-ai" id="ai">
+        <span class="hero-ai-label">Plan your trip with AI</span>
+        <div class="ai-box">
+          <input class="ai-input" id="ai-input" type="text"
+            aria-label="Describe your Iceland trip"
+            placeholder="7 days in Iceland in July, adventure-focused…" />
+          <button class="ai-send interactive-glow" type="button" onclick="handleAI()" aria-label="Plan my trip">
+            Plan it
+            <span class="mi" style="font-size:16px">arrow_forward</span>
+          </button>
+        </div>
+        <div class="prompts">
+          <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Ring Road in 10 days</button>
+          <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Northern Lights weekend</button>
+          <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Family trip with kids</button>
+          <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Budget week in summer</button>
+        </div>
+      </div>
+
+      <div class="hero-btns">
+        <a href="/bookacar/" class="btn-hero-secondary">
+          Book a car
+          <span class="mi" style="font-size:18px">arrow_forward</span>
+        </a>
+      </div>
     </div>
   </div>
 
@@ -873,33 +888,6 @@
       <span class="mi">menu_book</span> Travel Guides
       <span class="chip-badge badge-soon">Soon</span>
     </div>
-  </div>
-</section>
-
-<!-- ═══ AI STRIP ════════════════════════════════════════════════ -->
-<section id="ai">
-  <div class="ai-pulse"></div>
-  <span class="section-eye reveal">AI Trip Planner</span>
-  <h2 class="ai-title reveal reveal-d1">
-    Tell us your dream trip.<br>We'll plan every detail.
-  </h2>
-  <p class="ai-sub reveal reveal-d2">
-    Flights, car, hotel, experiences —<br>one complete itinerary, built in seconds.
-  </p>
-  <div class="ai-box reveal reveal-d3">
-    <input class="ai-input" id="ai-input" type="text"
-      aria-label="Describe your Iceland trip"
-      placeholder="7 days in Iceland in July, adventure-focused…" />
-    <button class="ai-send interactive-glow" type="button" onclick="handleAI()" aria-label="Plan my trip">
-      Plan it
-      <span class="mi" style="font-size:16px">arrow_forward</span>
-    </button>
-  </div>
-  <div class="prompts reveal reveal-d6">
-    <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Ring Road in 10 days</button>
-    <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Northern Lights weekend</button>
-    <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Family trip with kids</button>
-    <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Budget week in summer</button>
   </div>
 </section>
 

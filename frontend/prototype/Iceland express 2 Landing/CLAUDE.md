@@ -1,7 +1,7 @@
 # Iceland Express 2 — Project Context
 
 Full design system + hi-fi prototype for Iceland Express (car rental, Iceland).
-Complete project memory and design decisions are in `designsystem.md`.
+Complete project memory and design decisions are in [`designsystem/README.md`](designsystem/README.md).
 
 ## Quick Reference
 - Prototype: `Iceland Express.html`
@@ -20,4 +20,4 @@ Complete project memory and design decisions are in `designsystem.md`.
 - Image paths: `window.__resources.carX || "assets/car-x.png"`
 - `app.jsx` mount: always wrap in DOMContentLoaded guard
 
-See `designsystem.md` for the full spec.
+See [`designsystem/README.md`](designsystem/README.md) for the full spec.

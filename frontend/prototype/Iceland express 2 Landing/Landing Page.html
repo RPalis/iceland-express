@@ -10,13 +10,6 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     /* ── Landing-page-only layout (all values from DS tokens) ── */
-    .lp-nav { position: sticky; top: 0; z-index: 50; background: rgba(5,6,16,0.82); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border-soft); }
-    .lp-nav-inner { display: flex; align-items: center; justify-content: space-between; height: 68px; }
-    .lp-logo { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--fg); text-decoration: none; letter-spacing: -0.01em; }
-    .lp-logo-mark { width: 32px; height: 32px; border-radius: var(--r-sm); background: var(--primary); color: var(--primary-fg); display: grid; place-items: center; }
-    .lp-nav-links { display: flex; align-items: center; gap: 26px; }
-    .lp-nav-links a { color: var(--muted); text-decoration: none; font-size: 14.5px; font-weight: 500; transition: var(--tx-color); }
-    .lp-nav-links a:hover { color: var(--fg); }
 
     .lp-hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--border-soft); }
     .lp-hero-bg { position: absolute; inset: 0; background:
@@ -88,7 +81,6 @@
       .lp-hero-card { left: 12px; }
       .lp-usp-grid, .lp-fleet-grid, .lp-guide-grid { grid-template-columns: 1fr; }
       .lp-incl { grid-template-columns: 1fr; gap: 32px; }
-      .lp-nav-links { display: none; }
       .lp-section { padding: 60px 0; }
     }
   </style>
@@ -97,18 +89,28 @@
 
   <!-- ── Nav ─────────────────────────────────────────────── -->
   <!-- Static mirror of the canonical DS NavBar (ds-organisms.jsx). -->
-  <nav class="nav" data-screen-label="Landing — Nav">
+  <nav class="nav" id="nav" data-nav-menu data-screen-label="Landing — Nav">
     <div class="shell nav-inner">
       <a class="logo" href="#top" style="text-decoration:none;color:inherit;">
         Iceland<span class="logo-accent">Express</span>
       </a>
-      <div class="nav-links">
+      <div class="nav-links" aria-label="Primary navigation">
         <a href="Iceland Express.html">Book a car</a>
         <a href="#guides">Travel Guides</a>
         <a href="#included">Help</a>
       </div>
       <div class="nav-spacer"></div>
-      <a class="btn btn-primary btn-sm" href="Iceland Express.html">Manage Booking</a>
+      <a class="btn btn-primary btn-sm nav-cta" href="Iceland Express.html">Manage Booking</a>
+      <button type="button" class="nav-toggle"
+        aria-expanded="false" aria-controls="nav-drawer" aria-label="Open navigation menu">
+        <span class="nav-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <div class="nav-drawer" id="nav-drawer" role="menu" aria-label="Navigation menu">
+        <a href="Iceland Express.html" role="menuitem">Book a car</a>
+        <a href="#guides" role="menuitem">Travel Guides</a>
+        <a href="#included" role="menuitem">Help</a>
+        <a href="Iceland Express.html" role="menuitem" class="nav-drawer-cta">Manage Booking</a>
+      </div>
     </div>
   </nav>
 
@@ -323,5 +325,6 @@
     </div>
   </footer>
 
+  <script src="nav-menu.js"></script>
 </body>
 </html>

@@ -344,30 +344,136 @@ function PriceSummaryCard({ car, days, qty, cta, onCta, note, compact }) {
 
 /* ============================================================
    NavBar — canonical global navigation (single source of truth)
-   Frosted-glass pill · two-color text wordmark · btn-primary CTA.
-   All consumers (ui.jsx, screens, static pages) must match this.
-   Styling: .nav / .nav-inner / .logo / .logo-accent / .nav-links
+   Frosted-glass pill · two-color wordmark · btn-primary CTA.
+   Desktop (>960px): inline links · ≤960px: hamburger drawer.
+   Styling: .nav / .nav-toggle / .nav-drawer — see styles.css
    ============================================================ */
-function NavBar({ go }) {
+const NAV_DEFAULT_ITEMS = [
+  { label: 'Book a car', route: 'home' },
+  { label: 'Travel Guides', route: 'blog' },
+  { label: 'Help' },
+];
+
+function NavBarLink({ item, go, className, role, onNavigate }) {
+  const handleClick = (e) => {
+    if (item.route && go) {
+      e.preventDefault();
+      go(item.route);
+    }
+    item.onClick?.(e);
+    onNavigate?.();
+  };
+
+  if (item.href) {
+    return (
+      <a href={item.href} className={className} role={role} onClick={handleClick}>
+        {item.label}
+      </a>
+    );
+  }
+
   return (
-    <nav className="nav">
+    <button type="button" className={className} role={role} onClick={handleClick}>
+      {item.label}
+    </button>
+  );
+}
+
+function NavBar({ go, items = NAV_DEFAULT_ITEMS, manageRoute = 'manage' }) {
+  const [open, setOpen] = React.useState(false);
+  const navRef = React.useRef(null);
+  const toggleId = React.useId();
+  const drawerId = React.useId();
+
+  const close = React.useCallback(() => setOpen(false), []);
+
+  React.useEffect(() => {
+    const navEl = navRef.current;
+    if (!navEl) return;
+
+    const onScroll = () => navEl.classList.toggle('scrolled', scrollY > 50);
+    onScroll();
+    addEventListener('scroll', onScroll, { passive: true });
+
+    const onKey = (e) => { if (e.key === 'Escape') close(); };
+    document.addEventListener('keydown', onKey);
+
+    const onClick = (e) => {
+      if (!navEl.contains(e.target)) close();
+    };
+    document.addEventListener('click', onClick);
+
+    const mq = window.matchMedia('(min-width: 961px)');
+    const onMq = (e) => { if (e.matches) close(); };
+    mq.addEventListener('change', onMq);
+
+    return () => {
+      removeEventListener('scroll', onScroll);
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('click', onClick);
+      mq.removeEventListener('change', onMq);
+    };
+  }, [close]);
+
+  return (
+    <nav className={`nav${open ? ' is-open' : ''}`} ref={navRef} id="nav">
       <div className="shell nav-inner">
-        <a className="logo" href="/" style={{ textDecoration: "none", color: "inherit" }}>
+        <a className="logo" href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
           Iceland<span className="logo-accent">Express</span>
         </a>
-        <div className="nav-links">
-          <a onClick={() => go && go("home")}>Book a car</a>
-          <a onClick={() => go && go("blog")}>Travel Guides</a>
-          <a>Help</a>
+        <div className="nav-links" aria-label="Primary navigation">
+          {items.map((item) => (
+            <NavBarLink key={item.label} item={item} go={go} onNavigate={close} />
+          ))}
         </div>
-        <div className="nav-spacer"></div>
-        <button className="btn btn-primary btn-sm" onClick={() => go && go("manage")}>Manage Booking</button>
+        <div className="nav-spacer" />
+        <button
+          type="button"
+          className="btn btn-primary btn-sm nav-cta"
+          onClick={() => go && go(manageRoute)}
+        >
+          Manage Booking
+        </button>
+        <button
+          type="button"
+          className="nav-toggle"
+          id={toggleId}
+          aria-expanded={open}
+          aria-controls={drawerId}
+          aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span className="nav-toggle-bars" aria-hidden="true">
+            <span /><span /><span />
+          </span>
+        </button>
+        <div className="nav-drawer" id={drawerId} role="menu" aria-label="Navigation menu">
+          {items.map((item) => (
+            <NavBarLink
+              key={`drawer-${item.label}`}
+              item={item}
+              go={go}
+              role="menuitem"
+              onNavigate={close}
+            />
+          ))}
+          <button
+            type="button"
+            role="menuitem"
+            className="nav-drawer-cta"
+            onClick={() => { close(); go && go(manageRoute); }}
+          >
+            Manage Booking
+          </button>
+        </div>
       </div>
     </nav>
   );
 }
 
 Object.assign(window, {
+  NAV_DEFAULT_ITEMS,
+  NavBarLink,
   // Organisms
   CarCardV2, ExtraCardV2, BlogCardV2, ManageActionCard,
   PageHero, EmptyState, PriceSummaryCard, NavBar,

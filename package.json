@@ -1,0 +1,8 @@
+{
+  "name": "iceland-express",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve -l 3457 .",
+    "dev:prototype": "npx serve -l 3457 \"frontend/prototype/Iceland express 2 Landing\""
+  }
+}

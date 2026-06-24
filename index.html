@@ -96,6 +96,10 @@
       --nav-border-color: var(--alpha-08);
       --nav-pad-x:        var(--space-8);
       --nav-menu-max:     960px;
+
+      --hero-nav-h:       64px;
+      --hero-top-gap:     var(--space-12); /* 48px below floating nav */
+      --hero-sticky-top:  calc(var(--space-4) + var(--hero-nav-h) + var(--hero-top-gap));
     }
 
     /* ─── RESET ──────────────────────────────────────────────── */
@@ -356,13 +360,13 @@
       display: flex; flex-direction: column;
       align-items: stretch;
       text-align: left; overflow-x: hidden; overflow-y: visible;
-      padding-bottom: var(--section-y-lg);
+      padding-bottom: var(--space-12);
     }
     .hero-stage {
       flex: 1 1 auto;
-      display: flex; flex-direction: column; justify-content: center;
+      display: flex; flex-direction: column; justify-content: flex-start;
       width: 100%;
-      padding-top: calc(var(--nav-offset) + var(--space-6));
+      padding-top: var(--hero-sticky-top);
     }
     .aurora {
       position: absolute; inset: 0; z-index: 1; pointer-events: none;
@@ -392,8 +396,12 @@
     .hero-content {
       position: relative; z-index: 2;
       flex: 1; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      max-width: 920px; width: 100%; padding: 0 var(--space-6);
+      align-items: flex-start; justify-content: flex-start;
+      max-width: 100%; width: 100%; padding: 0;
+      text-align: left;
+    }
+    .hero-copy {
+      width: 100%;
       will-change: transform;
     }
     .hero-eyebrow {
@@ -441,7 +449,8 @@
     }
     .hero-sub strong { color: var(--fg); font-weight: 500; }
     .hero-btns {
-      display: flex; gap: var(--space-4); justify-content: flex-start; flex-wrap: wrap;
+      display: none; /* hidden for now — set to flex to restore */
+      gap: var(--space-4); justify-content: flex-start; flex-wrap: wrap;
       width: 100%; max-width: 600px;
       margin-top: var(--space-6);
       animation: fade-up var(--reveal-duration) .55s ease both;
@@ -538,10 +547,15 @@
 
     /* ─── HERO TRUST BADGES ──────────────────────────────────── */
     .hero-trust {
-      display: flex; flex-wrap: wrap; align-items: center;
+      display: none; /* hidden for now — set to flex to restore */
+      flex-wrap: wrap; align-items: center;
+      justify-content: flex-start;
       gap: var(--space-3) var(--space-5);
       margin-bottom: var(--space-8);
       animation: fade-up var(--reveal-duration) .35s ease both;
+    }
+    .hero-trust-item {
+      display: inline-flex; align-items: center; gap: var(--space-2);
     }
     .ai-pulse {
       position: absolute; top: 50%; left: 50%;
@@ -555,14 +569,39 @@
 
     /* ─── HERO AI PLANNER — single AI input (moved from #ai) ──── */
     .hero-ai {
-      position: relative; width: 100%; max-width: 600px;
+      position: sticky;
+      top: var(--hero-sticky-top);
+      z-index: calc(var(--z-sticky) - 1);
+      width: 100%; max-width: none;
+      margin-top: var(--space-8);
       padding: var(--space-6);
       border-radius: var(--r-xl);
       border: 1px solid rgba(6,182,212,.25);
-      background: rgba(255,255,255,.025);
-      box-shadow: 0 0 48px rgba(6,182,212,.08),
+      background: var(--nav-frost-bg);
+      backdrop-filter: blur(var(--nav-blur));
+      -webkit-backdrop-filter: blur(var(--nav-blur));
+      box-shadow: var(--shadow-lg), 0 0 48px rgba(6,182,212,.08),
                   inset 0 1px 0 rgba(255,255,255,.04);
       animation: fade-up var(--reveal-duration) .45s ease both;
+      text-align: left;
+    }
+    .hero-ai-label {
+      display: block;
+      font-size: var(--text-xs); letter-spacing: .14em; text-transform: uppercase;
+      font-weight: 700; color: var(--primary); margin-bottom: var(--space-4);
+    }
+    .hero-ai .ai-box { max-width: none; }
+    .hero-ai .prompts {
+      width: 100%;
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    .hero-ai .prompt-chip {
+      flex-shrink: 0;
+      white-space: nowrap;
     }
     .ai-title {
       font-family: var(--font-display);
@@ -817,7 +856,7 @@
 
     /* ─── RESPONSIVE ─────────────────────────────────────────── */
     @media (min-width: 961px) and (min-height: 860px) {
-      .hero-stage { justify-content: center; }
+      .hero-stage { justify-content: flex-start; }
     }
     @media (max-width: 960px) {
       :root {
@@ -832,14 +871,15 @@
         --section-gap: var(--space-10);
       }
       .nav { height: 58px; width: calc(100% - 24px); }
-      .hero-stage { padding-top: calc(var(--nav-offset) + var(--space-2)); }
-      .hero-content { max-width: 100%; }
+      :root { --hero-nav-h: 58px; }
+      .hero-stage { padding-top: var(--hero-sticky-top); }
       .hero-title { font-size: clamp(44px, 12vw, 72px); margin-bottom: var(--space-6); }
       .hero-sub { margin-bottom: var(--space-6); }
       .hero-trust { gap: var(--space-2) var(--space-4); margin-bottom: var(--space-6); }
       .hero-btns { max-width: 100%; }
-      .hero-ai { max-width: 100%; padding: var(--space-5); }
-      .btn-hero-secondary { width: 100%; justify-content: center; }
+      .hero-ai { padding: var(--space-5); }
+      .hero-btns .btn-hero-secondary { width: 100%; justify-content: flex-start; }
+      .hero-ai .prompt-chip { text-align: left; }
       .chips-row { margin-top: var(--section-gap); }
       .ai-box { display: flex; flex-direction: column; gap: var(--space-3); }
       .ai-input { padding: var(--space-4) var(--space-5); }
@@ -861,7 +901,13 @@
     @media (max-width: 480px) {
       .hero-eyebrow { margin-bottom: var(--space-6); }
       .prompts { flex-direction: column; align-items: stretch; }
+      .hero-ai .prompts {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: center;
+      }
       .prompt-chip { text-align: center; }
+      .hero-ai .prompt-chip { text-align: left; }
       .trust-stats { grid-template-columns: 1fr; }
       .t-num { font-size: 42px; }
     }
@@ -930,6 +976,7 @@
   <div class="hero-stage">
   <div class="shell">
     <div class="hero-content" id="hero-content">
+      <div class="hero-copy" id="hero-copy">
       <div class="hero-eyebrow">
         <div class="eyebrow-dot"></div>
         Iceland's complete travel platform
@@ -948,6 +995,7 @@
         <span class="hero-trust-item"><span class="mi" aria-hidden="true">check</span> CDW included</span>
         <span class="hero-trust-item"><span class="mi" aria-hidden="true">check</span> Local experts</span>
         <span class="hero-trust-item"><span class="mi" aria-hidden="true">check</span> 4.8★ rated</span>
+      </div>
       </div>
 
       <div class="hero-ai" id="ai">
@@ -1269,7 +1317,7 @@ initStars();
 
 /* ── PARALLAX (skipped when reduced motion preferred) ──────── */
 const heroEl      = document.getElementById('hero');
-const heroContent = document.getElementById('hero-content');
+const heroCopy    = document.getElementById('hero-copy');
 const auroraEl    = document.getElementById('aurora');
 const gridEl      = document.getElementById('grid');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1279,8 +1327,8 @@ if (!reducedMotion) {
   function updateParallax() {
     const heroH = heroEl ? heroEl.offsetHeight : 0;
     const inHero = scrollYVal < heroH;
-    if (heroContent) {
-      heroContent.style.transform = inHero ? `translateY(${scrollYVal * 0.28}px)` : '';
+    if (heroCopy) {
+      heroCopy.style.transform = inHero ? `translateY(${scrollYVal * 0.28}px)` : '';
     }
     if (auroraEl) {
       auroraEl.style.transform = inHero

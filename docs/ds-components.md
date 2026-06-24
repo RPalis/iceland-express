@@ -83,14 +83,20 @@ Each layer only imports from the layer below it. Never skip layers.
 **`NavBar` — the one canonical nav. All consumers must match it:**
 ```
 Spec:     frosted-glass fixed pill · two-color text wordmark Iceland|Express (no icon mark)
-Links:    Book a car · Travel Guides · Help
-CTA:      btn-primary btn-sm "Manage Booking"
+Links:    Book a car · Travel Guides · Help (configurable via items prop)
+CTA:      btn-primary btn-sm "Manage Booking" (desktop) · .nav-drawer-cta (mobile drawer)
+Breakpoint: --nav-menu-max (960px) — >960px inline links · ≤960px hamburger drawer
 Classes:  .nav / .nav-inner / .logo / .logo-accent / .nav-links / .nav-spacer
-Props:    go(route)  — 'home' | 'blog' | 'manage'
-Defined:  ds-organisms.jsx (window.NavBar). ui.jsx no longer defines it.
-Mirrors:  index.html (static) · Landing Page.html (static) · offroad-blog/NavBar.jsx
-          (offroad adds an optional breadcrumb extension + ports .nav CSS into its
-           own blog-post.css / tokens.css since it doesn't load the main styles.css)
+          .nav-toggle / .nav-toggle-bars / .nav-drawer / .nav-drawer-cta / .nav-cta
+          .nav.is-open (drawer open) · .nav.scrolled (scroll > 50px)
+Props:    go(route) · items[] · manageRoute
+          item: { label, route?, href?, onClick? }
+Defined:  ds-organisms.jsx (window.NavBar) · nav-menu.js (static pages only — data-nav-menu)
+          styles.css (--nav-menu-max + nav section)
+Mirrors:  index.html (static, extended links) · Landing Page.html (static)
+          offroad-blog/NavBar.jsx (offroad adds breadcrumb extension)
+Behavior: toggle drawer · Escape closes · outside click closes · resize >960px closes
+          scroll adds .scrolled · drawer links/buttons close on navigate
 Rule:     never re-implement NavBar with a different logo/CTA/class namespace.
 ```
 
@@ -155,6 +161,8 @@ Components:  .btn .btn-primary .btn-secondary .btn-ghost .btn-outline
              .badge-outline .badge-glass
              .chip .chip.active
              .input .selectbox .is-error .is-success .is-disabled
+             .nav .nav-toggle .nav-toggle-bars .nav-drawer .nav-drawer-cta .nav-cta
+             .nav.is-open .nav.scrolled
 
 Interaction: .hover-lift .fade-up .disabled .truncate
 ```

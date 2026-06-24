@@ -112,6 +112,7 @@ const T = Object.freeze({
     maxW:   'var(--nav-max-w)',         // 1200px pill max-width
     offset: 'var(--nav-offset)',        // 88px page top padding
     padX:   'var(--nav-pad-x)',         // 32px inner gutter, decoupled from page .shell
+    menuMax:'var(--nav-menu-max)',     // 960px — hamburger drawer breakpoint
   },
 
   // ── Component Specs ───────────────────────────────────────

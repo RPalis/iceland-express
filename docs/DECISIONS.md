@@ -295,6 +295,25 @@ is a CDN-line change in the HTML, not a component refactor.
 
 ---
 
+## 2026-06-24 — Platform landing footer links map to in-page anchors
+
+**What:** Wired all 11 footer `href="#"` placeholders in root `index.html` to real
+destinations: coming-soon verticals scroll to `#vertical-*` card IDs; Travel Guides
+→ `/bookacar/`; Ring Road → `#region-ring-road`; Destinations/Road Trips → `#regions`;
+About → `#statement`; Contact → `#ai`; Privacy/Terms → `#footer-legal` until legal
+pages exist (Sprint 5).
+
+**Why:** Dead links fail the platform-landing polish task and break keyboard/screen-reader
+navigation. In-page anchors match content that already exists on the landing page;
+live surfaces (car rental, blog) route to `/bookacar/`. No new stub pages — keeps
+scope within polish-to-done (no Figma file for platform landing).
+
+**Alternatives rejected:**
+- Leave `#` until Sprint 4 content screens (RT/DS hubs) — footer stays broken for weeks.
+- Create separate `/about`, `/privacy` HTML stubs — out of scope; duplicates future Sprint 5 work.
+
+---
+
 ## Update Rules for This File
 
 ```

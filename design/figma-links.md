@@ -8,9 +8,15 @@
 
 ```
 Main design file
-URL:     [paste Figma URL here]
+URL:     [paste Figma URL here — not linked for platform landing iteration]
 Pages:   Homepage · Car Rentals · Road Trips · Destinations
          Activities · Blog · Checkout · Confirmation · Manage Booking
+
+Platform landing iteration (live preview — no Figma gate)
+URL:     http://localhost:3457/
+Branch:  Home-screen @ RPalis/iceland-express
+Scope:   root index.html — responsive · hover/focus · WCAG labels · footer links
+Status:  ✅ complete (2026-06-24)
 
 Design System reference
 URL:     [paste Figma URL here]
@@ -41,6 +47,9 @@ Current state:
 ```
 Screen               Figma            Prototype        Frontend
 ────────────────     ───────────────  ───────────────  ───────────────
+Platform Landing     no Figma file    ✅ approved      ✅ done
+(index.html)         (polish-to-done) (Home-screen     (accepted static
+                                      branch)          mirror — root)
 A1 Homepage          ✅ approved      ✅ approved      not started
 A2 Car Results       ✅ approved      ✅ approved      not started
 A3 Car Detail        ✅ approved      ✅ approved      not started

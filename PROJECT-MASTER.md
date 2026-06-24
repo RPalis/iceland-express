@@ -8,8 +8,8 @@
 ```
 Phase:        1 — Relaunch
 Sprint:       2 — Claude API Chatbot (Sprint 1A complete)
-Task:         2-1 (next) · Platform homepage complete
-Last session: 2026-06-17
+Task:         2-1 ✅ platform landing polish (Home-screen)
+Last session: 2026-06-24
 ```
 
 ---
@@ -17,30 +17,17 @@ Last session: 2026-06-17
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   FOUNDATION HOUSE-CLEANING (foundation rounded before any feature work).
-                       (1) DS consolidation: NavBar unified to one canonical DS organism;
-                       logo-drift fixed via --nav-pad-x; removed redundant offroad-blog
-                       parallel DS (copy ported to blog-data.jsx first). (2) Governance:
-                       Tooling & Skills Protocol + anti-duplication lifecycle in PROJECT-MASTER;
-                       scripts/ds-audit.sh + STRICT pre-commit hook (.githooks, tested both
-                       ways). (3) Hygiene: removed 6 dead legacy files (screens1-5.jsx +
-                       Standalone.html); kept ds-app.jsx/Design System.html (live DS reference).
-                       ds-audit = 0 findings · DS catalog (ds-components.md) verified 100%
-                       complete. All pushed to GitHub private RPalis/iceland-express.
-NEXT TASK (tomorrow):  Finish the PLATFORM LANDING (root index.html) — UX/UI polish.
-                       Scoped gaps already found: ~11 dead links (href="#") to wire · check
-                       the few "coming soon" strings · responsive + dark + a11y pass ·
-                       DS-consistency. NO Figma linked (figma-links.md empty) → polish-to-done,
-                       not match-a-Figma. Run the per-change Quality Gate before "done".
-Stopped mid-step:      no — clean stop. Home-screen UX/UI deferred to next session by owner.
-Uncommitted changes:   none — committed + pushed this session
-Known issues:          none.
+Last completed task:   PLATFORM LANDING polish phase 1+2 (Home-screen branch):
+                       tokens · spacing · unified hover/focus · WCAG labels · responsive
+                       breakpoints · reduced-motion · 11 footer links wired · visual QA
+                       at 320/720/1280. ds-audit = 0 findings.
+NEXT TASK:             Optional: dedicated legal pages (Privacy/Terms) · production
+                       migration (PM-1) · Sprint 2 chatbot (2-1).
+Stopped mid-step:      no — platform landing polish task complete for this scope.
+Uncommitted changes:   none
+Known issues:          Privacy/Terms anchor to footer legal strip until Sprint 5 pages.
 Blocker:               none
-Pending (not started):  Production migration — prototype baseline → frontend/production/ is
-                       still EMPTY. NavBar approved (Gate 2 passed) but NOT yet migrated.
-                       First-ever production migration = its own task (full baseline, correct
-                       load order). Do this before frontend/production/ can run.
-Project path:          /Users/raquelsantospalis/Desktop/iceland-express/
+Project path:          /Users/raquelsantospalis/Downloads/iceland-express-master/
 ```
 
 If `in-progress task` is not blank → resume it before starting anything new.

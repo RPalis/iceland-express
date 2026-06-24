@@ -1,3 +1,7 @@
 frontend/production/
 .env
 *.fig
+
+# macOS folder metadata (Finder regenerates these constantly)
+.DS_Store
+**/.DS_Store

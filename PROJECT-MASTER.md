@@ -8,7 +8,7 @@
 ```
 Phase:        1 — Relaunch
 Sprint:       2 — Claude API Chatbot (Sprint 1A complete)
-Task:         2-1 ✅ platform landing polish (Home-screen)
+Task:         platform landing hero iteration ✅ (left-align + in-hero AI planner)
 Last session: 2026-06-24
 ```
 
@@ -17,15 +17,19 @@ Last session: 2026-06-24
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   PLATFORM LANDING polish phase 1+2 (Home-screen branch):
-                       tokens · spacing · unified hover/focus · WCAG labels · responsive
-                       breakpoints · reduced-motion · 11 footer links wired · visual QA
-                       at 320/720/1280. ds-audit = 0 findings.
+Last completed task:   PLATFORM LANDING hero iteration (index.html): left-aligned hero +
+                       AI planner moved INTO the hero (glowing card) with trust-badge row;
+                       standalone #ai section removed (moved, not duplicated); "Book a car"
+                       kept as secondary CTA. Verified: ds-audit --strict = 0 · 0 console
+                       errors · alignment measured 150px / AI card 600px · no overflow at
+                       375/320 · prompt-chip→input functional. Decision logged 2026-06-24.
 NEXT TASK:             Optional: dedicated legal pages (Privacy/Terms) · production
                        migration (PM-1) · Sprint 2 chatbot (2-1).
-Stopped mid-step:      no — platform landing polish task complete for this scope.
-Uncommitted changes:   none
+Stopped mid-step:      no — hero iteration complete for this scope.
+Uncommitted changes:   none (committed + pushed to origin/sprint-2-chatbot)
 Known issues:          Privacy/Terms anchor to footer legal strip until Sprint 5 pages.
+                       Hero headline (clamp up to 118px) overflows the 680px column to the
+                       right on wide viewports — intentional reference-style open-right look.
 Blocker:               none
 Project path:          /Users/raquelsantospalis/Downloads/iceland-express-master/
 ```

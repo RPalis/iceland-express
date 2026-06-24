@@ -2,10 +2,18 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "iceland-express-home",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", ".", "--no-clipboard"],
+      "port": 3000,
+      "autoPort": true
+    },
+    {
       "name": "iceland-express-prototype",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "frontend/prototype/Iceland express 2 Landing", "-p", "3457", "--no-clipboard"],
-      "port": 3457
+      "runtimeArgs": ["serve", "frontend/prototype/Iceland express 2 Landing", "--no-clipboard"],
+      "port": 3457,
+      "autoPort": true
     }
   ]
 }

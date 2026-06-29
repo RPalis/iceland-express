@@ -129,7 +129,18 @@
     /* ─── SECTION RHYTHM ─────────────────────────────────────── */
     .section {
       padding-block: var(--section-y-lg);
-      padding-inline: var(--section-x);
+      padding-inline: var(--section-x); /* 48px lateral gutter — all sections */
+    }
+    .section > .sec-head,
+    .section > .section-eye,
+    .section > .statement-title,
+    .section > .chips-row,
+    .section > .v-grid,
+    .section > .trust-row,
+    .section > .ft-inner,
+    .section > .ft-bottom {
+      max-width: var(--maxw);
+      margin-inline: auto;
     }
     .section--compact {
       padding-block: var(--section-y);
@@ -191,7 +202,7 @@
       top: var(--space-4);
       left: 50%;
       transform: translateX(-50%);
-      width: calc(100% - 40px);
+      width: calc(100% - 2 * var(--section-x));
       max-width: var(--nav-max-w);
       z-index: var(--z-sticky);
       height: 64px;
@@ -361,6 +372,13 @@
       align-items: stretch;
       text-align: left; overflow-x: hidden; overflow-y: visible;
       padding-bottom: var(--space-12);
+    }
+    #hero .shell {
+      width: 100%;
+      max-width: var(--maxw);
+      margin-inline: auto;
+      padding-inline: var(--section-x); /* same 48px gutter as .section */
+      box-sizing: border-box;
     }
     .hero-stage {
       flex: 1 1 auto;
@@ -866,11 +884,10 @@
     }
     @media (max-width: 720px) {
       :root {
-        --section-x: var(--space-4);
         --section-head-gap: var(--space-6);
         --section-gap: var(--space-10);
       }
-      .nav { height: 58px; width: calc(100% - 24px); }
+      .nav { height: 58px; width: calc(100% - 2 * var(--section-x)); }
       :root { --hero-nav-h: 58px; }
       .hero-stage { padding-top: var(--hero-sticky-top); }
       .hero-title { font-size: clamp(44px, 12vw, 72px); margin-bottom: var(--space-6); }
@@ -1057,33 +1074,6 @@
       <span class="mi">menu_book</span> Travel Guides
       <span class="chip-badge badge-soon">Soon</span>
     </div>
-  </div>
-</section>
-
-<!-- ═══ AI STRIP ════════════════════════════════════════════════ -->
-<section id="ai">
-  <div class="ai-pulse"></div>
-  <span class="section-eye reveal">AI Trip Planner</span>
-  <h2 class="ai-title reveal reveal-d1">
-    Tell us your dream trip.<br>We'll plan every detail.
-  </h2>
-  <p class="ai-sub reveal reveal-d2">
-    Flights, car, hotel, experiences —<br>one complete itinerary, built in seconds.
-  </p>
-  <div class="ai-box reveal reveal-d3">
-    <input class="ai-input" id="ai-input" type="text"
-      aria-label="Describe your Iceland trip"
-      placeholder="7 days in Iceland in July, adventure-focused…" />
-    <button class="ai-send interactive-glow" type="button" onclick="handleAI()" aria-label="Plan my trip">
-      Plan it
-      <span class="mi" style="font-size:16px">arrow_forward</span>
-    </button>
-  </div>
-  <div class="prompts reveal reveal-d6">
-    <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Ring Road in 10 days</button>
-    <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Northern Lights weekend</button>
-    <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Family trip with kids</button>
-    <button class="prompt-chip interactive-lift" type="button" onclick="fillPrompt(this)">Budget week in summer</button>
   </div>
 </section>
 

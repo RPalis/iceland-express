@@ -113,6 +113,13 @@ const T = Object.freeze({
     offset: 'var(--nav-offset)',        // 88px page top padding
     padX:   'var(--nav-pad-x)',         // 32px inner gutter, decoupled from page .shell
     menuMax:'var(--nav-menu-max)',     // 960px — hamburger drawer breakpoint
+    drawerBg:      'var(--nav-drawer-frost-bg)',
+    drawerBlur:    'var(--nav-drawer-blur)',
+    drawerShadow:  'var(--nav-drawer-shadow)',
+    drawerItemBg:  'var(--nav-drawer-item-bg)',
+    drawerItemHover:  'var(--nav-drawer-item-hover-bg)',
+    drawerItemActive: 'var(--nav-drawer-item-active-bg)',
+    drawerItemFocusRing: 'var(--nav-drawer-item-focus-ring)',
   },
 
   // ── Component Specs ───────────────────────────────────────

@@ -88,6 +88,8 @@ Links:    Book a car · Flights · Stays · Experiences · Travel Guides · Help
           In-app (bookacar): route for Book a car / Travel Guides · href to landing
           for Flights / Stays / Experiences / Help (/#vertical-* · /#ai)
 CTA:      btn-primary btn-sm "Manage Booking" (desktop) · .nav-drawer-cta (mobile drawer)
+Drawer:   dedicated frost tokens (--nav-drawer-frost-bg · --nav-drawer-blur) — stronger
+          than pill; item hover / focus-visible / active ladder via --nav-drawer-item-* tokens
 Breakpoint: --nav-menu-max (960px) — >960px inline links · ≤960px hamburger drawer
 Classes:  .nav / .nav-inner / .logo / .logo-accent / .nav-links / .nav-spacer
           .nav-toggle / .nav-toggle-bars / .nav-drawer / .nav-drawer-cta / .nav-cta

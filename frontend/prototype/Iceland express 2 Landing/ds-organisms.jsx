@@ -383,7 +383,8 @@ function NavBarLink({ item, go, className, role, onNavigate }) {
   );
 }
 
-function NavBar({ go, items = NAV_PLATFORM_ITEMS, manageRoute = 'manage' }) {
+function NavBar({ go, items, manageRoute = 'manage' }) {
+  const navItems = items || window.NAV_PLATFORM_ITEMS || NAV_PLATFORM_ITEMS;
   const [open, setOpen] = React.useState(false);
   const navRef = React.useRef(null);
   const toggleId = React.useId();
@@ -426,7 +427,7 @@ function NavBar({ go, items = NAV_PLATFORM_ITEMS, manageRoute = 'manage' }) {
           Iceland<span className="logo-accent">Express</span>
         </a>
         <div className="nav-links" aria-label="Primary navigation">
-          {items.map((item) => (
+          {navItems.map((item) => (
             <NavBarLink key={item.label} item={item} go={go} onNavigate={close} />
           ))}
         </div>
@@ -452,7 +453,7 @@ function NavBar({ go, items = NAV_PLATFORM_ITEMS, manageRoute = 'manage' }) {
           </span>
         </button>
         <div className="nav-drawer" id={drawerId} role="menu" aria-label="Navigation menu">
-          {items.map((item) => (
+          {navItems.map((item) => (
             <NavBarLink
               key={`drawer-${item.label}`}
               item={item}

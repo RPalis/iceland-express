@@ -61,7 +61,8 @@ Each layer imports only from the layer below. See [`docs/ds-components.md`](../.
 
 ```
 Spec:       frosted-glass fixed pill · two-color wordmark Iceland|Express
-Links:      Book a car · Travel Guides · Help (configurable via items[])
+Links:      Book a car · Flights · Stays · Experiences · Travel Guides · Help
+            (nav-items.js → window.NAV_PLATFORM_ITEMS)
 CTA:        btn-primary btn-sm desktop · .nav-drawer-cta in mobile drawer
 Breakpoint: --nav-menu-max (960px) — inline links above · hamburger drawer at/below
 Classes:    .nav .nav-inner .logo .logo-accent .nav-links .nav-spacer

@@ -342,6 +342,27 @@ overflow at 375/320; prompt-chip → input wiring functional.
 
 ---
 
+## 2026-06-30 — Platform nav item parity: landing ↔ bookacar (6 links everywhere)
+
+**What:** Unified global navigation to six primary links on every surface: Book a car,
+Flights, Stays, Experiences, Travel Guides, Help. Added `nav-items.js` exporting
+`window.NAV_PLATFORM_ITEMS` as the React single source of truth. The bookacar app
+(`NavBar` in ds-organisms.jsx) now uses the same list as `index.html` for both desktop
+inline links and the ≤960px hamburger drawer. Coming-soon verticals link out to landing
+anchors (`/#vertical-flights`, `/#vertical-stays`, `/#vertical-experiences`); Help links
+to `/#ai`.
+
+**Why:** Users who tapped "Book a car" on the platform landing saw Flights/Stays/Experiences
+in nav, then lost those entries inside `/bookacar/` — especially in the collapsed hamburger
+menu. One item config prevents drift between static landing and the booking SPA.
+
+**Alternatives rejected:**
+- Keep 3-link nav in bookacar and only show verticals on landing — breaks cross-session
+  consistency and the platform positioning as a multi-vertical hub.
+- In-app "Coming soon" modals for verticals — out of scope; landing anchors already exist.
+
+---
+
 ## Update Rules for This File
 
 ```

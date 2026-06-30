@@ -348,11 +348,15 @@ function PriceSummaryCard({ car, days, qty, cta, onCta, note, compact }) {
    Desktop (>960px): inline links · ≤960px: hamburger drawer.
    Styling: .nav / .nav-toggle / .nav-drawer — see styles.css
    ============================================================ */
-const NAV_DEFAULT_ITEMS = [
+const NAV_PLATFORM_ITEMS = window.NAV_PLATFORM_ITEMS || [
   { label: 'Book a car', route: 'home' },
+  { label: 'Flights', href: '/#vertical-flights' },
+  { label: 'Stays', href: '/#vertical-stays' },
+  { label: 'Experiences', href: '/#vertical-experiences' },
   { label: 'Travel Guides', route: 'blog' },
-  { label: 'Help' },
+  { label: 'Help', href: '/#ai' },
 ];
+const NAV_DEFAULT_ITEMS = NAV_PLATFORM_ITEMS;
 
 function NavBarLink({ item, go, className, role, onNavigate }) {
   const handleClick = (e) => {
@@ -379,7 +383,7 @@ function NavBarLink({ item, go, className, role, onNavigate }) {
   );
 }
 
-function NavBar({ go, items = NAV_DEFAULT_ITEMS, manageRoute = 'manage' }) {
+function NavBar({ go, items = NAV_PLATFORM_ITEMS, manageRoute = 'manage' }) {
   const [open, setOpen] = React.useState(false);
   const navRef = React.useRef(null);
   const toggleId = React.useId();
@@ -472,6 +476,7 @@ function NavBar({ go, items = NAV_DEFAULT_ITEMS, manageRoute = 'manage' }) {
 }
 
 Object.assign(window, {
+  NAV_PLATFORM_ITEMS,
   NAV_DEFAULT_ITEMS,
   NavBarLink,
   // Organisms

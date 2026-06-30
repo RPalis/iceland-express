@@ -83,7 +83,10 @@ Each layer only imports from the layer below it. Never skip layers.
 **`NavBar` — the one canonical nav. All consumers must match it:**
 ```
 Spec:     frosted-glass fixed pill · two-color text wordmark Iceland|Express (no icon mark)
-Links:    Book a car · Travel Guides · Help (configurable via items prop)
+Links:    Book a car · Flights · Stays · Experiences · Travel Guides · Help
+          (canonical list in nav-items.js → window.NAV_PLATFORM_ITEMS)
+          In-app (bookacar): route for Book a car / Travel Guides · href to landing
+          for Flights / Stays / Experiences / Help (/#vertical-* · /#ai)
 CTA:      btn-primary btn-sm "Manage Booking" (desktop) · .nav-drawer-cta (mobile drawer)
 Breakpoint: --nav-menu-max (960px) — >960px inline links · ≤960px hamburger drawer
 Classes:  .nav / .nav-inner / .logo / .logo-accent / .nav-links / .nav-spacer
@@ -91,7 +94,8 @@ Classes:  .nav / .nav-inner / .logo / .logo-accent / .nav-links / .nav-spacer
           .nav.is-open (drawer open) · .nav.scrolled (scroll > 50px)
 Props:    go(route) · items[] · manageRoute
           item: { label, route?, href?, onClick? }
-Defined:  ds-organisms.jsx (window.NavBar) · nav-menu.js (static pages only — data-nav-menu)
+Defined:  nav-items.js (window.NAV_PLATFORM_ITEMS) · ds-organisms.jsx (window.NavBar)
+          · nav-menu.js (static pages only — data-nav-menu)
           styles.css (--nav-menu-max + nav section)
 Mirrors:  index.html (static, extended links) · Landing Page.html (static)
           offroad-blog/NavBar.jsx (offroad adds breadcrumb extension)

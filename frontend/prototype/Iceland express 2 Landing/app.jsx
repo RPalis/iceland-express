@@ -76,7 +76,7 @@ function App() {
 
   return (
     <div className="page">
-      <NavBar go={go} />
+      <NavBar go={go} items={window.NAV_PLATFORM_ITEMS} />
 
       <main className="flow">
         {/* A1 — Homepage Search */}

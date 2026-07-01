@@ -363,6 +363,26 @@ menu. One item config prevents drift between static landing and the booking SPA.
 
 ---
 
+## 2026-07-01 — Landing nav now mounts the canonical React NavBar (single component)
+
+**What:** Removed the hand-written `<nav>` implementation from root `index.html` and
+replaced it with a React mount (`#landing-nav-root`) that renders the canonical
+`NavBar` from `frontend/prototype/Iceland express 2 Landing/ds-organisms.jsx`.
+Added `nav-items-landing.js` to provide landing-specific items + route mapping
+(`window.NAV_LANDING_ITEMS`, `window.LANDING_NAV_ROUTE_MAP`) while preserving the
+existing destinations (`/bookacar/`, `/#vertical-*`, `/#ai`).
+
+**Why:** Law 13 requires one source of truth for shared UI. Keeping a static nav in
+`index.html` plus a React nav in bookacar caused visual drift and repeated fixes.
+Mounting the same component on both surfaces removes duplication and keeps visuals +
+interaction states aligned by default.
+
+**Alternatives rejected:**
+- Keep syncing static nav markup manually — drift already occurred repeatedly.
+- Keep `nav-menu.js` for landing only — duplicates behavior owned by canonical `NavBar`.
+
+---
+
 ## Update Rules for This File
 
 ```

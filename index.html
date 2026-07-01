@@ -97,11 +97,11 @@
       --nav-border-color: var(--alpha-08);
       --nav-pad-x:        var(--space-8);
       --nav-menu-max:     960px;
-      --nav-drawer-frost-bg:       rgba(7, 10, 24, 0.90);
-      --nav-drawer-blur:           40px;
+      --nav-drawer-frost-bg:       rgba(12, 16, 34, 0.72);
+      --nav-drawer-blur:           blur(48px) saturate(180%);
       --nav-drawer-shadow:         var(--shadow-xl);
-      --nav-drawer-item-bg:        rgba(255, 255, 255, 0.03);
-      --nav-drawer-item-hover-bg:  rgba(255, 255, 255, 0.08);
+      --nav-drawer-item-bg:        rgba(7, 10, 24, 0.55);
+      --nav-drawer-item-hover-bg:  rgba(255, 255, 255, 0.12);
       --nav-drawer-item-active-bg: var(--primary-tint-2);
       --nav-drawer-item-focus-ring: 0 0 0 2px var(--primary), 0 0 0 4px rgba(6,182,212,0.20);
 
@@ -214,8 +214,6 @@
       max-width: var(--nav-max-w);
       z-index: var(--z-sticky);
       height: 64px;
-      /* anchor for .nav-drawer dropdown */
-      isolation: isolate;
       display: flex;
       align-items: center;
       background: var(--nav-frost-bg);
@@ -234,7 +232,9 @@
       box-shadow: var(--shadow-lg), 0 4px 24px rgba(0, 0, 0, 0.35);
     }
     .nav.is-open {
-      background: rgba(7, 10, 24, 0.88);
+      background: var(--nav-drawer-frost-bg);
+      backdrop-filter: var(--nav-drawer-blur);
+      -webkit-backdrop-filter: var(--nav-drawer-blur);
       box-shadow: var(--nav-drawer-shadow);
     }
     .nav-inner {
@@ -303,42 +303,53 @@
     .nav-drawer {
       display: none; position: absolute; top: calc(100% + var(--space-2));
       left: 0; right: 0; padding: var(--space-3);
-      background: var(--nav-drawer-frost-bg);
-      backdrop-filter: blur(var(--nav-drawer-blur));
-      -webkit-backdrop-filter: blur(var(--nav-drawer-blur));
+      overflow: hidden;
       border: 1px solid var(--nav-border-color);
       border-radius: var(--r-lg);
       box-shadow: var(--nav-drawer-shadow);
     }
+    .nav-drawer::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      background: var(--nav-drawer-frost-bg);
+      backdrop-filter: var(--nav-drawer-blur);
+      -webkit-backdrop-filter: var(--nav-drawer-blur);
+      pointer-events: none;
+    }
     .nav.is-open .nav-drawer { display: flex; flex-direction: column; gap: var(--space-2); }
-    .nav-drawer a,
-    .nav-drawer button {
+    .nav-drawer > a,
+    .nav-drawer > button {
       display: flex; align-items: center; justify-content: space-between;
       gap: var(--space-3); padding: var(--space-3) var(--space-4);
       border-radius: var(--r-md); font-size: 15px; font-weight: 500;
       color: var(--fg); text-decoration: none; width: 100%;
       background: var(--nav-drawer-item-bg); border: none; font-family: inherit; text-align: left;
       cursor: pointer;
+      position: relative;
+      z-index: 1;
       transition: color var(--dur-fast) var(--ease-out),
                   background-color var(--dur-fast) var(--ease-out),
                   border-color var(--dur-fast) var(--ease-out),
                   box-shadow var(--dur-normal) var(--ease-out),
                   transform var(--dur-normal) var(--ease-default);
     }
-    .nav-drawer a:hover,
-    .nav-drawer button:hover {
+    .nav-drawer > a:hover,
+    .nav-drawer > button:hover {
       background: var(--nav-drawer-item-hover-bg);
       color: var(--fg);
     }
-    .nav-drawer a:focus-visible,
-    .nav-drawer button:focus-visible {
+    .nav-drawer > a:focus-visible,
+    .nav-drawer > button:focus-visible {
       outline: none;
       background: var(--nav-drawer-item-hover-bg);
       color: var(--fg);
       box-shadow: var(--nav-drawer-item-focus-ring);
     }
-    .nav-drawer a:active,
-    .nav-drawer button:active {
+    .nav-drawer > a:active,
+    .nav-drawer > button:active {
       background: var(--nav-drawer-item-active-bg);
       transform: scale(0.99);
     }
@@ -365,6 +376,36 @@
       .nav-toggle { display: inline-flex; }
       .nav-inner { gap: var(--space-4); }
       .nav { height: 58px; width: calc(100% - 24px); }
+      .nav.is-open {
+        height: auto;
+        align-items: stretch;
+      }
+      .nav.is-open .nav-inner {
+        flex-wrap: wrap;
+        align-content: flex-start;
+        height: auto;
+        min-height: 58px;
+      }
+      .nav.is-open .nav-drawer {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        flex: 1 1 100%;
+        order: 10;
+        margin-top: var(--space-2);
+        padding-top: var(--space-3);
+        background: transparent;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        border: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .nav.is-open .nav-drawer::before {
+        display: none;
+      }
     }
     @media (min-width: 961px) {
       .nav-links { display: flex; }
@@ -997,36 +1038,8 @@
 <canvas id="cvs"></canvas>
 
 <!-- ═══ NAV ════════════════════════════════════════════════════ -->
-<!-- Static mirror of the canonical DS NavBar (ds-organisms.jsx), extended for
-     platform landing verticals. Desktop (>960px): inline links · ≤960px: hamburger. -->
-<nav class="nav" id="nav" data-nav-menu>
-  <div class="shell nav-inner">
-    <a href="/" class="logo">Iceland<span class="logo-accent">Express</span></a>
-    <div class="nav-links" aria-label="Primary navigation">
-      <a href="/bookacar/">Book a car</a>
-      <a href="#vertical-flights">Flights</a>
-      <a href="#vertical-stays">Stays</a>
-      <a href="#vertical-experiences">Experiences</a>
-      <a href="/bookacar/">Travel Guides</a>
-      <a href="#ai">Help</a>
-    </div>
-    <div class="nav-spacer"></div>
-    <a href="/bookacar/" class="btn btn-primary btn-sm nav-cta">Manage Booking</a>
-    <button type="button" class="nav-toggle"
-      aria-expanded="false" aria-controls="nav-drawer" aria-label="Open navigation menu">
-      <span class="nav-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
-    </button>
-    <div class="nav-drawer" id="nav-drawer" role="menu" aria-label="Navigation menu">
-      <a href="/bookacar/" role="menuitem">Book a car</a>
-      <a href="#vertical-flights" role="menuitem">Flights</a>
-      <a href="#vertical-stays" role="menuitem">Stays</a>
-      <a href="#vertical-experiences" role="menuitem">Experiences</a>
-      <a href="/bookacar/" role="menuitem">Travel Guides</a>
-      <a href="#ai" role="menuitem">Help</a>
-      <a href="/bookacar/" role="menuitem" class="nav-drawer-cta">Manage Booking</a>
-    </div>
-  </div>
-</nav>
+<!-- Canonical NavBar mount (single source of truth: ds-organisms.jsx) -->
+<div id="landing-nav-root"></div>
 
 <!-- ═══ HERO ════════════════════════════════════════════════════ -->
 <section id="hero">
@@ -1318,7 +1331,37 @@
   </div>
 </footer>
 
-<script src="frontend/prototype/Iceland express 2 Landing/nav-menu.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="frontend/prototype/Iceland express 2 Landing/data.jsx"></script>
+<script type="text/babel" src="frontend/prototype/Iceland express 2 Landing/tokens.jsx"></script>
+<script type="text/babel" src="frontend/prototype/Iceland express 2 Landing/ds-atoms.jsx"></script>
+<script type="text/babel" src="frontend/prototype/Iceland express 2 Landing/ds-molecules.jsx"></script>
+<script type="text/babel" src="frontend/prototype/Iceland express 2 Landing/ds-organisms.jsx?v=7"></script>
+<script src="frontend/prototype/Iceland express 2 Landing/nav-items-landing.js"></script>
+<script type="text/babel">
+function goLanding(route) {
+  const map = window.LANDING_NAV_ROUTE_MAP || {};
+  const target = map[route] || '/bookacar/';
+  window.location.href = target;
+}
+
+function mountLandingNav() {
+  const rootEl = document.getElementById('landing-nav-root');
+  if (!rootEl || !window.NavBar) return;
+  const items = window.NAV_LANDING_ITEMS || window.NAV_PLATFORM_ITEMS || [];
+  ReactDOM.createRoot(rootEl).render(
+    <NavBar go={goLanding} items={items} manageRoute="manage" />
+  );
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', mountLandingNav);
+} else {
+  mountLandingNav();
+}
+</script>
 <script>
 /* ── PARTICLES ─────────────────────────────────────────────── */
 const cvs = document.getElementById('cvs');

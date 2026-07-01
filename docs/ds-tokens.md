@@ -147,11 +147,11 @@ Tiers 2 and 3 never contain raw values. Breaking this breaks the theme system.
                                         applied via `.nav .shell { padding: 0 var(--nav-pad-x) }`.
                                         Mirror: T.nav.padX */
 --nav-menu-max:     960px            /* ≤960px: hamburger drawer · >960px: inline links */
---nav-drawer-frost-bg:       rgba(7,10,24,0.90)
---nav-drawer-blur:           40px
+--nav-drawer-frost-bg:       rgba(12,16,34,0.72)
+--nav-drawer-blur:           blur(48px) saturate(180%)
 --nav-drawer-shadow:         var(--shadow-xl)
---nav-drawer-item-bg:        rgba(255,255,255,0.03)
---nav-drawer-item-hover-bg:  rgba(255,255,255,0.08)
+--nav-drawer-item-bg:        rgba(7,10,24,0.55)
+--nav-drawer-item-hover-bg:  rgba(255,255,255,0.12)
 --nav-drawer-item-active-bg: var(--primary-tint-2)
 --nav-drawer-item-focus-ring: 0 0 0 2px var(--primary), 0 0 0 4px rgba(6,182,212,0.20)
 ```

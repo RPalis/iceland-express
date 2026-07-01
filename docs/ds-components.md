@@ -88,18 +88,18 @@ Links:    Book a car · Flights · Stays · Experiences · Travel Guides · Help
           In-app (bookacar): route for Book a car / Travel Guides · href to landing
           for Flights / Stays / Experiences / Help (/#vertical-* · /#ai)
 CTA:      btn-primary btn-sm "Manage Booking" (desktop) · .nav-drawer-cta (mobile drawer)
-Drawer:   dedicated frost tokens (--nav-drawer-frost-bg · --nav-drawer-blur) — stronger
-          than pill; item hover / focus-visible / active ladder via --nav-drawer-item-* tokens
+Drawer:   iOS-style frost — blur(48px) saturate(180%) on open pill + ::before layer;
+          opaque item rows (--nav-drawer-item-bg 55%); unified card on mobile ≤960px
 Breakpoint: --nav-menu-max (960px) — >960px inline links · ≤960px hamburger drawer
 Classes:  .nav / .nav-inner / .logo / .logo-accent / .nav-links / .nav-spacer
           .nav-toggle / .nav-toggle-bars / .nav-drawer / .nav-drawer-cta / .nav-cta
           .nav.is-open (drawer open) · .nav.scrolled (scroll > 50px)
 Props:    go(route) · items[] · manageRoute
           item: { label, route?, href?, onClick? }
-Defined:  nav-items.js (window.NAV_PLATFORM_ITEMS) · ds-organisms.jsx (window.NavBar)
-          · nav-menu.js (static pages only — data-nav-menu)
-          styles.css (--nav-menu-max + nav section)
-Mirrors:  index.html (static, extended links) · Landing Page.html (static)
+Defined:  nav-items.js (window.NAV_PLATFORM_ITEMS) · nav-items-landing.js (window.NAV_LANDING_ITEMS)
+          · ds-organisms.jsx (window.NavBar) · styles.css (--nav-menu-max + nav section)
+Mounts:   index.html (React mount #landing-nav-root) · app.jsx (bookacar SPA)
+Mirrors:  Landing Page.html (static)
           offroad-blog/NavBar.jsx (offroad adds breadcrumb extension)
 Behavior: toggle drawer · Escape closes · outside click closes · resize >960px closes
           scroll adds .scrolled · drawer links/buttons close on navigate

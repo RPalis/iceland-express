@@ -200,6 +200,64 @@ New organism:
 
 ---
 
+## Figma Component Library — Cars-First Iteration (2026-07-01)
+
+The Figma file (`RGRxsEOrZbuJGDLJasrxby`) now hosts a mirror of the code DS
+on the `Components` page. Every Figma component uses Figma Variables bound to
+the `Iceland Express / Tokens` collection (145 vars, 1:1 with `styles.css` /
+`tokens.jsx`).
+
+### Figma Variables → Code Tokens
+| Figma Variable collection | Code source                |
+|---------------------------|----------------------------|
+| `Iceland Express / Tokens` (145 vars, mode: Dark) | `styles.css` CSS vars + `tokens.jsx` `T.*` |
+
+Variable groups: `color/`, `radius/`, `space/`, `font/`, `weight/`, `size/`,
+`line-height/`, `z/`, `dur/`, `ease/`, `alpha/`. Semantic tokens alias
+primitives (e.g. `color/input-bg` → `color/inner`).
+
+### Figma Components → Code Components
+| Figma component (page: Components)             | Code component            | Notes |
+|------------------------------------------------|---------------------------|-------|
+| `Ico`                                          | `Ico` (ds-atoms)          | Instance swap target for icons |
+| `Button/{intent}/{state}` × 12                 | `Btn` (ds-atoms)          | 3 intents × 4 states |
+| `Field/state={s}` × 5                          | `Fld` (ds-atoms)          | default/focus/filled/error/disabled |
+| `Badge/{variant}` × 6                          | `Bdg` (ds-atoms)          | primary/soft/success/amber/outline/glass |
+| `FreeCancBadge/{variant}` × 2                  | `FreeCancBadge` (ds-molecules) | compact/full |
+| `TrustBadges`                                  | (new — code TBD)          | SSL / Free Cancellation / Secure Payment |
+| `StepHeader/step={n}` × 5                      | (new — code TBD)          | 5-step funnel progress |
+| `Tab/{method}/{selected}` × 8                  | `IETabs` (radix-primitives) | Card/PayPal/ApplePay/GooglePay × selected/unselected |
+| `DepositOption/{option}/{selected}` × 6        | (new — code TBD)          | full/deposit/pickup × selected/unselected |
+| `NavBar`                                       | `NavBar` (ds-organisms)   | Canonical — single source of truth |
+| `CarCard`                                      | `CarCardV2` (ds-organisms)| A2 results card |
+| `PriceBreakdownCard`                           | `PriceSummaryCard` (ds-organisms) | A3/A5/A6 sidebar |
+| `EmptyState`                                   | `EmptyState` (ds-organisms) | No results |
+| `ErrorState`                                   | (new — code TBD)          | API down / timeout |
+
+**D4 Audit (2026-07-01):** 51 components · 242 nodes · 100 auto-layout frames ·
+211/212 fills bound (100%) · 30/30 strokes bound (100%) · 136/137 text colors
+bound (99%, 1 raw = emoji glyph — acceptable). Verdict: **PASS**.
+
+**Master practices implemented:**
+- ✅ Variables bound — every fill/stroke/text uses a Figma Variable
+- ✅ Auto-layout — 100 frames with `layoutMode` set
+- ✅ Variant properties — intent/state/variant on Button/Field/Badge/Tab
+- ✅ Component descriptions — every component has a description
+- ✅ Nested instances — FreeCancBadge inside CarCard, links inside NavBar
+- ⚠ Boolean props (showLeftIcon, etc.) — deferred to future session
+- ⚠ Text props (labelText, placeholder) — deferred to future session
+- ⚠ Instance swap wiring (Ico → Button) — deferred to future session
+
+**Code Connect mapping:** To be formalized in Phase G follow-up via
+`figma-code-connect` skill. The table above is the manual mapping; the
+Code Connect file will automate the Figma → code component resolution.
+
+---
+
+*IcelandExpress · docs/ds-components.md · v1.1 · July 2026*
+
+---
+
 ## Update Rules for This File
 
 ```

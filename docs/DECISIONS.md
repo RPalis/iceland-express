@@ -383,6 +383,20 @@ interaction states aligned by default.
 
 ---
 
+## 2026-07-01 — Cars-first Figma design iteration: foundations locked, provider switched to Rentalcars Connect
+
+**What:** Launched a 7-phase Figma-only design iteration (Phases A-G) to perfect the Cars vertical end-to-end before any frontend/backend changes. Foundations are locked: (1) 145 Figma Variables in the `Iceland Express / Tokens` collection mapping 1:1 to `styles.css` and `tokens.jsx`; (2) 51 Figma components (19 atoms, 22 molecules, 5 organisms) with auto-layout and 100% variable-bound fills/strokes/text; (3) UX logic documented in `docs/ux-logic.md` (5-step funnel, per-vertical field matrix, Rentalcars Connect schema mapping, payment + amendment logic, guest-mode constraints). Car booking provider switched from Caren to **Rentalcars Connect**. Multi-provider strategy adopted: Rentalcars Connect (cars) / ETG (hotels) / Bokun (activities) / Duffel (flights). D4 audit: 211/212 fills bound, 30/30 strokes bound, 136/137 text colors bound (1 raw = emoji glyph — acceptable). Phase E (screen refinement) started — A6 Checkout and MB Lookup representative screens built from the component library. Phase F (prototype wiring + test plan) documented. Phase G (this entry + spec docs) in progress.
+
+**Why:** The existing Figma frames used 99% raw fills, inline components, and had Figma/prototype drift on A6. Design-to-code drift was documented in the Phase A audit (`design/audit-cars-2026-07-01.md`). Locking foundations first (tokens + components) ensures every future screen starts from bound variables and reusable components — preventing the drift that plagued the NavBar (see 2026-06-17 entries). Switching to Rentalcars Connect gives access to a broader vehicle inventory, standardized extras, and a unified booking API across multiple suppliers. The guest-mode constraint (no accounts) was ratified to reduce booking friction — booking ref + email is the only retrieval key.
+
+**Alternatives rejected:**
+- Build screens first, fix tokens later — produces the same drift the audit found. Rejected.
+- Keep Caren as the provider — limited inventory, no native extras API, amendment flow is manual. Rejected in favor of Rentalcars Connect.
+- Add user accounts for MB — increases friction at booking time; guest-mode (ref + email) is sufficient for Phase 1 and matches Booking.com's retrieve-booking pattern. Rejected.
+- Build all 4 verticals simultaneously — violates the vertical-stacking model (2026-06-16 decision). Cars first, then Flights/Hotels/Experiences.
+
+---
+
 ## Update Rules for This File
 
 ```

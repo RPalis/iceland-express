@@ -280,6 +280,19 @@
 
 ---
 
+## Session notes
+
+### 2026-07-08 — Cars-First Phase E + prototype reconciliation (nav-parity)
+
+- Ratified `docs/ux-logic.md` §11 (8 open questions) → `docs/DECISIONS.md`
+- Phase G specs: `design/payment-logic.md`, `design/amendments-flow-spec.md`
+- Figma Gate 1: canonical frames pinned (`design/figma-links.md`); MB lookup/cancel/failure states added; NavBar component instances across flows
+- Prototype Gate 2: A6 (dynamic CTA, trust badges, payment tabs, ISK line); MB (vertical prop, M3a/M4, failure states); `manage` key in cars + flights configs
+- `bash scripts/ds-audit.sh --strict` = 0 findings
+- Ready: merge `nav-parity` → `master`, then PM-1 production migration
+
+---
+
 ## Update Rules for This File
 
 ```

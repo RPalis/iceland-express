@@ -52,14 +52,23 @@ function CheckoutScreen({ search, setSearch, car, days, qty, go, vertical }) {
   const [pay, setPay] = useS3("full");
   const [form, setForm] = useS3({
     first: "", last: "", email: "", phone: "",
-    dob: "", license: "", licenseCountry: "GB",
-    flight: "", requests: "",
+    dob: "", licenseCountry: "GB",
+    flight: "",
     card: "", expiry: "", cvv: "", cardName: "",
     agree: false, marketing: false,
   });
   const [submitting, setSubmitting] = useS3(false);
   const [sameAsDriver, setSameAsDriver] = useS3(false);
+  const [payMethod, setPayMethod] = useS3("card");
   const set = (k) => (e) => setForm({ ...form, [k]: e.target ? e.target.value : e });
+
+  // Phase 1: card only is wired — wallets are visual placeholders (DECISIONS 2026-07-08)
+  const PAY_METHODS = [
+    { id: "card",      label: "Card",       icon: "Card" },
+    { id: "paypal",    label: "PayPal",     icon: "Card" },
+    { id: "applepay",  label: "Apple Pay",  icon: "Card" },
+    { id: "googlepay", label: "Google Pay", icon: "Card" },
+  ];
 
   function toggleSameAsDriver() {
     const next = !sameAsDriver;
@@ -75,6 +84,8 @@ function CheckoutScreen({ search, setSearch, car, days, qty, go, vertical }) {
   const payOpts = v.payment.hasPickupOption
     ? allPayOpts
     : allPayOpts.filter(o => o.id !== "pickup");
+  const dueToday = (payOpts.find(o => o.id === pay) || payOpts[0]).amt;
+  const ctaLabel = "Complete Booking — " + (dueToday === 0 ? "€0" : eur(dueToday));
 
   function submit(e) {
     e.preventDefault();
@@ -98,7 +109,16 @@ function CheckoutScreen({ search, setSearch, car, days, qty, go, vertical }) {
               <FormField label="First name" required><Fld type="text" placeholder="Anna" value={form.first} onChange={set("first")} /></FormField>
               <FormField label="Last name" required><Fld type="text" placeholder="Sigurðardóttir" value={form.last} onChange={set("last")} /></FormField>
               <FormField label="Email address" required span><Fld type="email" placeholder="anna@example.com" value={form.email} onChange={set("email")} /></FormField>
-              <FormField label="Special requests" span><TxtArea placeholder={v.traveller.requestsPlaceholder} value={form.requests} onChange={set("requests")} rows={3} /></FormField>
+              <FormField label="Phone number" required><Fld type="tel" placeholder="+354 555 0100" value={form.phone} onChange={set("phone")} /></FormField>
+              <FormField label="Date of birth" required helper="Driver must be 25–70"><Fld type="text" placeholder="DD/MM/YYYY" maxLength={10} value={form.dob} onChange={set("dob")} /></FormField>
+              {v.traveller.hasLicense && (
+                <FormField label={v.traveller.licenseLabel} required>
+                  <SelFld value={form.licenseCountry} onChange={set("licenseCountry")}>
+                    {(v.traveller.licenseCountries || []).map((c) => <option key={c} value={c}>{c}</option>)}
+                  </SelFld>
+                </FormField>
+              )}
+              <FormField label="Flight number (optional)" helper={v.traveller.flightHelper}><Fld type="text" placeholder="FI 205" value={form.flight} onChange={set("flight")} /></FormField>
             </div>
           </div>
 
@@ -120,28 +140,36 @@ function CheckoutScreen({ search, setSearch, car, days, qty, go, vertical }) {
             </div>
           </div>
 
-          {/* Card details */}
+          {/* Payment method */}
           {pay !== "pickup" && (
             <div className="card card-pad">
-              <div className="row between center" style={{ marginBottom: 20 }}>
-                <h3 className="h2">Card Details</h3>
+              <div className="row between center" style={{ marginBottom: 16 }}>
+                <h3 className="h2">Payment Method</h3>
                 <div className="row center gap6 muted" style={{ fontSize: 13 }}>
                   <Icons.Lock size={16} style={{ color: "var(--success)" }} /> SSL secured
                 </div>
               </div>
-              <div className="form-grid">
-                <FormField label="Card number" required span><Fld type="text" placeholder="4242 4242 4242 4242" maxLength={19} value={form.card} onChange={set("card")} /></FormField>
-                <FormField label="Expiry" required><Fld type="text" placeholder="MM/YY" maxLength={5} value={form.expiry} onChange={set("expiry")} /></FormField>
-                <FormField label="CVV" required><Fld type="text" placeholder="•••" maxLength={4} value={form.cvv} onChange={set("cvv")} /></FormField>
-                <FormField label="Name on card" required span>
-                  <Fld type="text" placeholder="Anna Sigurðardóttir" value={form.cardName} onChange={set("cardName")} readOnly={sameAsDriver} style={sameAsDriver ? { opacity: 0.6 } : {}} />
-                  <div style={{ marginTop: 8 }}>
-                    <Chk checked={sameAsDriver} onChange={toggleSameAsDriver}>
-                      <span style={{ fontSize: 13, color: "var(--muted)" }}>Same as driver</span>
-                    </Chk>
-                  </div>
-                </FormField>
-              </div>
+              <Tab items={PAY_METHODS} active={payMethod} onChange={setPayMethod} style={{ marginBottom: 20 }} />
+
+              {payMethod === "card" ? (
+                <div className="form-grid">
+                  <FormField label="Card number" required span><Fld type="text" placeholder="4242 4242 4242 4242" maxLength={19} value={form.card} onChange={set("card")} /></FormField>
+                  <FormField label="Expiry" required><Fld type="text" placeholder="MM/YY" maxLength={5} value={form.expiry} onChange={set("expiry")} /></FormField>
+                  <FormField label="CVV" required><Fld type="text" placeholder="•••" maxLength={4} value={form.cvv} onChange={set("cvv")} /></FormField>
+                  <FormField label="Name on card" required span>
+                    <Fld type="text" placeholder="Anna Sigurðardóttir" value={form.cardName} onChange={set("cardName")} readOnly={sameAsDriver} style={sameAsDriver ? { opacity: 0.6 } : {}} />
+                    <div style={{ marginTop: 8 }}>
+                      <Chk checked={sameAsDriver} onChange={toggleSameAsDriver}>
+                        <span style={{ fontSize: 13, color: "var(--muted)" }}>Same as driver</span>
+                      </Chk>
+                    </div>
+                  </FormField>
+                </div>
+              ) : (
+                <InfoBanner variant="info">
+                  {PAY_METHODS.find(m => m.id === payMethod).label} is coming soon — please pay by card for now.
+                </InfoBanner>
+              )}
             </div>
           )}
 
@@ -156,14 +184,15 @@ function CheckoutScreen({ search, setSearch, car, days, qty, go, vertical }) {
           </div>
 
           <Btn variant="primary" size="lg" block iconEnd={Icons.ArrowR} disabled={submitting} type="submit">
-            {submitting ? "Processing…" : "Confirm & Book"}
+            {submitting ? "Processing…" : ctaLabel}
           </Btn>
+          <TrustBadges variant="checkout" style={{ marginTop: 4 }} />
         </form>
 
         <div className="summary">
           <PriceSummaryCard
             car={car} days={days} qty={qty}
-            cta={submitting ? "Processing…" : "Confirm & Book"}
+            cta={submitting ? "Processing…" : ctaLabel}
             onCta={() => submit({ preventDefault: () => {} })}
             note={
               <div className="row center gap8" style={{ marginTop: 16, padding: "13px 16px", background: "var(--inner)", borderRadius: "var(--r-sm)", fontSize: 13.5 }}>

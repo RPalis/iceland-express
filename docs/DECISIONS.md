@@ -397,6 +397,43 @@ interaction states aligned by default.
 
 ---
 
+## 2026-07-08 — ux-logic §11 open questions ratified (Phase E unblocked)
+
+**What:** All 8 open questions in `docs/ux-logic.md` §11 are ratified with the documented recommendations:
+
+1. **A6 field set** — Figma's fuller set is canonical for Phase 1: First/Last name, Email, Phone, DOB, License Country, Flight Number (optional).
+2. **Payment methods** — Card-only is wired in the Phase 1 prototype. PayPal / Apple Pay / Google Pay are designed in Figma as visual placeholder tabs (Phase 2+ wiring).
+3. **Special requests** — removed from A6 entirely (not moved to A5).
+4. **Change Location** — remains a separate MB state (`changeLocation`), not folded into Modify Dates.
+5. **Light mode** — dark-only for Phase 1. Light mode is a Phase 2+ concern.
+6. **`price_increase_percent` threshold** — 10%. Any amendment re-price increase above 10% requires an explicit user accept.
+7. **MB lookup rate limit** — 5 attempts per IP per 5 minutes, 15-minute lockout after 5 failures.
+8. **Past-pickup cutoff** — 2-hour grace period: amend/cancel actions lock when `now > pickupDate + 2h`.
+
+**Why:** Phase E screen refinement and the prototype reconciliation both blocked on these. The recommendations were already documented in `design/audit-cars-2026-07-01.md` §9 and `docs/ux-logic.md` §11; adopting them as written keeps Figma and prototype converging on one canonical spec.
+
+**Alternatives rejected:**
+- Deferring ratification until user testing — blocks Phase E indefinitely; the test plan (Phase F) already assumes these flows.
+- Wiring all 4 payment methods in Phase 1 — adds provider integration work with no Phase 1 conversion benefit; tabs communicate the roadmap visually.
+
+---
+
+## 2026-07-08 — Amendments flow extended: M3a Change Driver + M4 Pay the Difference
+
+**What:** Two amendment use cases designed in the Figma `Amendments flow` section are adopted into the canonical spec:
+- **M3a — Change Driver**: guest can amend driver details (name, phone, license country) on an existing booking. New MB state `changeDriver`; new vertical-config flag `manage.hasModifyDriver` (cars: true).
+- **M4 — Pay the Difference**: when an amendment re-price increases the total, the user completes payment of the delta on a dedicated payment step (method pills + card form + `Pay €X & Update Booking` CTA) before the amendment is confirmed. Charged to the card used at booking by default.
+
+The MB state machine is now: `lookup → found → (changeDriver | changeDates | changeLocation | changeExtras) → reprice → (payDifference if delta > 0) → updated`, plus `cancelConfirm → cancelled`.
+
+**Why:** The Figma amendments flow (M3–M5 frames) surfaced these two real-world cases missing from `docs/ux-logic.md` §8: driver details change is Rentalcars Connect's most common amendment, and a price-increase amendment needs an explicit payment step — silently charging the card on file violates the never-silently-raise-the-price rule (ds-rules).
+
+**Alternatives rejected:**
+- Charging the delta automatically to the card on file with only a notice — violates explicit-consent pattern for price increases.
+- Treating driver change as a cancel + rebook — loses the original rate and free-cancellation window.
+
+---
+
 ## Update Rules for This File
 
 ```

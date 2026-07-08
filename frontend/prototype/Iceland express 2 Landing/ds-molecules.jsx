@@ -266,10 +266,48 @@ function FreeCancBadge({ compact }) {
   );
 }
 
+/* ── Tab ─────────────────────────────────────────────────────
+ * Pill tab row — e.g. A6 payment methods (Card / PayPal / Apple Pay / Google Pay).
+ * Figma: Components page `Tab` component set (method × selected).
+ * Atoms used  : Ico
+ * Tokens      : T.primary, T.muted, T.fg
+ */
+function Tab({ items, active, onChange, style }) {
+  return (
+    <div role="tablist" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', ...style }}>
+      {items.map((it) => {
+        const on = it.id === active;
+        return (
+          <button
+            key={it.id}
+            type="button"
+            role="tab"
+            aria-selected={on}
+            onClick={() => onChange && onChange(it.id)}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              padding: '9px 16px', cursor: 'pointer',
+              fontSize: 13, fontWeight: 600,
+              color: on ? T.primary : T.muted,
+              background: on ? 'var(--primary-tint)' : 'var(--inner)',
+              border: `1px solid ${on ? 'var(--primary)' : 'var(--border)'}`,
+              borderRadius: 'var(--r-pill)',
+              fontFamily: 'inherit',
+            }}
+          >
+            {it.icon && <Ico name={it.icon} size={15} style={{ color: on ? T.primary : T.dim }} />}
+            {it.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 Object.assign(window, {
   // Molecules
   InputGroup, SearchInput, FormField,
   SpecCell, SpecRow,
   PriceTag, MetaRow, SectionHdr,
-  InclList, InfoBanner, RatingChip, FreeCancBadge,
+  InclList, InfoBanner, RatingChip, FreeCancBadge, Tab,
 });

@@ -118,6 +118,27 @@ const carsConfig = {
     ],
   },
 
+  // ── Manage booking (MB) — ratified 2026-07-08 (docs/ux-logic.md §6.3) ─────
+  manage: {
+
+    // [REQUIRED] Which amendment actions are available for this vertical
+    hasModifyDriver: true,      // M3a — name / phone / license country
+    hasModifyDates: true,       // M3b
+    hasModifyLocation: true,    // M3c
+    hasModifyExtras: true,      // M3d
+    hasCancel: true,
+
+    // [REQUIRED] Labels for the cancellation fee tiers
+    cancelTierLabels: {
+      free: 'Free Cancellation',
+      partial: '15% cancellation fee',
+      late: '25% cancellation fee',
+    },
+
+    // [REQUIRED] Instructions shown at the top of the amend view
+    amendInstructions: 'Edit your driver details, dates, location, or extras below. Changes are confirmed by Rentalcars within 60 seconds.',
+  },
+
   // ── Item summary card (A7) ────────────────────────────────────────────────
   // Describes how to render the "what was booked" card on the confirmation page.
   item: {

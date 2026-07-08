@@ -157,14 +157,16 @@ Every list-bearing screen must handle these 4 states. Every form-bearing screen 
 | **Lookup** | `lookup` | Initial — ref + email form |
 | **Lookup failed** | (within lookup) | No booking found — error text + retry |
 | **Found** | `found` | Booking retrieved — summary + actions |
-| **Change dates** | `changeDates` | User clicks Modify dates |
-| **Change location** | `changeLocation` | User clicks Modify location (NOT in original plan — see §8 open question) |
-| **Change extras** | `changeExtras` | User clicks Add extras / Modify extras |
+| **Change driver** | `changeDriver` | User clicks Change driver (Figma M3a) — name / phone / license country |
+| **Change dates** | `changeDates` | User clicks Modify dates (Figma M3b) |
+| **Change location** | `changeLocation` | User clicks Modify location (Figma M3c) — ratified 2026-07-08 as a separate state |
+| **Change extras** | `changeExtras` | User clicks Add extras / Modify extras (Figma M3d) |
+| **Pay the difference** | `payDifference` | Amendment re-price increased the total (Figma M4) — delta payment step before confirm |
 | **Cancel confirm** | `cancelConfirm` | User clicks Cancel — fee tier preview modal |
 | **Cancelled** | `cancelled` | Cancel confirmed — refund receipt |
-| **Updated** | `updated` | Amendment confirmed — updated voucher |
-| **Amendment failed** | (TBD — add to prototype) | Provider rejects amendment — error + retry / contact support |
-| **Past pickup** | (TBD — add to prototype) | User tries to amend/cancel after pickup time — locked, contact support |
+| **Updated** | `updated` | Amendment confirmed — updated voucher (Figma M5) |
+| **Amendment failed** | `amendFailed` | Provider rejects amendment — error + retry / contact support |
+| **Past pickup** | (banner within `found`) | `now > pickupDate + 2h` — amend/cancel locked, contact support (ratified 2026-07-08) |
 
 ---
 
@@ -304,6 +306,7 @@ MB currently uses hardcoded car-specific rendering. To become a true shared engi
 ```javascript
 // Add to cars.config.js (and every vertical config):
 manage: {
+  hasModifyDriver: true,       // cars: yes (name/phone/license — Figma M3a), flights: no (name changes = re-ticket), hotels: yes, activities: yes
   hasModifyDates: true,        // cars: yes, flights: depends on Duffel, hotels: yes, activities: yes
   hasModifyLocation: true,     // cars: yes (pickup/dropoff), flights: no (origin/dest fixed), hotels: no, activities: yes (pickup point)
   hasModifyExtras: true,       // cars: yes, flights: yes (bags/seats), hotels: yes, activities: maybe
@@ -313,7 +316,7 @@ manage: {
     partial: '15% cancellation fee',
     late: '25% cancellation fee',
   },
-  amendInstructions: 'Edit your dates, location, or extras below. Changes are confirmed by Rentalcars within 60 seconds.',
+  amendInstructions: 'Edit your driver details, dates, location, or extras below. Changes are confirmed by Rentalcars within 60 seconds.',
 },
 ```
 
@@ -379,20 +382,22 @@ flowchart TD
   Lookup --> |Not found| LookupFail[Error - no booking found]
   Lookup --> |Found| View[MB View Booking]
   View --> Choose{Choose action}
-  Choose --> |Modify dates| ModDates[Pick new dates]
-  Choose --> |Modify location| ModLoc[Pick new pickup/dropoff]
-  Choose --> |Modify extras| ModExtras[Adjust extras quantities]
+  Choose --> |Change driver| ModDriver[Edit name / phone / license - M3a]
+  Choose --> |Modify dates| ModDates[Pick new dates - M3b]
+  Choose --> |Modify location| ModLoc[Pick new pickup/dropoff - M3c]
+  Choose --> |Modify extras| ModExtras[Adjust extras quantities - M3d]
   Choose --> |Cancel| Cancel[Cancel confirm modal]
+  ModDriver --> ConfirmAmend[Confirm amendment]
   ModDates --> Reprice[Re-price against Rentalcars]
   ModLoc --> Reprice
   ModExtras --> Reprice
   Reprice --> |Price decreased| RefundDue[Show refund amount]
-  Reprice --> |Price increased| ChargeDue[Show additional charge - price-increase-percent warning]
+  Reprice --> |Price increased| PayDiff[M4 Pay the Difference - delta payment step]
   Reprice --> |Same price| NoChange[Show no change]
-  RefundDue --> ConfirmAmend[Confirm amendment]
-  ChargeDue --> ConfirmAmend
+  RefundDue --> ConfirmAmend
+  PayDiff --> |Delta paid| ConfirmAmend
   NoChange --> ConfirmAmend
-  ConfirmAmend --> |Success| Updated([MB Updated - new voucher])
+  ConfirmAmend --> |Success| Updated([M5 MB Updated - new voucher])
   Cancel --> FeeTier{Compute cancellation tier}
   FeeTier --> |>=48h| FreeRefund[Full refund]
   FeeTier --> |24-48h| PartialRefund[85% refund - 15% fee]
@@ -458,7 +463,14 @@ if (delta === 0) {
 }
 ```
 
-**Price increase threshold:** Rentalcars' `prebook` supports `price_increase_percent` (0–100%). If the increase exceeds the threshold, the original rate is released and the user sees the new rate. Recommended threshold: 10% — anything above triggers an explicit user accept.
+**Price increase threshold:** Rentalcars' `prebook` supports `price_increase_percent` (0–100%). If the increase exceeds the threshold, the original rate is released and the user sees the new rate. Ratified threshold (2026-07-08): **10%** — anything above triggers an explicit user accept.
+
+**M4 — Pay the Difference (delta > 0):** when the re-price increases the total, the amendment is NOT confirmed until the user pays the delta on a dedicated payment step (Figma M4):
+- `PriceDeltaRow` shows original total, new total, and the delta.
+- Payment method pills (Card / PayPal / Apple Pay / Google Pay — card-only wired in Phase 1).
+- Card form pre-notice: "Charged to the card used at booking by default."
+- CTA: `Pay €{delta} & Update Booking` — on success → M5 Updated.
+- Abandoning M4 leaves the booking unchanged (original rate kept if within `price_increase_percent` hold window; otherwise the user is returned to the amendment form with the new rate).
 
 ### 8.5 Amendment failure branches
 
@@ -533,18 +545,18 @@ This is **not** designed this round. The Figma flow assumes guest-mode only.
 
 ---
 
-## 11. Open questions to ratify before Phase E
+## 11. Open questions — RATIFIED 2026-07-08 (see DECISIONS.md)
 
-1. **A6 field set** — confirm Phone + DOB + License Country + Flight Number are all in Phase 1 scope (Figma pattern wins per audit §5.1).
-2. **Payment methods in Phase 1** — confirm Card-only is wired in prototype; PayPal/Apple Pay/Google Pay are Figma visual placeholders for Phase 2+.
-3. **`Special requests` TxtArea** — remove from A6 entirely (recommended) or move to A5 extras as a "Notes for the rental desk" field?
-4. **ManageChangeLocation** — keep as separate MB state (recommended) or fold into Modify dates? Current prototype has it separate.
-5. **Light mode** — confirm dark-only for Phase 1. Light mode is a Phase 2+ concern.
-6. **`price_increase_percent` threshold** — confirm 10% as the point where the user must explicitly accept a price increase on amendment.
-7. **MB lookup rate limit** — confirm 5 attempts per IP per 5 minutes, 15-min lockout.
-8. **Past-pickup cutoff** — confirm: amend/cancel buttons hidden when `now > pickupDate + 2h` (2-hour grace period) vs. strictly `now > pickupDate`.
+All 8 questions were ratified with the documented recommendations:
 
-These are ratified in the next session before Phase E frames are designed.
+1. **A6 field set** — Phone + DOB + License Country + Flight Number (optional) are all Phase 1 scope. ✅
+2. **Payment methods in Phase 1** — Card-only wired in prototype; PayPal/Apple Pay/Google Pay are visual placeholders for Phase 2+. ✅
+3. **`Special requests` TxtArea** — removed from A6 entirely. ✅
+4. **ManageChangeLocation** — kept as a separate MB state. ✅
+5. **Light mode** — dark-only for Phase 1. ✅
+6. **`price_increase_percent` threshold** — 10%; above triggers explicit user accept (M4 Pay the Difference). ✅
+7. **MB lookup rate limit** — 5 attempts per IP per 5 minutes, 15-min lockout. ✅
+8. **Past-pickup cutoff** — 2-hour grace period (`now > pickupDate + 2h` locks amend/cancel). ✅
 
 ---
 

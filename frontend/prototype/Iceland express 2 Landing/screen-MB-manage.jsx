@@ -18,28 +18,46 @@ const DEMO_BOOKING = {
   status: "confirmed",
   paid: "full",
   bookedOn: new Date(Date.now() - 2 * 86400000),
+  driver: { first: "Anna", last: "Sigurðardóttir", phone: "+354 555 0100", licenseCountry: "IS" },
 };
 
 /* ── cancellation policy ── */
-function cancellationFee(booking) {
+function cancellationFee(booking, tierLabels) {
+  const labels = tierLabels || { free: "Free Cancellation", partial: "15% cancellation fee", late: "25% cancellation fee" };
   const now = new Date();
   const hoursToPickup = (booking.pickupDate - now) / 3600000;
-  if (hoursToPickup > 48) return { label: "Free Cancellation", fee: 0, pct: 0 };
-  if (hoursToPickup > 24) return { label: "15% cancellation fee", fee: Math.ceil(computeTotals(booking.car, daysBetween(booking.pickupDate, booking.returnDate), booking.qty).total * 0.15), pct: 15 };
-  return { label: "25% cancellation fee", fee: Math.ceil(computeTotals(booking.car, daysBetween(booking.pickupDate, booking.returnDate), booking.qty).total * 0.25), pct: 25 };
+  if (hoursToPickup > 48) return { label: labels.free, fee: 0, pct: 0 };
+  if (hoursToPickup > 24) return { label: labels.partial, fee: Math.ceil(computeTotals(booking.car, daysBetween(booking.pickupDate, booking.returnDate), booking.qty).total * 0.15), pct: 15 };
+  return { label: labels.late, fee: Math.ceil(computeTotals(booking.car, daysBetween(booking.pickupDate, booking.returnDate), booking.qty).total * 0.25), pct: 25 };
+}
+
+/* ── past-pickup lock — 2h grace period (DECISIONS 2026-07-08) ── */
+function isPastPickup(booking) {
+  const pickup = new Date(booking.pickupDate);
+  const [h, m] = (booking.pickupTime || "10:00").split(":").map(Number);
+  pickup.setHours(h, m, 0, 0);
+  return Date.now() > pickup.getTime() + 2 * 3600000;
 }
 
 /* ============================================================
    MANAGE BOOKING — outer router
    ============================================================ */
-function ManageBookingScreen({ go }) {
-  const [sub, setSub] = useS4("lookup");   // lookup | found | changeDates | changeLocation | changeExtras | cancelConfirm | cancelled | updated
+function ManageBookingScreen({ go, vertical }) {
+  const v = vertical || window.carsConfig;
+  // lookup | found | changeDriver | changeDates | changeLocation | changeExtras
+  // | payDifference | cancelConfirm | cancelled | updated | amendFailed
+  const [sub, setSub] = useS4("lookup");
   const [booking, setBooking] = useS4(null);
   const [draftDates, setDraftDates] = useS4(null);
   const [draftLoc, setDraftLoc] = useS4(null);
   const [draftQty, setDraftQty] = useS4(null);
+  const [draftDriver, setDraftDriver] = useS4(null);
+  const [pending, setPending] = useS4(null); // { patch, delta } awaiting M4 payment
 
-  function applyUpdate(patch) {
+  // M4 Pay the Difference: price increases require an explicit payment step
+  // before the amendment is confirmed (DECISIONS 2026-07-08).
+  function applyUpdate(patch, delta) {
+    if (delta > 0) { setPending({ patch, delta }); setSub("payDifference"); return; }
     setBooking({ ...booking, ...patch });
     setSub("updated");
   }
@@ -47,14 +65,24 @@ function ManageBookingScreen({ go }) {
   return (
     <div className="flow" style={{ paddingBottom: 60 }}>
       {sub === "lookup" && <ManageLookup onFound={(b) => { setBooking(b); setSub("found"); }} goHome={() => go("home")} />}
-      {sub === "found" && booking && <ManageFound booking={booking} setSub={setSub} goHome={() => go("home")} />}
+      {sub === "found" && booking && <ManageFound booking={booking} vertical={v} setSub={setSub} goHome={() => go("home")} />}
+      {sub === "changeDriver" && booking && (
+        <ManageChangeDriver
+          booking={booking}
+          vertical={v}
+          draft={draftDriver || { ...booking.driver }}
+          setDraft={setDraftDriver}
+          onBack={() => setSub("found")}
+          onSave={(d) => applyUpdate({ driver: d }, 0)}
+        />
+      )}
       {sub === "changeDates" && booking && (
         <ManageChangeDates
           booking={booking}
           draft={draftDates || { pickupDate: booking.pickupDate, returnDate: booking.returnDate, pickupTime: booking.pickupTime, returnTime: booking.returnTime }}
           setDraft={setDraftDates}
           onBack={() => setSub("found")}
-          onSave={(d) => applyUpdate(d)}
+          onSave={(d, delta) => applyUpdate(d, delta)}
         />
       )}
       {sub === "changeLocation" && booking && (
@@ -63,7 +91,7 @@ function ManageBookingScreen({ go }) {
           draft={draftLoc || { pickupLoc: booking.pickupLoc, dropoffLoc: booking.dropoffLoc }}
           setDraft={setDraftLoc}
           onBack={() => setSub("found")}
-          onSave={(d) => applyUpdate(d)}
+          onSave={(d) => applyUpdate(d, 0)}
         />
       )}
       {sub === "changeExtras" && booking && (
@@ -72,12 +100,25 @@ function ManageBookingScreen({ go }) {
           draft={draftQty || { ...booking.qty }}
           setDraft={setDraftQty}
           onBack={() => setSub("found")}
-          onSave={(q) => applyUpdate({ qty: q })}
+          onSave={(q, delta) => applyUpdate({ qty: q }, delta)}
         />
+      )}
+      {sub === "payDifference" && booking && pending && (
+        <ManagePayDifference
+          booking={booking}
+          delta={pending.delta}
+          onBack={() => { setPending(null); setSub("found"); }}
+          onPaid={() => { const p = pending.patch; setPending(null); setBooking({ ...booking, ...p }); setSub("updated"); }}
+          onFail={() => { setPending(null); setSub("amendFailed"); }}
+        />
+      )}
+      {sub === "amendFailed" && (
+        <ManageAmendFailed onRetry={() => setSub("found")} goHome={() => go("home")} />
       )}
       {sub === "cancelConfirm" && booking && (
         <ManageCancelConfirm
           booking={booking}
+          vertical={v}
           onBack={() => setSub("found")}
           onConfirm={() => setSub("cancelled")}
         />
@@ -104,8 +145,14 @@ function ManageLookup({ onFound, goHome }) {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      // Demo: any non-empty ref+email resolves — hint shown below
+      // Demo: any non-empty ref+email resolves — hint shown below.
+      // A ref containing "PAST" loads a past-pickup booking (locked state).
       const demo = { ...DEMO_BOOKING, ref: ref.trim().toUpperCase(), email: email.trim().toLowerCase() };
+      if (/PAST/i.test(ref)) {
+        const p = new Date(); p.setDate(p.getDate() - 1);
+        const r = new Date(); r.setDate(r.getDate() + 4);
+        demo.pickupDate = p; demo.returnDate = r;
+      }
       onFound(demo);
     }, 900);
   }
@@ -141,7 +188,7 @@ function ManageLookup({ onFound, goHome }) {
       <div className="surface" style={{ marginTop: 20, padding: "14px 18px", display: "flex", alignItems: "flex-start", gap: 10 }}>
         <Icons.Info size={16} style={{ color: "var(--primary)", flex: "none", marginTop: 2 }} />
         <p className="dim" style={{ fontSize: 13, lineHeight: 1.5, margin: 0 }}>
-          <strong style={{ color: "var(--muted)" }}>Demo tip:</strong> Enter any booking reference and email to load a sample booking. Try <strong style={{ color: "var(--primary-strong)" }}>ICE-7X9K</strong> and <strong style={{ color: "var(--primary-strong)" }}>anna@example.com</strong>.
+          <strong style={{ color: "var(--muted)" }}>Demo tip:</strong> Enter any booking reference and email to load a sample booking. Try <strong style={{ color: "var(--primary-strong)" }}>ICE-7X9K</strong> and <strong style={{ color: "var(--primary-strong)" }}>anna@example.com</strong>. Use <strong style={{ color: "var(--primary-strong)" }}>ICE-PAST</strong> to see a locked past-pickup booking.
         </p>
       </div>
     </div>
@@ -151,13 +198,24 @@ function ManageLookup({ onFound, goHome }) {
 /* ============================================================
    2. BOOKING FOUND — overview + actions
    ============================================================ */
-function ManageFound({ booking, setSub, goHome }) {
+function ManageFound({ booking, vertical, setSub, goHome }) {
+  const v = vertical || window.carsConfig;
+  const m = v.manage || {};
   const days = daysBetween(booking.pickupDate, booking.returnDate);
   const { total, lines } = computeTotals(booking.car, days, booking.qty);
-  const policy = cancellationFee(booking);
+  const policy = cancellationFee(booking, m.cancelTierLabels);
+  const locked = isPastPickup(booking);
 
   const actions = [
-    {
+    m.hasModifyDriver && {
+      id: "changeDriver",
+      icon: "Users",
+      title: "Change driver",
+      desc: "Update the driver name, phone or license country.",
+      color: "var(--primary-tint)",
+      textColor: "var(--primary-strong)",
+    },
+    m.hasModifyDates && {
       id: "changeDates",
       icon: "Calendar",
       title: "Change dates",
@@ -165,7 +223,7 @@ function ManageFound({ booking, setSub, goHome }) {
       color: "var(--primary-tint)",
       textColor: "var(--primary-strong)",
     },
-    {
+    m.hasModifyLocation && {
       id: "changeLocation",
       icon: "Pin",
       title: "Change location",
@@ -173,7 +231,7 @@ function ManageFound({ booking, setSub, goHome }) {
       color: "var(--primary-tint)",
       textColor: "var(--primary-strong)",
     },
-    {
+    m.hasModifyExtras && {
       id: "changeExtras",
       icon: "Sparkle",
       title: "Modify add-ons",
@@ -181,7 +239,7 @@ function ManageFound({ booking, setSub, goHome }) {
       color: "var(--primary-tint)",
       textColor: "var(--primary-strong)",
     },
-    {
+    m.hasCancel && {
       id: "cancelConfirm",
       icon: "X",
       title: "Cancel booking",
@@ -190,7 +248,7 @@ function ManageFound({ booking, setSub, goHome }) {
       textColor: "var(--danger)",
       danger: true,
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <div className="shell" style={{ paddingTop: 40, paddingBottom: 60 }}>
@@ -291,20 +349,32 @@ function ManageFound({ booking, setSub, goHome }) {
             </div>
           </div>
 
-          {/* Action cards */}
+          {/* Action cards — locked once pickup + 2h grace has passed */}
           <h3 className="h3" style={{ fontSize: 16, marginBottom: -4 }}>What would you like to change?</h3>
+          {locked && (
+            <InfoBanner variant="warn" icon="Info">
+              Past pickup — contact support to change this booking. Amendments and cancellation lock 2 hours after pickup time.
+            </InfoBanner>
+          )}
           {actions.map((a) => (
-              <ManageActionCard
-                key={a.id}
-                icon={a.icon}
-                title={a.title}
-                desc={a.desc}
-                color={a.color}
-                textColor={a.textColor}
-                danger={a.danger}
-                onClick={() => setSub(a.id)}
-              />
+              <div key={a.id} style={locked ? { opacity: 0.45, pointerEvents: "none" } : undefined}>
+                <ManageActionCard
+                  icon={a.icon}
+                  title={a.title}
+                  desc={locked ? "Locked — past pickup" : a.desc}
+                  color={a.color}
+                  textColor={a.textColor}
+                  danger={a.danger}
+                  onClick={() => setSub(a.id)}
+                />
+              </div>
             ))}
+          {locked && (
+            <div className="card card-pad row center gap10" style={{ justifyContent: "center", fontSize: 14 }}>
+              <Icons.Info size={16} style={{ color: "var(--primary)" }} />
+              <span className="muted">Contact support — <strong style={{ color: "var(--fg)" }}>support@icelandexpress.is</strong> · +354 555 0100</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -401,8 +471,8 @@ function ManageChangeDates({ booking, draft, setDraft, onBack, onSave }) {
               </div>
             )}
           </div>
-          <button className="btn btn-primary btn-block" onClick={() => onSave({ pickupDate: draft.pickupDate, returnDate: draft.returnDate, pickupTime: draft.pickupTime, returnTime: draft.returnTime })}>
-            Save changes <Icons.Check size={16} />
+          <button className="btn btn-primary btn-block" onClick={() => onSave({ pickupDate: draft.pickupDate, returnDate: draft.returnDate, pickupTime: draft.pickupTime, returnTime: draft.returnTime }, diff)}>
+            {diff > 0 ? <>Continue to payment — +{eur(diff)} <Icons.ArrowR size={16} /></> : <>Save changes <Icons.Check size={16} /></>}
           </button>
           <button className="btn btn-ghost btn-block btn-sm" onClick={onBack}>Cancel</button>
         </div>
@@ -524,7 +594,9 @@ function ManageChangeExtras({ booking, draft, setDraft, onBack, onSave }) {
               <span style={{ fontWeight: 700, color: diff > 0 ? "var(--warn)" : "var(--success)" }}>{diff > 0 ? "+" : ""}{eur(diff)}</span>
             </div>
           )}
-          <button className="btn btn-primary btn-block" onClick={() => onSave(draft)}>Save add-ons <Icons.Check size={16} /></button>
+          <button className="btn btn-primary btn-block" onClick={() => onSave(draft, diff)}>
+            {diff > 0 ? <>Continue to payment — +{eur(diff)} <Icons.ArrowR size={16} /></> : <>Save add-ons <Icons.Check size={16} /></>}
+          </button>
           <button className="btn btn-ghost btn-block btn-sm" onClick={onBack}>Cancel</button>
         </div>
       </div>
@@ -533,10 +605,135 @@ function ManageChangeExtras({ booking, draft, setDraft, onBack, onSave }) {
 }
 
 /* ============================================================
+   5a. CHANGE DRIVER — M3a (Figma 633:10065)
+   ============================================================ */
+function ManageChangeDriver({ booking, vertical, draft, setDraft, onBack, onSave }) {
+  const v = vertical || window.carsConfig;
+  const countries = (v.traveller && v.traveller.licenseCountries) || ["GB","US","DE","FR","IS"];
+  const set = (k) => (e) => setDraft({ ...draft, [k]: e.target.value });
+  const valid = (draft.first || "").trim() && (draft.last || "").trim();
+
+  return (
+    <div className="shell" style={{ paddingTop: 36, paddingBottom: 60, maxWidth: 560, margin: "0 auto" }}>
+      <div className="link" style={{ marginBottom: 22 }} onClick={onBack}><Icons.ArrowL size={16} /> Back to booking</div>
+      <h1 className="h1" style={{ fontSize: 28, marginBottom: 6 }}>Change driver</h1>
+      <p className="muted" style={{ fontSize: 14, marginBottom: 28 }}>Update the driver details on this booking. No price impact — the update is free.</p>
+
+      <div className="card card-pad col gap18">
+        <div className="form-grid">
+          <FormField label="First name" required><Fld type="text" placeholder="Anna" value={draft.first || ""} onChange={set("first")} /></FormField>
+          <FormField label="Last name" required><Fld type="text" placeholder="Sigurðardóttir" value={draft.last || ""} onChange={set("last")} /></FormField>
+          <FormField label="Phone number" span><Fld type="tel" placeholder="+354 555 0100" value={draft.phone || ""} onChange={set("phone")} /></FormField>
+          <FormField label="Driver license country" span helper="Driver must be 25–70 and hold a full license.">
+            <SelFld value={draft.licenseCountry || countries[0]} onChange={set("licenseCountry")}>
+              {countries.map((c) => <option key={c} value={c}>{c}</option>)}
+            </SelFld>
+          </FormField>
+        </div>
+
+        <InfoBanner variant="info" icon="Info">The new driver must present their license at pickup. The booking reference stays the same.</InfoBanner>
+
+        <button className="btn btn-primary btn-lg btn-block" disabled={!valid} onClick={() => onSave({ ...draft })}>
+          Save driver <Icons.Check size={16} />
+        </button>
+        <button className="btn btn-ghost btn-block btn-sm" onClick={onBack}>Cancel</button>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   5b. PAY THE DIFFERENCE — M4 (Figma 624:50682)
+   Amendment re-price increased the total: explicit delta payment
+   before the change is confirmed (DECISIONS 2026-07-08).
+   ============================================================ */
+function ManagePayDifference({ booking, delta, onBack, onPaid, onFail }) {
+  const [payMethod, setPayMethod] = useS4("card");
+  const [card, setCard] = useS4({ name: "", number: "", expiry: "", cvv: "" });
+  const [processing, setProcessing] = useS4(false);
+  const set = (k) => (e) => setCard({ ...card, [k]: e.target.value });
+
+  const PAY_METHODS = [
+    { id: "card",      label: "Card",       icon: "Card" },
+    { id: "paypal",    label: "PayPal",     icon: "Card" },
+    { id: "applepay",  label: "Apple Pay",  icon: "Card" },
+    { id: "googlepay", label: "Google Pay", icon: "Card" },
+  ];
+
+  function pay() {
+    setProcessing(true);
+    setTimeout(() => { setProcessing(false); onPaid(); }, 900);
+  }
+
+  return (
+    <div className="shell" style={{ paddingTop: 36, paddingBottom: 60, maxWidth: 620, margin: "0 auto" }}>
+      <div className="link" style={{ marginBottom: 22 }} onClick={onBack}><Icons.ArrowL size={16} /> Back to booking</div>
+      <h1 className="h1" style={{ fontSize: 28, marginBottom: 6 }}>Pay the difference</h1>
+      <p className="muted" style={{ fontSize: 14, marginBottom: 28 }}>Your change increases the total. Pay the difference to confirm the update — your booking stays unchanged until payment completes.</p>
+
+      <div className="card card-pad col gap18">
+        <div className="row between center" style={{ padding: "13px 16px", background: "var(--warn-bg)", border: "1px solid var(--warn-border)", borderRadius: "var(--r-sm)" }}>
+          <span className="muted" style={{ fontSize: 14 }}>Amount due now</span>
+          <span className="price-amt" style={{ fontSize: 24, color: "var(--warn)" }}>+{eur(delta)}</span>
+        </div>
+
+        <div>
+          <div className="field-label" style={{ marginBottom: 8 }}>Payment method</div>
+          <Tab items={PAY_METHODS} active={payMethod} onChange={setPayMethod} />
+        </div>
+
+        {payMethod === "card" ? (
+          <div className="form-grid">
+            <FormField label="Name on card" span><Fld type="text" placeholder="Anna Sigurðardóttir" value={card.name} onChange={set("name")} /></FormField>
+            <FormField label="Card number" span><Fld type="text" placeholder="4242 4242 4242 4242" maxLength={19} value={card.number} onChange={set("number")} /></FormField>
+            <FormField label="Expiry"><Fld type="text" placeholder="MM/YY" maxLength={5} value={card.expiry} onChange={set("expiry")} /></FormField>
+            <FormField label="CVV"><Fld type="text" placeholder="•••" maxLength={4} value={card.cvv} onChange={set("cvv")} /></FormField>
+          </div>
+        ) : (
+          <InfoBanner variant="info">
+            {PAY_METHODS.find(m => m.id === payMethod).label} is coming soon — please pay by card for now.
+          </InfoBanner>
+        )}
+
+        <button className="btn btn-primary btn-lg btn-block" disabled={processing} onClick={pay}>
+          <Icons.Lock size={16} /> {processing ? "Processing…" : `Pay ${eur(delta)} & update booking`}
+        </button>
+        <div className="row center gap8" style={{ justifyContent: "center", color: "var(--dim)", fontSize: 13 }}>
+          <Icons.Shield size={14} style={{ color: "var(--success)" }} /> SSL Encrypted · Charged to the card used at booking by default
+        </div>
+        <button className="btn btn-ghost btn-block btn-sm" onClick={onFail}>Simulate provider decline (demo)</button>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   5c. AMENDMENT FAILED — provider rejected the change
+   ============================================================ */
+function ManageAmendFailed({ onRetry, goHome }) {
+  return (
+    <div className="shell" style={{ paddingTop: 60, textAlign: "center", maxWidth: 520, margin: "0 auto" }}>
+      <div style={{ width: 68, height: 68, borderRadius: "50%", background: "var(--danger-bg)", display: "grid", placeItems: "center", color: "var(--danger)", margin: "0 auto 20px", boxShadow: "0 0 0 10px rgba(239,68,68,0.07)" }}>
+        <Icons.X size={30} />
+      </div>
+      <h1 className="h1" style={{ fontSize: 30 }}>We couldn't update your booking</h1>
+      <p className="muted" style={{ fontSize: 16, lineHeight: 1.5, margin: "12px 0 32px" }}>
+        The provider couldn't confirm the change — the car may not be available for your new selection. Your booking is unchanged and no charge was made.
+      </p>
+      <div className="row center gap12" style={{ justifyContent: "center", flexWrap: "wrap" }}>
+        <button className="btn btn-primary btn-lg" onClick={onRetry}><Icons.ArrowL size={16} /> Back to booking</button>
+        <button className="btn btn-ghost" onClick={goHome}>Contact support</button>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
    6. CANCEL CONFIRM
    ============================================================ */
-function ManageCancelConfirm({ booking, onBack, onConfirm }) {
-  const policy = cancellationFee(booking);
+function ManageCancelConfirm({ booking, vertical, onBack, onConfirm }) {
+  const v = vertical || window.carsConfig;
+  const policy = cancellationFee(booking, (v.manage || {}).cancelTierLabels);
   const days = daysBetween(booking.pickupDate, booking.returnDate);
   const { total } = computeTotals(booking.car, days, booking.qty);
   const refundAmt = total - policy.fee;

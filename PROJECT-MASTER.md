@@ -8,8 +8,9 @@
 ```
 Phase:        1 — Relaunch
 Sprint:       2 — Claude API Chatbot (Sprint 1A complete)
-Task:         platform landing hero iteration ✅ (left-align + in-hero AI planner)
-Last session: 2026-06-24
+Task:         Cars-First Phase E + prototype reconciliation ✅ (pre-merge)
+Last session: 2026-07-08
+Branch:       nav-parity (ready to merge → master)
 ```
 
 ---
@@ -17,21 +18,23 @@ Last session: 2026-06-24
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   PLATFORM LANDING hero iteration (index.html): left-aligned hero +
-                       AI planner moved INTO the hero (glowing card) with trust-badge row;
-                       standalone #ai section removed (moved, not duplicated); "Book a car"
-                       kept as secondary CTA. Verified: ds-audit --strict = 0 · 0 console
-                       errors · alignment measured 150px / AI card 600px · no overflow at
-                       375/320 · prompt-chip→input functional. Decision logged 2026-06-24.
-NEXT TASK:             Optional: dedicated legal pages (Privacy/Terms) · production
-                       migration (PM-1) · Sprint 2 chatbot (2-1).
-Stopped mid-step:      no — hero iteration complete for this scope.
-Uncommitted changes:   none (committed + pushed to origin/sprint-2-chatbot)
+Last completed task:   FINALIZE BOOKING / PAYMENT / AMENDMENTS (pre-merge):
+                       · Ratified ux-logic §11 → DECISIONS.md (8 decisions)
+                       · Created design/payment-logic.md + design/amendments-flow-spec.md
+                       · Figma Phase E: NavBar instances (41), MB frames M3–M5 + 6 MB states,
+                         canonical frames pinned in design/figma-links.md, A6 TrustBadges
+                         component instance + deposit labels standardised
+                       · Prototype: A6 dynamic CTA, trust badges, payment tabs, ISK line;
+                         MB vertical prop, M3a Change Driver, M4 Pay the Difference,
+                         amendFailed + past-pickup locked states; cars/flights manage config
+                       · ds-audit --strict = 0 findings
+NEXT TASK:             Merge nav-parity → master (PR #4) · then PM-1 production migration
+                       OR Sprint 2 chatbot (2-1)
+Stopped mid-step:      no — pre-merge scope complete.
+Uncommitted changes:   yes — Stage 1–5 work on nav-parity (commit pending)
 Known issues:          Privacy/Terms anchor to footer legal strip until Sprint 5 pages.
-                       Hero headline (clamp up to 118px) overflows the 680px column to the
-                       right on wide viewports — intentional reference-style open-right look.
 Blocker:               none
-Project path:          /Users/raquelsantospalis/Downloads/iceland-express-master/
+Project path:          /Users/raquelsantospalis/Documents/GitHub/iceland-express/
 ```
 
 If `in-progress task` is not blank → resume it before starting anything new.

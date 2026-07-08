@@ -297,7 +297,10 @@ function PriceSummaryCard({ car, days, qty, cta, onCta, note, compact }) {
             {lines.map((l) => (
               <div key={l.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13.5 }}>
                 <span style={{ color: T.muted }}>{l.qty > 1 ? l.qty + '× ' : ''}{l.name}</span>
-                <span style={{ fontWeight: 600 }}>{eur(l.sum)}</span>
+                <span style={{ textAlign: 'right' }}>
+                  <span style={{ fontWeight: 600 }}>{eur(l.sum)}</span>
+                  <span style={{ display: 'block', color: T.dim, fontSize: 11.5 }}>{isk(l.sum)}</span>
+                </span>
               </div>
             ))}
           </>
@@ -338,6 +341,42 @@ function PriceSummaryCard({ car, days, qty, cta, onCta, note, compact }) {
         <Ico name="Lock" size={14} />
         No charge today · Free cancellation
       </div>
+    </div>
+  );
+}
+
+/* ── TrustBadges ─────────────────────────────────────────────
+ * Trust-signal row — checkout / confirmation surfaces (Figma pattern).
+ * Figma: Components page `TrustBadges` component.
+ * Atoms used  : Ico
+ * Tokens      : T.muted, T.success
+ */
+const TRUST_BADGE_SETS = {
+  checkout: [
+    { icon: 'Lock',   label: 'SSL Encrypted' },
+    { icon: 'Shield', label: 'Free Cancellation 48h' },
+    { icon: 'Check',  label: 'Secure Payment' },
+  ],
+  confirmation: [
+    { icon: 'Check',  label: 'Booking Confirmed' },
+    { icon: 'Lock',   label: 'SSL Encrypted' },
+    { icon: 'Shield', label: '24/7 Support' },
+  ],
+};
+
+function TrustBadges({ variant = 'checkout', style }) {
+  const items = TRUST_BADGE_SETS[variant] || TRUST_BADGE_SETS.checkout;
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      gap: 24, flexWrap: 'wrap', ...style,
+    }}>
+      {items.map((b) => (
+        <div key={b.label} style={{ display: 'flex', alignItems: 'center', gap: 7, color: T.muted, fontSize: 13 }}>
+          <Ico name={b.icon} size={14} style={{ color: T.success }} />
+          {b.label}
+        </div>
+      ))}
     </div>
   );
 }
@@ -482,5 +521,5 @@ Object.assign(window, {
   NavBarLink,
   // Organisms
   CarCardV2, ExtraCardV2, BlogCardV2, ManageActionCard,
-  PageHero, EmptyState, PriceSummaryCard, NavBar,
+  PageHero, EmptyState, PriceSummaryCard, NavBar, TrustBadges,
 });

@@ -46,6 +46,7 @@ function App() {
   const [selectedCar, setSelectedCar] = useAppState(CARS[1]);
   const [qty,         setQty]         = useAppState({});
   const [currentPost, setCurrentPost] = useAppState(null);
+  const [authSession, setAuthSessionState] = useAppState(() => getAuthSession());
 
   const days = daysBetween(search.pickupDate, search.returnDate);
 
@@ -112,11 +113,19 @@ function App() {
           />
         )}
 
-        {/* A6 — Checkout */}
-        {screen === "checkout" && (
+        {/* A6 — Checkout (SMS gate) */}
+        {screen === "checkout" && !authSession && (
+          <SmsAuthGate
+            variant="checkout"
+            goBack={() => go("extras")}
+            onVerified={(s) => setAuthSessionState(s)}
+          />
+        )}
+        {screen === "checkout" && authSession && (
           <CheckoutScreen
             search={search} setSearch={setSearch}
             car={selectedCar} days={days} qty={qty} go={go}
+            authSession={authSession}
           />
         )}
 
@@ -127,8 +136,17 @@ function App() {
           />
         )}
 
-        {/* MB — Manage Booking */}
-        {screen === "manage" && <ManageBookingScreen go={go} />}
+        {/* MB — Manage Booking (SMS gate) */}
+        {screen === "manage" && !authSession && (
+          <SmsAuthGate
+            variant="manage"
+            goBack={() => go("home")}
+            onVerified={(s) => setAuthSessionState(s)}
+          />
+        )}
+        {screen === "manage" && authSession && (
+          <ManageBookingScreen go={go} verifiedMobile={authSession.mobile} />
+        )}
 
         {/* BL — Blog List */}
         {screen === "blog" && <BlogListScreen go={go} goPost={goPost} />}

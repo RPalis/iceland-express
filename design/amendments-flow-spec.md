@@ -3,14 +3,14 @@
 > Phase G deliverable (per `design/audit-cars-2026-07-01.md` §8).
 > Canonical spec for the guest-mode Manage Booking + amendments flow.
 > Figma: `Amendments flow` section `624:50681` inside `Book a car Flows` (`592:39888`).
-> Ratifications: 2026-07-08 (`docs/DECISIONS.md`). Logic detail: `docs/ux-logic.md` §8.
+> Ratifications: 2026-07-08 (`docs/DECISIONS.md`); SMS OTP gate 2026-07-09. Logic detail: `docs/ux-logic.md` §8–9.
 
 ---
 
 ## 1. State machine
 
 ```
-lookup → found → ┬ changeDriver  (M3a) ──────────────→ confirm ─→ updated (M5)
+lookup → [SMS OTP gate] → list → found → ┬ changeDriver  (M3a) ──────────────→ confirm ─→ updated (M5)
                  ├ changeDates   (M3b) ─→ reprice ─┬─→ confirm ─→ updated (M5)
                  ├ changeLocation(M3c) ─→ reprice ─┤
                  ├ changeExtras  (M3d) ─→ reprice ─┘
@@ -31,27 +31,31 @@ Past pickup + 2h grace      → found (locked) — amend/cancel disabled, contac
 | Change add-ons | M3d — Change Add-ons (expanded) | `624:44880` |
 | Pay the difference | M4 — Pay the Difference | `624:50682` |
 | Booking updated | M5 — Booking Updated (confirmation) | `624:51295` |
-| Lookup / Cancel states | MB — Lookup · MB — Found · MB — Cancel Confirm · MB — Cancelled · MB — Amendment Failed · MB — Past Pickup (locked) | see frame map below |
+| Lookup / list | MB — Lookup (SMS OTP) · post-verify booking list | see frame map below |
 
 Shared organisms across M-frames: `NavBar`, `BookingStatusBar`, `BookingSummarySidebar` (with CHANGES chips: Driver / Dates / Location / Add-ons), `Footer`.
 
-### MB lookup + cancel + failure frames (2026-07-08)
+### MB SMS + lookup frames (2026-07-09)
 
 | State | Figma frame | Node |
 |-------|-------------|------|
-| Lookup | MB — Lookup | `1016:17233` |
-| Found (view booking) | MB — Found (view booking) | `1016:17923` |
+| SMS verify (checkout) | AUTH — SMS Verify (checkout) | `1035:5804` |
+| SMS code (checkout) | AUTH — SMS Code (checkout) | `1035:6406` |
+| SMS verify (manage) | AUTH — SMS Verify (manage booking) | `1035:7008` |
+| Booking list | MB — Booking List (post-SMS) | `1035:7610` |
+| Slim checkout | A6 — Checkout (slim · post-SMS) | `1039:14272` |
 | Cancel confirm | MB — Cancel Confirm | `1016:18613` |
 | Cancelled | MB — Cancelled | `1016:19303` |
 | Amendment failed | MB — Amendment Failed | `1016:19993` |
 | Past pickup (locked) | MB — Past Pickup (locked) | `1016:20683` |
 
-## 3. Guest-mode access
+## 3. Guest-mode access (superseded 2026-07-09 → SMS-session)
 
-- Retrieval by **booking ref + email** only (both must match, email case-insensitive).
-- Rate limit: **5 lookup attempts per IP per 5 minutes; 15-min lockout** (ratified).
+- Retrieval by **SMS OTP to mobile** — session ~15 min.
+- Bookings listed by verified mobile (E.164).
+- Optional ref filter after verify ("Have a booking reference?").
 - Every amend/cancel action sends a confirmation email to `driver.email`.
-- No accounts, no history, no saved payment methods (Phase 1).
+- No password accounts, no saved payment methods (Phase 1).
 
 ## 4. Amendment use cases
 

@@ -80,6 +80,7 @@ Each layer only imports from the layer below it. Never skip layers.
 | `EmptyState`        | No results                                | Ico Btn                                      |
 | `PriceSummaryCard`  | Price breakdown sidebar — calls computeTotals · EUR + ISK secondary line | PriceTag Btn Sep                         |
 | `TrustBadges`       | Trust-signal row — checkout / confirmation    | Ico (Lock / Shield / Check)              |
+| `SmsAuthGate`       | SMS OTP gate before A6 checkout / MB          | Field · Btn · InfoBanner · EmptyState    |
 | `NavBar`            | **Canonical** global navigation — single source of truth | `.nav` frosted pill · two-color wordmark · btn-primary CTA |
 
 **`NavBar` — the one canonical nav. All consumers must match it:**

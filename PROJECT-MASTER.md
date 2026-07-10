@@ -8,9 +8,9 @@
 ```
 Phase:        1 — Relaunch
 Sprint:       2 — Claude API Chatbot (Sprint 1A complete)
-Task:         Cars-First Phase E + prototype reconciliation ✅ (pre-merge)
-Last session: 2026-07-08
-Branch:       nav-parity (ready to merge → master)
+Task:         SMS auth + slim A6 + MB list — **Figma-first (Gate 1 pending)**
+Last session: 2026-07-09
+Branch:       nav-parity (merge on hold until Figma approved)
 ```
 
 ---
@@ -18,22 +18,13 @@ Branch:       nav-parity (ready to merge → master)
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   FINALIZE BOOKING / PAYMENT / AMENDMENTS (pre-merge):
-                       · Ratified ux-logic §11 → DECISIONS.md (8 decisions)
-                       · Created design/payment-logic.md + design/amendments-flow-spec.md
-                       · Figma Phase E: NavBar instances (41), MB frames M3–M5 + 6 MB states,
-                         canonical frames pinned in design/figma-links.md, A6 TrustBadges
-                         component instance + deposit labels standardised
-                       · Prototype: A6 dynamic CTA, trust badges, payment tabs, ISK line;
-                         MB vertical prop, M3a Change Driver, M4 Pay the Difference,
-                         amendFailed + past-pickup locked states; cars/flights manage config
-                       · ds-audit --strict = 0 findings
-NEXT TASK:             Merge nav-parity → master (PR #4) · then PM-1 production migration
-                       OR Sprint 2 chatbot (2-1)
-Stopped mid-step:      no — pre-merge scope complete.
-Uncommitted changes:   yes — Stage 1–5 work on nav-parity (commit pending)
-Known issues:          Privacy/Terms anchor to footer legal strip until Sprint 5 pages.
-Blocker:               none
+Last completed task:   BOOKING / PAYMENT / AMENDMENTS pre-merge (2026-07-08) — Gate 1 for that scope
+NEXT TASK:             **Build SMS-auth Figma iterations → user approval (Gate 1)**
+                       → prototype parity (Gate 2) → gate checks → code only after both gates
+Stopped mid-step:      Figma iterations for SMS auth (AUTH-SMS, slim A6, MB booking list)
+Uncommitted changes:   yes — prototype SMS auth code exists but **ON HOLD** until Figma approved
+Known issues:          Prototype was built ahead of Figma for SMS auth — violates workflow; do not merge
+Blocker:               User must approve Figma designs before prototype/code work continues
 Project path:          /Users/raquelsantospalis/Documents/GitHub/iceland-express/
 ```
 

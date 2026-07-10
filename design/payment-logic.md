@@ -46,7 +46,7 @@ Placeholder tabs are selectable in Figma prototypes but show a "Coming soon" pan
 | Failure | Recovery |
 |---------|----------|
 | Card declined | Toast "Your card was declined" + form remains + card field error + retry |
-| 3-DS abandoned | Toast "Authentication cancelled" + form remains + retry |
+| **3-DS challenge abandoned** | Toast "Authentication cancelled" + form remains + retry — booking **not** created |
 | Provider timeout (>30s) | ErrorState "Payment timed out" + Retry + "No charge was made" |
 | Network error | Toast "Network error" + retry |
 | Already booked | Modal "This car is no longer available" + return to A2 |
@@ -76,5 +76,20 @@ Full matrix: `docs/ux-logic.md` §8.3.
 
 ---
 
-*IcelandExpress · design/payment-logic.md · v1.0 · 2026-07-08*
+## 8. SMS OTP access authentication (ratified 2026-07-09)
+
+Required before A6 checkout and before Manage Booking. Search/explore (A1–A5) stays open.
+
+| Step | UI | Backend (Phase 1 spec) |
+|------|-----|------------------------|
+| Enter mobile | E.164 input + Send code | `POST /api/auth/sms/send` |
+| Enter OTP | 6-digit input + Verify | `POST /api/auth/sms/verify` → JWT ~15 min |
+| Verified | Continue to A6 or MB | Session `{ mobile, verifiedAt }` |
+
+**Rules:** 6-digit OTP · 5 min TTL · max 3 resends · 15 min lockout after 5 failures.
+Prototype simulates send/verify (any 6-digit code in demo).
+
+---
+
+*IcelandExpress · design/payment-logic.md · v1.1 · 2026-07-09*
 *Owner: design lead + Claude Code — update when payment options, methods, or capture logic change*

@@ -57,6 +57,22 @@ Pinned 2026-07-08 for Gate 1 approval. Use these node IDs in exports, Code Conne
 | A6 Checkout | A6 — Checkout | `549:31190` |
 | A7 Confirmation | A7 — Booking Confirmation | `592:39730` |
 
+### SMS auth (2026-07-09) — **Gate 1 pending approval**
+
+Placed in main funnel row (x ≈ 5050–8090, y ≈ 16067), between A5 and canonical A6.
+
+| State | Frame | Node ID | Status |
+|-------|-------|---------|--------|
+| Checkout — enter mobile | AUTH — SMS Verify (checkout) | `1035:5804` | Cloned from MB Lookup — copy updated |
+| Checkout — enter OTP | AUTH — SMS Code (checkout) | `1035:6406` | Cloned from MB Lookup — copy updated |
+| Manage — enter mobile | AUTH — SMS Verify (manage booking) | `1035:7008` | Cloned from MB Lookup — copy updated |
+| Manage — booking list | MB — Booking List (post-SMS) | `1035:7610` | Cloned from MB Found — needs list UI |
+| Slim checkout (post-SMS) | A6 — Checkout (slim · post-SMS) | `1039:14272` | Cloned from A6 — remove DOB/license/flight |
+
+Canonical A6 (`549:31190`) unchanged until slim variant approved, then replace.
+
+**Do not start prototype/code until user approves these frames (Gate 1).**
+
 ### Amendments flow (section 624:50681)
 
 | State | Frame | Node ID |
@@ -68,7 +84,7 @@ Pinned 2026-07-08 for Gate 1 approval. Use these node IDs in exports, Code Conne
 | Change add-ons | M3d — Change Add-ons (expanded) | `624:44880` |
 | Pay the difference | M4 — Pay the Difference | `624:50682` |
 | Booking updated | M5 — Booking Updated (confirmation) | `624:51295` |
-| Lookup | MB — Lookup | `1016:17233` |
+| Lookup (legacy ref+email) | MB — Lookup | `1016:17233` — superseded by SMS list 2026-07-09 |
 | Found | MB — Found (view booking) | `1016:17923` |
 | Cancel confirm | MB — Cancel Confirm | `1016:18613` |
 | Cancelled | MB — Cancelled | `1016:19303` |

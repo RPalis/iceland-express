@@ -1,25 +1,53 @@
 // screen-MB-manage.jsx — MB Manage Booking
-// Figma: Manage Booking (guest mode)
+// Figma: Manage Booking (SMS-session model)
 
 const { useState: useS4, useRef: useRefS4, useEffect: useEffectS4 } = React;
 
-/* ── demo booking fixture ── */
-const DEMO_BOOKING = {
-  ref: "ICE-7X9K",
-  email: "anna@example.com",
-  car: CARS[1], // Toyota RAV4
-  pickupLoc: LOCATIONS[0],
-  dropoffLoc: LOCATIONS[0],
-  pickupDate: (() => { const d = new Date(); d.setDate(d.getDate() + 14); d.setHours(0,0,0,0); return d; })(),
-  returnDate: (() => { const d = new Date(); d.setDate(d.getDate() + 19); d.setHours(0,0,0,0); return d; })(),
-  pickupTime: "10:00",
-  returnTime: "10:00",
-  qty: { gps: 1, wifi: 1 },
-  status: "confirmed",
-  paid: "full",
-  bookedOn: new Date(Date.now() - 2 * 86400000),
-  driver: { first: "Anna", last: "Sigurðardóttir", phone: "+354 555 0100", licenseCountry: "IS" },
-};
+/* ── demo booking fixtures ── */
+function makeDemoBooking(overrides) {
+  const base = {
+    ref: "ICE-7X9K",
+    email: "anna@example.com",
+    mobile: "+3545550100",
+    car: CARS[1],
+    pickupLoc: LOCATIONS[0],
+    dropoffLoc: LOCATIONS[0],
+    pickupDate: (() => { const d = new Date(); d.setDate(d.getDate() + 14); d.setHours(0,0,0,0); return d; })(),
+    returnDate: (() => { const d = new Date(); d.setDate(d.getDate() + 19); d.setHours(0,0,0,0); return d; })(),
+    pickupTime: "10:00",
+    returnTime: "10:00",
+    qty: { gps: 1, wifi: 1 },
+    status: "confirmed",
+    paid: "full",
+    bookedOn: new Date(Date.now() - 2 * 86400000),
+    driver: { first: "Anna", last: "Sigurðardóttir", phone: "+354 555 0100", licenseCountry: "IS" },
+  };
+  return { ...base, ...overrides };
+}
+
+const DEMO_BOOKING = makeDemoBooking({});
+
+const DEMO_BOOKING_2 = makeDemoBooking({
+  ref: "ICE-2M4P",
+  car: CARS[0],
+  pickupDate: (() => { const d = new Date(); d.setDate(d.getDate() + 30); d.setHours(0,0,0,0); return d; })(),
+  returnDate: (() => { const d = new Date(); d.setDate(d.getDate() + 33); d.setHours(0,0,0,0); return d; })(),
+  qty: {},
+});
+
+const DEMO_BOOKING_PAST = makeDemoBooking({
+  ref: "ICE-PAST",
+  pickupDate: (() => { const d = new Date(); d.setDate(d.getDate() - 1); d.setHours(0,0,0,0); return d; })(),
+  returnDate: (() => { const d = new Date(); d.setDate(d.getDate() + 4); d.setHours(0,0,0,0); return d; })(),
+});
+
+function bookingsForMobile(verifiedMobile) {
+  const key = String(verifiedMobile || '').replace(/\D/g, '');
+  const list = [DEMO_BOOKING, DEMO_BOOKING_2, DEMO_BOOKING_PAST];
+  if (!key) return list;
+  return list.filter((b) => String(b.mobile || b.driver.phone).replace(/\D/g, '') === key
+    || key.endsWith('5550100') || key.includes('3545550100'));
+}
 
 /* ── cancellation policy ── */
 function cancellationFee(booking, tierLabels) {
@@ -42,11 +70,9 @@ function isPastPickup(booking) {
 /* ============================================================
    MANAGE BOOKING — outer router
    ============================================================ */
-function ManageBookingScreen({ go, vertical }) {
+function ManageBookingScreen({ go, vertical, verifiedMobile }) {
   const v = vertical || window.carsConfig;
-  // lookup | found | changeDriver | changeDates | changeLocation | changeExtras
-  // | payDifference | cancelConfirm | cancelled | updated | amendFailed
-  const [sub, setSub] = useS4("lookup");
+  const [sub, setSub] = useS4("list");
   const [booking, setBooking] = useS4(null);
   const [draftDates, setDraftDates] = useS4(null);
   const [draftLoc, setDraftLoc] = useS4(null);
@@ -64,7 +90,16 @@ function ManageBookingScreen({ go, vertical }) {
 
   return (
     <div className="flow" style={{ paddingBottom: 60 }}>
-      {sub === "lookup" && <ManageLookup onFound={(b) => { setBooking(b); setSub("found"); }} goHome={() => go("home")} />}
+      {sub === "list" && (
+        <ManageBookingList
+          verifiedMobile={verifiedMobile}
+          onSelect={(b) => { setBooking(b); setSub("found"); }}
+          goHome={() => go("home")}
+        />
+      )}
+      {sub === "list-empty" && (
+        <ManageBookingListEmpty verifiedMobile={verifiedMobile} goHome={() => go("home")} />
+      )}
       {sub === "found" && booking && <ManageFound booking={booking} vertical={v} setSub={setSub} goHome={() => go("home")} />}
       {sub === "changeDriver" && booking && (
         <ManageChangeDriver
@@ -130,7 +165,85 @@ function ManageBookingScreen({ go, vertical }) {
 }
 
 /* ============================================================
-   1. LOOKUP
+   1. BOOKING LIST (post-SMS)
+   ============================================================ */
+function ManageBookingList({ verifiedMobile, onSelect, goHome }) {
+  const [refFilter, setRefFilter] = useS4("");
+  const bookings = bookingsForMobile(verifiedMobile);
+  const filtered = refFilter.trim()
+    ? bookings.filter((b) => b.ref.toUpperCase().includes(refFilter.trim().toUpperCase()))
+    : bookings;
+
+  if (bookings.length === 0) {
+    return <ManageBookingListEmpty verifiedMobile={verifiedMobile} goHome={goHome} />;
+  }
+
+  return (
+    <div className="shell" style={{ paddingTop: 40, paddingBottom: 60, maxWidth: 640, margin: "0 auto" }}>
+      <div className="link" style={{ marginBottom: 24 }} onClick={goHome}><Icons.ArrowL size={16} /> Back to home</div>
+      <div className="col gap6" style={{ marginBottom: 28 }}>
+        <div className="pill" style={{ alignSelf: "flex-start" }}><Icons.Check size={14} /> Verified · {verifiedMobile}</div>
+        <h1 className="h1" style={{ fontSize: 30 }}>Your bookings</h1>
+        <p className="muted" style={{ fontSize: 15, lineHeight: 1.5 }}>Select a booking to view or change it.</p>
+      </div>
+
+      <FormField label="Have a booking reference? (optional)" helper="Filter the list below">
+        <Fld type="text" placeholder="e.g. ICE-7X9K" value={refFilter} onChange={(e) => setRefFilter(e.target.value)} style={{ textTransform: "uppercase", letterSpacing: "0.04em" }} />
+      </FormField>
+
+      <div className="col gap12" style={{ marginTop: 20 }}>
+        {filtered.length === 0 ? (
+          <InfoBanner variant="warn" icon="Info">No bookings match that reference for {verifiedMobile}.</InfoBanner>
+        ) : filtered.map((b) => {
+          const days = daysBetween(b.pickupDate, b.returnDate);
+          const { total } = computeTotals(b.car, days, b.qty);
+          const past = isPastPickup(b);
+          return (
+            <button
+              key={b.ref}
+              type="button"
+              className="card card-pad"
+              style={{ textAlign: "left", cursor: "pointer", width: "100%", border: "1px solid var(--border)" }}
+              onClick={() => onSelect(b)}
+            >
+              <div className="row between center wrap gap8">
+                <span className="badge badge-glass"><Icons.Doc size={12} /> {b.ref}</span>
+                {past && <span className="badge badge-outline">Past pickup</span>}
+              </div>
+              <h3 className="h3" style={{ fontSize: 18, margin: "10px 0 4px" }}>{b.car.year} {b.car.name}</h3>
+              <p className="muted" style={{ fontSize: 14, margin: 0 }}>
+                {fmtDate(b.pickupDate)} → {fmtDate(b.returnDate)} · {days} days · {eur(total)}
+              </p>
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="surface" style={{ marginTop: 24, padding: "14px 18px", display: "flex", alignItems: "flex-start", gap: 10 }}>
+        <Icons.Info size={16} style={{ color: "var(--primary)", flex: "none", marginTop: 2 }} />
+        <p className="dim" style={{ fontSize: 13, lineHeight: 1.5, margin: 0 }}>
+          <strong style={{ color: "var(--muted)" }}>Demo:</strong> Any verified mobile shows sample bookings. Select <strong style={{ color: "var(--primary-strong)" }}>ICE-7X9K</strong> for a live booking or <strong style={{ color: "var(--primary-strong)" }}>ICE-PAST</strong> for the locked past-pickup state.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function ManageBookingListEmpty({ verifiedMobile, goHome }) {
+  return (
+    <div className="shell" style={{ paddingTop: 60, paddingBottom: 60, maxWidth: 520, margin: "0 auto", textAlign: "center" }}>
+      <EmptyState
+        icon="Doc"
+        title="No bookings found"
+        desc={"We couldn't find any bookings for " + verifiedMobile + ". Try the mobile number used when you booked, or start a new search."}
+        action={<Btn variant="primary" onClick={goHome}>Search cars</Btn>}
+      />
+    </div>
+  );
+}
+
+/* ============================================================
+   1b. LOOKUP (legacy — superseded by SMS list; kept for reference)
    ============================================================ */
 function ManageLookup({ onFound, goHome }) {
   const [ref, setRef] = useS4("");

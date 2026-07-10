@@ -434,6 +434,26 @@ The MB state machine is now: `lookup → found → (changeDriver | changeDates |
 
 ---
 
+## 2026-07-09 — SMS OTP access auth + 3DS payment auth; minimal A6 driver form
+
+**What:** Phase 1 access model updated:
+- **SMS OTP** (mobile → 6-digit code) required before A6 checkout and before Manage Booking. Short-lived session (~15 min) keyed to verified E.164 mobile.
+- **3D Secure** elevated to mandatory **second factor** at card capture (not a second SMS).
+- **A6 driver form** slimmed to 4 fields only: first name, last name, email, mobile. DOB not collected when `search.ageConfirmed === true` on A1. License country and flight number removed from A6 Phase 1.
+- **MB** primary gate changes from ref+email lookup to post-SMS booking list for verified mobile.
+
+Search/explore (A1–A5) remains unauthenticated.
+
+**Why:** Best-practice security without full account friction: SMS verifies identity before sensitive actions; 3DS satisfies PSD2/SCA at payment. Age attestation on A1 removes redundant DOB on checkout. Minimal driver fields reduce drop-off while Rentalcars still collects license at pickup.
+
+**Alternatives rejected:**
+- Keep ref+email as sole MB gate — weaker than mobile OTP; superseded.
+- SMS OTP again at payment — redundant with 3DS; user chose 3DS only for pay step.
+- Full password accounts in Phase 1 — out of scope; SMS session sufficient for now.
+- Keep DOB on A6 when age already confirmed on A1 — duplicate friction.
+
+---
+
 ## Update Rules for This File
 
 ```

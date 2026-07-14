@@ -454,6 +454,21 @@ Search/explore (A1–A5) remains unauthenticated.
 
 ---
 
+## 2026-07-14 — SMS-auth Figma Gate 1 approved; prototype Gate 2 verified
+
+**What:** User approved Gate 1 for five SMS-auth Figma frames in Book a car Flows:
+`1035:5804`, `1035:6406`, `1035:7008`, `1035:7610`, `1039:14272`.
+Prototype parity verified at `/bookacar/` (SmsAuthGate, slim A6, MB booking list, 3DS modal).
+Slim A6 (`1039:14272`) promoted to canonical checkout frame; legacy `549:31190` superseded.
+
+**Why:** Workflow requires Figma approval before prototype sign-off and merge. SMS auth completes the pre-merge booking/payment/amendments scope on `nav-parity`.
+
+**Alternatives rejected:**
+- Merge before Gate 1 — rejected; user required Figma review first.
+- Keep legacy A6 as canonical — rejected; slim 4-field form matches ratified 2026-07-09 decision.
+
+---
+
 ## Update Rules for This File
 
 ```

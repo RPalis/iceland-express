@@ -90,7 +90,7 @@ function CheckoutScreen({ search, setSearch, car, days, qty, go, vertical, authS
               <FormField label="First name" required><Fld type="text" placeholder="Anna" value={form.first} onChange={set("first")} /></FormField>
               <FormField label="Last name" required><Fld type="text" placeholder="Sigurðardóttir" value={form.last} onChange={set("last")} /></FormField>
               <FormField label="Email address" required span><Fld type="email" placeholder="anna@example.com" value={form.email} onChange={set("email")} /></FormField>
-              <FormField label="Mobile number" required helper="Verified by SMS — must match the number you confirmed">
+              <FormField label="Mobile number" required helper="Must match the number on your booking">
                 <Fld type="tel" placeholder="+354 555 0100" value={form.phone} onChange={set("phone")} readOnly={!!authSession?.mobile} style={authSession?.mobile ? { opacity: 0.85 } : {}} />
               </FormField>
             </div>

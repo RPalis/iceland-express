@@ -8,9 +8,9 @@
 ```
 Phase:        1 — Relaunch
 Sprint:       2 — Claude API Chatbot (Sprint 1A complete)
-Task:         SMS auth + slim A6 + MB list — **Figma-first (Gate 1 pending)**
-Last session: 2026-07-09
-Branch:       nav-parity (merge on hold until Figma approved)
+Task:         SMS auth Gate 1+2 complete — merge nav-parity → master
+Last session: 2026-07-14
+Branch:       nav-parity
 ```
 
 ---
@@ -18,13 +18,12 @@ Branch:       nav-parity (merge on hold until Figma approved)
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   BOOKING / PAYMENT / AMENDMENTS pre-merge (2026-07-08) — Gate 1 for that scope
-NEXT TASK:             **Build SMS-auth Figma iterations → user approval (Gate 1)**
-                       → prototype parity (Gate 2) → gate checks → code only after both gates
-Stopped mid-step:      Figma iterations for SMS auth (AUTH-SMS, slim A6, MB booking list)
-Uncommitted changes:   yes — prototype SMS auth code exists but **ON HOLD** until Figma approved
-Known issues:          Prototype was built ahead of Figma for SMS auth — violates workflow; do not merge
-Blocker:               User must approve Figma designs before prototype/code work continues
+Last completed task:   SMS auth Gate 1 approved (2026-07-14) + Gate 2 prototype parity verified
+NEXT TASK:             Merge nav-parity → master · then PM-1 production migration
+Stopped mid-step:      no
+Uncommitted changes:   docs + parity fixes pending commit
+Known issues:          3DS modal is prototype-only (no dedicated Figma frame)
+Blocker:               none
 Project path:          /Users/raquelsantospalis/Documents/GitHub/iceland-express/
 ```
 

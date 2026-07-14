@@ -423,13 +423,19 @@ const SMS_AUTH_COPY = {
   checkout: {
     pill: 'Secure checkout',
     title: 'Verify your mobile',
+    titleCode: 'Enter your code',
     subtitle: 'We send a one-time code to confirm it\'s you before payment.',
+    subtitleCode: (mobile) => 'We sent a 6-digit code to ' + mobile + '.',
+    backLabel: 'Back to add-ons',
     cta: 'Continue to checkout',
   },
   manage: {
     pill: 'Manage booking',
     title: 'Verify your mobile',
-    subtitle: 'Enter the mobile number used when you booked. We\'ll send a one-time code.',
+    titleCode: 'Enter your code',
+    subtitle: 'Enter the mobile number used when you booked.',
+    subtitleCode: (mobile) => 'We sent a 6-digit code to ' + mobile + '.',
+    backLabel: 'Back to home',
     cta: 'View my bookings',
   },
 };
@@ -516,13 +522,18 @@ function SmsAuthGate({ variant = 'checkout', onVerified, goBack }) {
     );
   }
 
+  const displayTitle = step === 'code' ? (copy.titleCode || copy.title) : copy.title;
+  const displaySubtitle = step === 'code' && copy.subtitleCode
+    ? copy.subtitleCode(sentTo || mobile)
+    : copy.subtitle;
+
   return (
     <div className="shell" style={{ paddingTop: 60, paddingBottom: 60, maxWidth: 520, margin: '0 auto' }}>
-      {goBack && <div className="link" style={{ marginBottom: 24 }} onClick={goBack}><Icons.ArrowL size={16} /> Back</div>}
+      {goBack && <div className="link" style={{ marginBottom: 24 }} onClick={goBack}><Icons.ArrowL size={16} /> {copy.backLabel || 'Back'}</div>}
       <div className="col gap6" style={{ marginBottom: 32 }}>
         <div className="pill" style={{ alignSelf: 'flex-start' }}><Icons.Lock size={14} /> {copy.pill}</div>
-        <h1 className="h1" style={{ fontSize: 32 }}>{copy.title}</h1>
-        <p className="muted" style={{ fontSize: 15, lineHeight: 1.5, marginTop: 4 }}>{copy.subtitle}</p>
+        <h1 className="h1" style={{ fontSize: 32 }}>{displayTitle}</h1>
+        <p className="muted" style={{ fontSize: 15, lineHeight: 1.5, marginTop: 4 }}>{displaySubtitle}</p>
       </div>
 
       {step === 'mobile' ? (

@@ -291,6 +291,13 @@
 - `bash scripts/ds-audit.sh --strict` = 0 findings
 - Ready: merge `nav-parity` → `master`, then PM-1 production migration
 
+### 2026-07-14 — SMS auth Gate 1 + Gate 2 (nav-parity)
+
+- Gate 1 approved: AUTH-SMS checkout/manage (`1035:5804`, `1035:6406`, `1035:7008`), MB list (`1035:7610`), slim A6 (`1039:14272`)
+- Gate 2 verified: `SmsAuthGate`, slim checkout, MB booking list, 3DS modal at `/bookacar/`
+- Canonical A6 promoted to slim variant; legacy `549:31190` superseded
+- Next: merge `nav-parity` → `master`
+
 ---
 
 ## Update Rules for This File

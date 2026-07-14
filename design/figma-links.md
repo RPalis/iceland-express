@@ -54,24 +54,24 @@ Pinned 2026-07-08 for Gate 1 approval. Use these node IDs in exports, Code Conne
 | A2 Search Results | A2 — Search Results | `544:20955` |
 | A3 Car Detail | A3 — Car Detail | `564:37937` |
 | A5 Extras | A5 — Extras | `544:12405` |
-| A6 Checkout | A6 — Checkout | `549:31190` |
+| A6 Checkout (slim · post-SMS) | A6 — Checkout (slim · post-SMS) | `1039:14272` |
 | A7 Confirmation | A7 — Booking Confirmation | `592:39730` |
 
-### SMS auth (2026-07-09) — **Gate 1 pending approval**
+Legacy A6 with full driver form: `549:31190` — superseded by slim variant 2026-07-14.
 
-Placed in main funnel row (x ≈ 5050–8090, y ≈ 16067), between A5 and canonical A6.
+### SMS auth (2026-07-09) — **Gate 1 approved 2026-07-14**
 
-| State | Frame | Node ID | Status |
-|-------|-------|---------|--------|
-| Checkout — enter mobile | AUTH — SMS Verify (checkout) | `1035:5804` | Cloned from MB Lookup — copy updated |
-| Checkout — enter OTP | AUTH — SMS Code (checkout) | `1035:6406` | Cloned from MB Lookup — copy updated |
-| Manage — enter mobile | AUTH — SMS Verify (manage booking) | `1035:7008` | Cloned from MB Lookup — copy updated |
-| Manage — booking list | MB — Booking List (post-SMS) | `1035:7610` | Cloned from MB Found — needs list UI |
-| Slim checkout (post-SMS) | A6 — Checkout (slim · post-SMS) | `1039:14272` | Cloned from A6 — remove DOB/license/flight |
+Placed in main funnel row (x ≈ 5050–8090, y ≈ 16067), between A5 and slim A6.
 
-Canonical A6 (`549:31190`) unchanged until slim variant approved, then replace.
+| State | Frame | Node ID | Gate 1 | Gate 2 |
+|-------|-------|---------|--------|--------|
+| Checkout — enter mobile | AUTH — SMS Verify (checkout) | `1035:5804` | ✅ | ✅ |
+| Checkout — enter OTP | AUTH — SMS Code (checkout) | `1035:6406` | ✅ | ✅ |
+| Manage — enter mobile | AUTH — SMS Verify (manage booking) | `1035:7008` | ✅ | ✅ |
+| Manage — booking list | MB — Booking List (post-SMS) | `1035:7610` | ✅ | ✅ |
+| Slim checkout (post-SMS) | A6 — Checkout (slim · post-SMS) | `1039:14272` | ✅ | ✅ |
 
-**Do not start prototype/code until user approves these frames (Gate 1).**
+**Prototype-only (no Figma frame):** 3DS payment confirmation modal at A6 card capture.
 
 ### Amendments flow (section 624:50681)
 
@@ -118,10 +118,14 @@ A1 Homepage          ✅ approved      ✅ approved      not started
 A2 Car Results       ✅ approved      ✅ approved      not started
 A3 Car Detail        ✅ approved      ✅ approved      not started
 A5 Car Extras        ✅ approved      ✅ approved      not started
-A6 Checkout          ✅ approved      ✅ approved      not started
-                     (549:31190)      (dynamic CTA,
-                                      trust badges,
-                                      payment tabs)
+AUTH SMS (checkout)  ✅ approved      ✅ approved      not started
+                     (1035:5804/6406) (SmsAuthGate)
+AUTH SMS (manage)    ✅ approved      ✅ approved      not started
+                     (1035:7008)      (SmsAuthGate)
+MB Booking List      ✅ approved      ✅ approved      not started
+                     (1035:7610)      (post-SMS list)
+A6 Checkout (slim)   ✅ approved      ✅ approved      not started
+                     (1039:14272)     (4 fields, 3DS modal)
 A7 Confirmation      ✅ approved      ✅ approved      not started
 MB Manage Booking    ✅ approved      ✅ approved      not started
                      (M3–M5 + MB      (vertical prop,
@@ -147,8 +151,8 @@ Prototype "✅ approved"  → frontend build can start
 Never skip a gate
 ```
 
-Cars vertical (A1→A7 + MB) has passed **Gate 1** (Figma canonical frames pinned 2026-07-08).
-Prototype reconciliation complete 2026-07-08 — **Gate 2** ready for PM-1 production migration.
+Cars vertical (A1→A7 + MB) passed **Gate 1** 2026-07-08; SMS-auth scope passed **Gate 1** 2026-07-14.
+SMS-auth prototype passed **Gate 2** 2026-07-14 — ready for `nav-parity` → `master` merge, then PM-1.
 
 ---
 

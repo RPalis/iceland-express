@@ -297,7 +297,10 @@ function PriceSummaryCard({ car, days, qty, cta, onCta, note, compact }) {
             {lines.map((l) => (
               <div key={l.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13.5 }}>
                 <span style={{ color: T.muted }}>{l.qty > 1 ? l.qty + '× ' : ''}{l.name}</span>
-                <span style={{ fontWeight: 600 }}>{eur(l.sum)}</span>
+                <span style={{ textAlign: 'right' }}>
+                  <span style={{ fontWeight: 600 }}>{eur(l.sum)}</span>
+                  <span style={{ display: 'block', color: T.dim, fontSize: 11.5 }}>{isk(l.sum)}</span>
+                </span>
               </div>
             ))}
           </>
@@ -337,6 +340,246 @@ function PriceSummaryCard({ car, days, qty, cta, onCta, note, compact }) {
       }}>
         <Ico name="Lock" size={14} />
         No charge today · Free cancellation
+      </div>
+    </div>
+  );
+}
+
+/* ── TrustBadges ─────────────────────────────────────────────
+ * Trust-signal row — checkout / confirmation surfaces (Figma pattern).
+ * Figma: Components page `TrustBadges` component.
+ * Atoms used  : Ico
+ * Tokens      : T.muted, T.success
+ */
+const TRUST_BADGE_SETS = {
+  checkout: [
+    { icon: 'Lock',   label: 'SSL Encrypted' },
+    { icon: 'Shield', label: 'Free Cancellation 48h' },
+    { icon: 'Check',  label: 'Secure Payment' },
+  ],
+  confirmation: [
+    { icon: 'Check',  label: 'Booking Confirmed' },
+    { icon: 'Lock',   label: 'SSL Encrypted' },
+    { icon: 'Shield', label: '24/7 Support' },
+  ],
+};
+
+function TrustBadges({ variant = 'checkout', style }) {
+  const items = TRUST_BADGE_SETS[variant] || TRUST_BADGE_SETS.checkout;
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      gap: 24, flexWrap: 'wrap', ...style,
+    }}>
+      {items.map((b) => (
+        <div key={b.label} style={{ display: 'flex', alignItems: 'center', gap: 7, color: T.muted, fontSize: 13 }}>
+          <Ico name={b.icon} size={14} style={{ color: T.success }} />
+          {b.label}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* ── Auth session (SMS OTP prototype) ─────────────────────────
+ * Short-lived session after mobile OTP verify (~15 min).
+ * Backend spec: POST /api/auth/sms/send · POST /api/auth/sms/verify
+ */
+const AUTH_SESSION_TTL_MS = 15 * 60 * 1000;
+
+function normalizeMobileE164(raw) {
+  const digits = String(raw || '').replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.startsWith('354')) return '+' + digits;
+  if (digits.length <= 10) return '+354' + digits.replace(/^0+/, '');
+  return '+' + digits;
+}
+
+function getAuthSession() {
+  const s = window.__authSession;
+  if (!s || !s.verifiedAt || !s.mobile) return null;
+  if (Date.now() - s.verifiedAt > AUTH_SESSION_TTL_MS) {
+    window.__authSession = null;
+    return null;
+  }
+  return s;
+}
+
+function setAuthSession(mobile) {
+  const normalized = normalizeMobileE164(mobile);
+  window.__authSession = { mobile: normalized, verifiedAt: Date.now() };
+  return window.__authSession;
+}
+
+function clearAuthSession() {
+  window.__authSession = null;
+}
+
+/* ── SmsAuthGate ─────────────────────────────────────────────
+ * Shared SMS OTP gate before A6 checkout and MB (Figma AUTH-SMS).
+ * Prototype: any 6-digit code verifies; resend/lockout simulated.
+ */
+const SMS_AUTH_COPY = {
+  checkout: {
+    pill: 'Secure checkout',
+    title: 'Verify your mobile',
+    titleCode: 'Enter your code',
+    subtitle: 'We send a one-time code to confirm it\'s you before payment.',
+    subtitleCode: (mobile) => 'We sent a 6-digit code to ' + mobile + '.',
+    backLabel: 'Back to add-ons',
+    cta: 'Continue to checkout',
+  },
+  manage: {
+    pill: 'Manage booking',
+    title: 'Verify your mobile',
+    titleCode: 'Enter your code',
+    subtitle: 'Enter the mobile number used when you booked.',
+    subtitleCode: (mobile) => 'We sent a 6-digit code to ' + mobile + '.',
+    backLabel: 'Back to home',
+    cta: 'View my bookings',
+  },
+};
+
+function SmsAuthGate({ variant = 'checkout', onVerified, goBack }) {
+  const copy = SMS_AUTH_COPY[variant] || SMS_AUTH_COPY.checkout;
+  const [step, setStep] = React.useState('mobile');
+  const [mobile, setMobile] = React.useState('');
+  const [code, setCode] = React.useState('');
+  const [err, setErr] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
+  const [failCount, setFailCount] = React.useState(0);
+  const [resends, setResends] = React.useState(0);
+  const [sentTo, setSentTo] = React.useState('');
+
+  function sendCode(e) {
+    e?.preventDefault?.();
+    setErr('');
+    const normalized = normalizeMobileE164(mobile);
+    if (normalized.length < 8) {
+      setErr('Enter a valid mobile number including country code.');
+      return;
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setSentTo(normalized);
+      setStep('code');
+    }, 700);
+  }
+
+  function resendCode() {
+    if (resends >= 3) { setStep('locked'); return; }
+    setErr('');
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setResends((n) => n + 1);
+      setCode('');
+    }, 500);
+  }
+
+  function verifyCode(e) {
+    e?.preventDefault?.();
+    setErr('');
+    if (!/^\d{6}$/.test(code.trim())) {
+      setErr('Enter the 6-digit code we sent to your phone.');
+      return;
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      if (failCount >= 4) {
+        setStep('locked');
+        return;
+      }
+      const session = setAuthSession(sentTo || mobile);
+      onVerified?.(session);
+    }, 600);
+  }
+
+  function handleBadCode() {
+    const next = failCount + 1;
+    setFailCount(next);
+    if (next >= 5) {
+      setStep('locked');
+      return;
+    }
+    setErr('That code didn\'t work. Check the SMS and try again.');
+    setCode('');
+  }
+
+  if (step === 'locked') {
+    return (
+      <div className="shell" style={{ paddingTop: 60, paddingBottom: 60, maxWidth: 520, margin: '0 auto' }}>
+        {goBack && <div className="link" style={{ marginBottom: 24 }} onClick={goBack}><Icons.ArrowL size={16} /> Back</div>}
+        <EmptyState
+          icon="Lock"
+          title="Too many attempts"
+          desc="For your security, SMS verification is locked for 15 minutes. Please try again later or contact support."
+          action={<Btn variant="primary" onClick={goBack}>Back</Btn>}
+        />
+      </div>
+    );
+  }
+
+  const displayTitle = step === 'code' ? (copy.titleCode || copy.title) : copy.title;
+  const displaySubtitle = step === 'code' && copy.subtitleCode
+    ? copy.subtitleCode(sentTo || mobile)
+    : copy.subtitle;
+
+  return (
+    <div className="shell" style={{ paddingTop: 60, paddingBottom: 60, maxWidth: 520, margin: '0 auto' }}>
+      {goBack && <div className="link" style={{ marginBottom: 24 }} onClick={goBack}><Icons.ArrowL size={16} /> {copy.backLabel || 'Back'}</div>}
+      <div className="col gap6" style={{ marginBottom: 32 }}>
+        <div className="pill" style={{ alignSelf: 'flex-start' }}><Icons.Lock size={14} /> {copy.pill}</div>
+        <h1 className="h1" style={{ fontSize: 32 }}>{displayTitle}</h1>
+        <p className="muted" style={{ fontSize: 15, lineHeight: 1.5, marginTop: 4 }}>{displaySubtitle}</p>
+      </div>
+
+      {step === 'mobile' ? (
+        <form className="card card-pad col gap18" onSubmit={sendCode} noValidate>
+          <FormField label="Mobile number" required helper="Include country code — e.g. +354 555 0100">
+            <Fld type="tel" placeholder="+354 555 0100" value={mobile} onChange={(e) => setMobile(e.target.value)} autoComplete="tel" />
+          </FormField>
+          {err && <InfoBanner variant="danger" icon="Info">{err}</InfoBanner>}
+          <Btn variant="primary" size="lg" block disabled={loading} type="submit">
+            {loading ? 'Sending code…' : 'Send verification code'}
+          </Btn>
+        </form>
+      ) : (
+        <form className="card card-pad col gap18" onSubmit={verifyCode} noValidate>
+          <InfoBanner variant="info" icon="Info">
+            Code sent to <strong style={{ color: 'var(--fg)' }}>{sentTo}</strong>. Demo: enter any 6 digits.
+          </InfoBanner>
+          <FormField label="6-digit code" required>
+            <Fld
+              type="text"
+              inputMode="numeric"
+              placeholder="123456"
+              maxLength={6}
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+              style={{ fontFamily: 'var(--font-display)', fontWeight: 700, letterSpacing: '0.2em', fontSize: 22, textAlign: 'center' }}
+            />
+          </FormField>
+          {err && <InfoBanner variant="danger" icon="Info">{err}</InfoBanner>}
+          <Btn variant="primary" size="lg" block disabled={loading || code.length < 6} type="submit">
+            {loading ? 'Verifying…' : copy.cta}
+          </Btn>
+          <div className="row center between wrap gap8" style={{ fontSize: 13 }}>
+            <button type="button" className="link" onClick={() => { setStep('mobile'); setCode(''); setErr(''); }}>Change number</button>
+            <button type="button" className="link" disabled={loading || resends >= 3} onClick={resendCode}>
+              Resend code{resends ? ` (${resends}/3)` : ''}
+            </button>
+          </div>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={handleBadCode} style={{ alignSelf: 'center' }}>
+            Simulate wrong code (demo)
+          </button>
+        </form>
+      )}
+
+      <div className="row center gap8" style={{ justifyContent: 'center', marginTop: 20, color: 'var(--dim)', fontSize: 13 }}>
+        <Icons.Shield size={14} style={{ color: 'var(--success)' }} /> Code expires in 5 minutes · Session lasts 15 minutes
       </div>
     </div>
   );
@@ -480,7 +723,12 @@ Object.assign(window, {
   NAV_PLATFORM_ITEMS,
   NAV_DEFAULT_ITEMS,
   NavBarLink,
+  AUTH_SESSION_TTL_MS,
+  normalizeMobileE164,
+  getAuthSession,
+  setAuthSession,
+  clearAuthSession,
   // Organisms
   CarCardV2, ExtraCardV2, BlogCardV2, ManageActionCard,
-  PageHero, EmptyState, PriceSummaryCard, NavBar,
+  PageHero, EmptyState, PriceSummaryCard, NavBar, TrustBadges, SmsAuthGate,
 });

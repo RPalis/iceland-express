@@ -33,9 +33,15 @@ const carsConfig = {
     // [REQUIRED] Section heading above the form card
     sectionLabel: 'Driver Details',
 
+    // [REQUIRED] Phase 1 checkout collects these fields only (SMS auth supplies mobile)
+    minFields: ['first', 'last', 'email', 'phone'],
+
+    // [REQUIRED] DOB omitted on A6 when age attested on A1 (search.ageConfirmed)
+    skipDobWhenAgeConfirmed: true,
+
     // [REQUIRED] Whether to show the "license issued in" select field
-    // false → field is removed entirely from the form
-    hasLicense: true,
+    // false → field is removed entirely from the form (Phase 1)
+    hasLicense: false,
 
     // [OPTIONAL] Label for the license country select. null if hasLicense=false
     licenseLabel: 'License issued in',
@@ -43,10 +49,10 @@ const carsConfig = {
     // [OPTIONAL] Countries shown in the license select. null → use default list
     licenseCountries: ['GB','US','DE','FR','IS','AU','CA','NL','SE','NO','DK'],
 
-    // [REQUIRED] Helper text below the flight number field
+    // [OPTIONAL] Flight number removed from A6 Phase 1 — kept for Phase 2 flights vertical
     flightHelper: 'We monitor your flight and adjust pickup automatically.',
 
-    // [REQUIRED] Placeholder for the special requests textarea
+    // [OPTIONAL] Special requests removed from A6 Phase 1 minimal form
     requestsPlaceholder: 'Child seat installed on arrival, camping kit assembly, etc.',
   },
 
@@ -116,6 +122,27 @@ const carsConfig = {
         desc:  'All set! Your rental includes CDW, unlimited mileage and 24/7 support.',
       },
     ],
+  },
+
+  // ── Manage booking (MB) — ratified 2026-07-08 (docs/ux-logic.md §6.3) ─────
+  manage: {
+
+    // [REQUIRED] Which amendment actions are available for this vertical
+    hasModifyDriver: true,      // M3a — name / phone / license country
+    hasModifyDates: true,       // M3b
+    hasModifyLocation: true,    // M3c
+    hasModifyExtras: true,      // M3d
+    hasCancel: true,
+
+    // [REQUIRED] Labels for the cancellation fee tiers
+    cancelTierLabels: {
+      free: 'Free Cancellation',
+      partial: '15% cancellation fee',
+      late: '25% cancellation fee',
+    },
+
+    // [REQUIRED] Instructions shown at the top of the amend view
+    amendInstructions: 'Edit your driver details, dates, location, or extras below. Changes are confirmed by Rentalcars within 60 seconds.',
   },
 
   // ── Item summary card (A7) ────────────────────────────────────────────────

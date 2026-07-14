@@ -280,6 +280,26 @@
 
 ---
 
+## Session notes
+
+### 2026-07-08 — Cars-First Phase E + prototype reconciliation (nav-parity)
+
+- Ratified `docs/ux-logic.md` §11 (8 open questions) → `docs/DECISIONS.md`
+- Phase G specs: `design/payment-logic.md`, `design/amendments-flow-spec.md`
+- Figma Gate 1: canonical frames pinned (`design/figma-links.md`); MB lookup/cancel/failure states added; NavBar component instances across flows
+- Prototype Gate 2: A6 (dynamic CTA, trust badges, payment tabs, ISK line); MB (vertical prop, M3a/M4, failure states); `manage` key in cars + flights configs
+- `bash scripts/ds-audit.sh --strict` = 0 findings
+- Ready: merge `nav-parity` → `master`, then PM-1 production migration
+
+### 2026-07-14 — SMS auth Gate 1 + Gate 2 (nav-parity)
+
+- Gate 1 approved: AUTH-SMS checkout/manage (`1035:5804`, `1035:6406`, `1035:7008`), MB list (`1035:7610`), slim A6 (`1039:14272`)
+- Gate 2 verified: `SmsAuthGate`, slim checkout, MB booking list, 3DS modal at `/bookacar/`
+- Canonical A6 promoted to slim variant; legacy `549:31190` superseded
+- Next: merge `nav-parity` → `master`
+
+---
+
 ## Update Rules for This File
 
 ```

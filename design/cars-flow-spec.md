@@ -9,13 +9,12 @@
 ## 1. Funnel Overview
 
 ```
-A1 Home  →  A2 Results  →  A3 Detail  →  A5 Extras  →  A6 Checkout  →  A7 Confirmation
+A1 Home  →  A2 Results  →  A3 Detail  →  A5 Extras  →  AUTH-SMS  →  A6 Checkout  →  A7 Confirmation
                                                               ↓
-                                                          MB Manage Booking (guest)
+                                                          MB Manage Booking (SMS OTP)
 ```
 
-5-step funnel. Each step is a dedicated screen. MB (Manage Booking) is a
-post-booking surface accessible from the NavBar without an account.
+5-step funnel plus SMS auth gate before checkout. MB requires SMS OTP to verified mobile.
 
 ---
 
@@ -64,16 +63,24 @@ post-booking surface accessible from the NavBar without an account.
 - **States:** default, loading (extras fetched from provider)
 - **Provider mapping:** Rentalcars `extras` list per `vehicleId`
 
+### AUTH — SMS Verify
+- **Purpose:** Verify mobile before A6 checkout or MB access.
+- **Primary action:** Verify OTP → continue
+- **Fields:** Mobile (E.164), 6-digit OTP
+- **Variants:** checkout copy vs manage-booking copy
+- **States:** enterMobile, enterCode, verified, failed, locked
+
 ### A6 — Checkout
-- **Purpose:** Collect driver details + payment. Confirm booking.
-- **Primary action:** Complete Booking → A7 Confirmation
+- **Purpose:** Collect minimal driver details + payment. Confirm booking.
+- **Primary action:** Complete Booking → 3DS → A7 Confirmation
 - **Sections:**
-  1. Driver details (First name, Last name, Email, Special requests — 4 fields only)
+  1. Driver details (**First name, Last name, Email, Mobile** — 4 fields only)
   2. Payment amount (Pay in Full / Pay Deposit 50% / Pay at Pickup) — `DepositOption`
   3. Payment method (Card / PayPal / Apple Pay / Google Pay) — `Tab`
   4. Card form (number, expiry, CVC, name on card) — `Field` components
-  5. Price breakdown sidebar — `PriceBreakdownCard`
-  6. Trust badges — `TrustBadges`
+  5. 3DS helper: "Your bank may ask you to confirm this payment (3D Secure)"
+  6. Price breakdown sidebar — `PriceBreakdownCard`
+  7. Trust badges — `TrustBadges`
 - **States:**
   - default — form ready
   - processing — spinner on CTA, fields disabled
@@ -92,13 +99,14 @@ post-booking surface accessible from the NavBar without an account.
 - **States:** default, voucher-download (PDF generation)
 - **Provider mapping:** Rentalcars `bookingConfirmation` → `bookingRef`, `voucherUrl`
 
-### MB — Manage Booking (guest-mode)
-- **Purpose:** View, modify, or cancel an existing booking without an account.
-- **Entry:** NavBar[Manage Booking] or A7[Manage]
-- **Lookup:** Booking reference + email (no account required)
+### MB — Manage Booking (SMS-session)
+- **Purpose:** View, modify, or cancel bookings for verified mobile.
+- **Entry:** NavBar[Manage Booking] → SMS OTP → booking list
+- **Lookup:** SMS OTP to mobile (no ref+email primary gate)
 - **States:**
-  - lookup — ref + email form
-  - lookup-failed — error + retry
+  - sms-auth — mobile + OTP (shared AUTH component)
+  - list — bookings for verified mobile
+  - list-empty — no bookings + retry
   - found — summary + status chip + action buttons
   - change-dates — date picker + re-pricing preview
   - change-location — location picker + re-pricing

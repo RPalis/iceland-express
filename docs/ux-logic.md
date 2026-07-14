@@ -40,10 +40,11 @@ The shared engine (A6 checkout, A7 confirmation, MB manage) is built once and pa
 | 1 | **A1 Home** | Enter pickup location, pickup date + time, return date + time, driver age (25+ toggle) | `search = { pickupLoc, pickupDate, pickupTime, returnDate, returnTime, driverAge }` | A2 |
 | 2 | **A2 Results** | Browse car cards, filter (transmission / fuel / seats / price / Free Cancellation), sort (Recommended / Price / Top Rated), select car | `selectedCar` | A3 |
 | 3 | **A3 Detail** | View gallery, specs, included items, tabs (Arrive / Bring / Deposit), price breakdown, click Continue | — | A5 |
-| 4 | **A5 Extras** | Add extras with stepper (Insurance / GPS / Child seat / Additional driver / Winter tires / Camping kit / Sleeping bags), see running total | `qty = { gps: 1, wifi: 1, ... }` | A6 |
-| 5a | **A6 Checkout** | Fill driver form, choose deposit option, choose payment method, enter card details, accept terms, submit | `form = { first, last, email, phone, dob, licenseCountry, flight, requests, card, expiry, cvv, cardName, agree, marketing }` + `pay = full \| deposit \| pickup` | A7 |
+| 4 | **A5 Extras** | Add extras with stepper (Insurance / GPS / Child seat / Additional driver / Winter tires / Camping kit / Sleeping bags), see running total | `qty = { gps: 1, wifi: 1, ... }` | AUTH |
+| 4b | **AUTH — SMS Verify** | Enter mobile → receive 6-digit OTP → verify (required before A6 and MB) | `authSession = { mobile, verifiedAt }` | A6 |
+| 5a | **A6 Checkout** | Fill minimal driver form (4 fields), choose deposit option, choose payment method, enter card details, accept terms, submit → 3DS | `form = { first, last, email, phone, card, expiry, cvv, cardName, agree, marketing }` + `pay = full \| deposit \| pickup` | A7 |
 | 5b | **A7 Confirmation** | View booking ref, trip details, add-ons booked, what-happens-next, voucher download, manage-booking link | — | MB (later) |
-| Post | **MB Manage** | Retrieve by ref + email (guest), view booking, modify dates / location / extras, cancel | — | — |
+| Post | **MB Manage** | SMS OTP to mobile → list bookings for verified number, view booking, modify dates / location / extras, cancel | — | — |
 
 ### 2.2 Field set per screen (canonical for Phase 1)
 
@@ -57,15 +58,21 @@ These fields are the **canonical Phase 1 spec** (reconciled from the Figma A6 vs
 - **Return time** — time select
 - **Driver age 25+** — boolean toggle (Rentalcars surcharge rules)
 
-#### A6 Checkout — Driver form
+#### AUTH — SMS Verify (before A6 checkout and before MB)
+- **Mobile number** (required, E.164) → **Send code**
+- **6-digit OTP** (required, 5 min TTL) → **Verify**
+- On success: short-lived session (`window.__authSession`, ~15 min JWT in production)
+- Search/explore (A1–A5) requires **no** auth
+
+#### A6 Checkout — Driver form (minimal — ratified 2026-07-09)
 - **First name** (required)
 - **Last name** (required)
 - **Email address** (required, validated)
-- **Phone number** (required, +354 default for IS)
-- **Date of birth** (required, DD/MM/YYYY — driver must be 25+ per A1 toggle)
-- **License country** (required, select — `carsConfig.traveller.licenseCountries`)
-- **Flight number (optional)** — text, helper "So we can track delays and adjust your pickup time"
-- ~~**Special requests**~~ — **removed from A6** (moved to A5 extras as a note field, or dropped — confirm in Phase E)
+- **Phone number** (required) — pre-filled from SMS session; must match verified mobile
+- **Date of birth** — **not collected on A6** when `search.ageConfirmed === true` on A1 (age attested at search)
+- **License country** — **removed from A6 Phase 1** (required at pickup — shown in A7 next-steps copy)
+- **Flight number** — **removed from A6 Phase 1**
+- ~~**Special requests**~~ — removed from A6
 
 #### A6 Checkout — Payment amount
 Three options (standardised labels — Figma adopts code labels):
@@ -113,7 +120,8 @@ Four tabs (Figma pattern wins — design all 4 now; prototype implements card-on
 | **Results: filters** | Transmission / fuel / seats / price / Free Cancellation | Stops / airline / times / price | Stars / area / amenities / price | Duration / difficulty / group size / price |
 | **Detail: hero** | Gallery + spec grid | Route map + fare breakdown | Gallery + room types | Gallery + itinerary |
 | **Extras** | Insurance / GPS / Child seat / Additional driver / Winter tires | Bags / seats / meal / lounge | Breakfast / parking / spa / airport shuttle | Photos / video / pickup / group discount |
-| **Checkout: traveller** | Driver Details (license, DOB, phone) | Passenger Details (passport, DOB, nationality) | Guest Details (name, email, phone) | Participant Details (name, email, weight/size if needed) |
+| **Checkout: traveller** | Driver Details (first, last, email, phone only) | Passenger Details (passport, DOB, nationality) | Guest Details (name, email, phone) | Participant Details (name, email, weight/size if needed) |
+| **Auth gate** | SMS OTP before A6 + MB | SMS OTP before B6 + MB | SMS OTP before C6 + MB | SMS OTP before D6 + MB |
 | **Confirmation: ref prefix** | `ICE-` | `FL-` | `HT-` | `EX-` |
 | **Manage: amend** | Modify dates / location / extras · Cancel | (TBD per Duffel) | (TBD per ETG) | (TBD per Bokun) |
 
@@ -146,25 +154,37 @@ Every list-bearing screen must handle these 4 states. Every form-bearing screen 
 | **Error** | Validation failed | `T.status.danger` border + helper text → error text |
 | **Disabled** | Conditional (e.g. card form hidden when pay=pickup) | Opacity 0.45, not interactive |
 | **Submitting** | Form sent, awaiting response | `Btn` loading state, spinner, "Processing…" |
-| **3-DS challenge** | Card requires SCA | Modal overlay (Phase 2+ — Phase 1 simulates success) |
+| **3-DS challenge** | Card requires SCA | Modal overlay — **mandatory second factor** at pay (Phase 1 simulates) |
 | **Success** | Booking created | Redirect to A7 |
 | **Decline** | Card rejected | Toast + form remains, error text on card field, retry |
 
-### 4.3 Manage booking states (MB)
+### 4.3 SMS auth gate states (AUTH — shared by checkout + MB)
+
+| State | Trigger | UI |
+|-------|---------|-----|
+| **Enter mobile** | User reaches A6 or MB without valid session | Mobile input + "Send code" |
+| **Enter code** | OTP sent | 6-digit input + "Verify" + resend (max 3 / 15 min) |
+| **Verified** | OTP accepted | Session stored; continue to A6 or MB list |
+| **OTP failed** | Wrong code / expired | Error text + retry |
+| **Locked** | 5 failed attempts / 15 min | Lockout message |
+
+### 4.4 Manage booking states (MB)
 
 | State | Prototype `sub` | Trigger |
 |-------|-----------------|---------|
-| **Lookup** | `lookup` | Initial — ref + email form |
-| **Lookup failed** | (within lookup) | No booking found — error text + retry |
+| **List** | `list` | Post-SMS — bookings for verified mobile |
+| **List empty** | (within list) | No bookings for this mobile |
 | **Found** | `found` | Booking retrieved — summary + actions |
-| **Change dates** | `changeDates` | User clicks Modify dates |
-| **Change location** | `changeLocation` | User clicks Modify location (NOT in original plan — see §8 open question) |
-| **Change extras** | `changeExtras` | User clicks Add extras / Modify extras |
+| **Change driver** | `changeDriver` | User clicks Change driver (Figma M3a) — name / phone / license country |
+| **Change dates** | `changeDates` | User clicks Modify dates (Figma M3b) |
+| **Change location** | `changeLocation` | User clicks Modify location (Figma M3c) — ratified 2026-07-08 as a separate state |
+| **Change extras** | `changeExtras` | User clicks Add extras / Modify extras (Figma M3d) |
+| **Pay the difference** | `payDifference` | Amendment re-price increased the total (Figma M4) — delta payment step before confirm |
 | **Cancel confirm** | `cancelConfirm` | User clicks Cancel — fee tier preview modal |
 | **Cancelled** | `cancelled` | Cancel confirmed — refund receipt |
-| **Updated** | `updated` | Amendment confirmed — updated voucher |
-| **Amendment failed** | (TBD — add to prototype) | Provider rejects amendment — error + retry / contact support |
-| **Past pickup** | (TBD — add to prototype) | User tries to amend/cancel after pickup time — locked, contact support |
+| **Updated** | `updated` | Amendment confirmed — updated voucher (Figma M5) |
+| **Amendment failed** | `amendFailed` | Provider rejects amendment — error + retry / contact support |
+| **Past pickup** | (banner within `found`) | `now > pickupDate + 2h` — amend/cancel locked, contact support (ratified 2026-07-08) |
 
 ---
 
@@ -304,6 +324,7 @@ MB currently uses hardcoded car-specific rendering. To become a true shared engi
 ```javascript
 // Add to cars.config.js (and every vertical config):
 manage: {
+  hasModifyDriver: true,       // cars: yes (name/phone/license — Figma M3a), flights: no (name changes = re-ticket), hotels: yes, activities: yes
   hasModifyDates: true,        // cars: yes, flights: depends on Duffel, hotels: yes, activities: yes
   hasModifyLocation: true,     // cars: yes (pickup/dropoff), flights: no (origin/dest fixed), hotels: no, activities: yes (pickup point)
   hasModifyExtras: true,       // cars: yes, flights: yes (bags/seats), hotels: yes, activities: maybe
@@ -313,7 +334,7 @@ manage: {
     partial: '15% cancellation fee',
     late: '25% cancellation fee',
   },
-  amendInstructions: 'Edit your dates, location, or extras below. Changes are confirmed by Rentalcars within 60 seconds.',
+  amendInstructions: 'Edit your driver details, dates, location, or extras below. Changes are confirmed by Rentalcars within 60 seconds.',
 },
 ```
 
@@ -364,7 +385,18 @@ flowchart TD
 
 ### 7.4 Phase 1 scope (cards only)
 
-For Phase 1, **only Card payment is implemented in the prototype**. PayPal, Apple Pay, Google Pay are designed in Figma as visual placeholders but not wired. The payment tabs in the Figma A6 show all 4 — this is the intended end state. The prototype uses a single card form path with simulated success (`setTimeout` 900ms → A7).
+For Phase 1, **only Card payment is implemented in the prototype**. PayPal, Apple Pay, Google Pay are designed in Figma as visual placeholders but not wired. The payment tabs in the Figma A6 show all 4 — this is the intended end state.
+
+### 7.5 Two-factor payment security (ratified 2026-07-09)
+
+| Step | Factor | Method |
+|------|--------|--------|
+| **Access** (before A6 / MB) | First factor | SMS OTP to mobile |
+| **Capture** (at pay) | Second factor | **3D Secure / bank SCA** (mandatory for card payments) |
+
+- Abandoned 3DS = booking **not** created; form remains; user can retry.
+- No second SMS at payment — 3DS is the payment authentication step.
+- Phase 1 prototype: simulates 3DS via modal overlay before redirect to A7.
 
 ---
 
@@ -374,25 +406,27 @@ For Phase 1, **only Card payment is implemented in the prototype**. PayPal, Appl
 
 ```mermaid
 flowchart TD
-  Retrieve([User visits MB]) --> EnterRef[Enter ref + email]
-  EnterRef --> Lookup[POST /api/bookings/lookup]
-  Lookup --> |Not found| LookupFail[Error - no booking found]
-  Lookup --> |Found| View[MB View Booking]
+  Retrieve([User visits MB]) --> SmsAuth[SMS OTP gate]
+  SmsAuth --> ListBookings[Bookings for verified mobile]
+  ListBookings --> |Empty| ListFail[No bookings found]
+  ListBookings --> |Select| View[MB View Booking]
   View --> Choose{Choose action}
-  Choose --> |Modify dates| ModDates[Pick new dates]
-  Choose --> |Modify location| ModLoc[Pick new pickup/dropoff]
-  Choose --> |Modify extras| ModExtras[Adjust extras quantities]
+  Choose --> |Change driver| ModDriver[Edit name / phone / license - M3a]
+  Choose --> |Modify dates| ModDates[Pick new dates - M3b]
+  Choose --> |Modify location| ModLoc[Pick new pickup/dropoff - M3c]
+  Choose --> |Modify extras| ModExtras[Adjust extras quantities - M3d]
   Choose --> |Cancel| Cancel[Cancel confirm modal]
+  ModDriver --> ConfirmAmend[Confirm amendment]
   ModDates --> Reprice[Re-price against Rentalcars]
   ModLoc --> Reprice
   ModExtras --> Reprice
   Reprice --> |Price decreased| RefundDue[Show refund amount]
-  Reprice --> |Price increased| ChargeDue[Show additional charge - price-increase-percent warning]
+  Reprice --> |Price increased| PayDiff[M4 Pay the Difference - delta payment step]
   Reprice --> |Same price| NoChange[Show no change]
-  RefundDue --> ConfirmAmend[Confirm amendment]
-  ChargeDue --> ConfirmAmend
+  RefundDue --> ConfirmAmend
+  PayDiff --> |Delta paid| ConfirmAmend
   NoChange --> ConfirmAmend
-  ConfirmAmend --> |Success| Updated([MB Updated - new voucher])
+  ConfirmAmend --> |Success| Updated([M5 MB Updated - new voucher])
   Cancel --> FeeTier{Compute cancellation tier}
   FeeTier --> |>=48h| FreeRefund[Full refund]
   FeeTier --> |24-48h| PartialRefund[85% refund - 15% fee]
@@ -458,7 +492,14 @@ if (delta === 0) {
 }
 ```
 
-**Price increase threshold:** Rentalcars' `prebook` supports `price_increase_percent` (0–100%). If the increase exceeds the threshold, the original rate is released and the user sees the new rate. Recommended threshold: 10% — anything above triggers an explicit user accept.
+**Price increase threshold:** Rentalcars' `prebook` supports `price_increase_percent` (0–100%). If the increase exceeds the threshold, the original rate is released and the user sees the new rate. Ratified threshold (2026-07-08): **10%** — anything above triggers an explicit user accept.
+
+**M4 — Pay the Difference (delta > 0):** when the re-price increases the total, the amendment is NOT confirmed until the user pays the delta on a dedicated payment step (Figma M4):
+- `PriceDeltaRow` shows original total, new total, and the delta.
+- Payment method pills (Card / PayPal / Apple Pay / Google Pay — card-only wired in Phase 1).
+- Card form pre-notice: "Charged to the card used at booking by default."
+- CTA: `Pay €{delta} & Update Booking` — on success → M5 Updated.
+- Abandoning M4 leaves the booking unchanged (original rate kept if within `price_increase_percent` hold window; otherwise the user is returned to the amendment form with the new rate).
 
 ### 8.5 Amendment failure branches
 
@@ -467,7 +508,7 @@ if (delta === 0) {
 | **Provider rejects amendment** | Rentalcars returns error (car unavailable for new dates, etc.) | `ErrorState` — "We couldn't update your booking" + Retry + "Contact support" link |
 | **Refund failed** | Stripe refund call fails | Booking remains in original state + Toast "Refund failed — your booking is unchanged" + "Contact support" link |
 | **Past pickup time** | User tries to amend/cancel after pickup datetime | All amend/cancel buttons disabled + banner "Past pickup — contact support to change your booking" |
-| **Session expired** | MB lookup session >30min | Modal — "Your session has expired" + re-enter ref + email |
+| **Session expired** | SMS session >15min | Modal — "Your session has expired" + re-verify mobile via SMS OTP |
 
 ### 8.6 Amendment success states
 
@@ -478,41 +519,39 @@ if (delta === 0) {
 
 ---
 
-## 9. Guest-mode constraints (B8)
+## 9. SMS-session model (B8) — ratified 2026-07-09
 
-### 9.1 What guest mode means
+Supersedes the 2026-07-01 guest ref+email model for MB access. Search/explore remains unauthenticated.
 
-- **No user accounts** in Phase 1. No registration, no login, no password, no session persistence beyond the booking ref + email.
-- All booking creation (A6) is anonymous — the booking is tied to `driver.email`, not a user ID.
-- All booking retrieval (MB) is by `ref + email` pair. Both must match.
-- No "my bookings" page, no booking history, no saved payment methods.
+### 9.1 What SMS-session means
+
+- **No password accounts** in Phase 1. No registration form, no OAuth.
+- **SMS OTP** is the access authentication before A6 checkout and before MB.
+- Short-lived session (~15 min) keyed to verified **mobile (E.164)**.
+- Bookings are indexed by `driver.phone` (must match verified mobile at checkout).
+- **3D Secure** is the payment second factor at capture — not a second SMS.
 
 ### 9.2 What this implies for design
 
 | Screen | Implication |
 |--------|-------------|
-| A1 Home | No "Sign in" CTA in NavBar. CTA is "Manage Booking" (which opens MB lookup) |
-| A6 Checkout | No "Save my details" checkbox. No "Create account after booking" upsell. Form is one-shot. |
-| A7 Confirmation | No "Create account to manage your booking" CTA. Booking is managed via the ref + email link in the confirmation email + on-screen. |
-| MB Retrieve | Form is just `ref` + `email`. No "forgot password". No social login. |
-| MB View | No "account settings". No "saved cars". Just the booking + amend/cancel actions. |
+| A1–A5 | Open — no auth. Age attestation checkbox on A1 only (`ageConfirmed`). |
+| AUTH | Mobile + 6-digit OTP gate before A6 and MB |
+| A6 Checkout | Minimal driver form (4 fields). Phone pre-filled from session. 3DS modal at submit. |
+| A7 Confirmation | Manage booking via NavBar → SMS OTP (same mobile) |
+| MB | Post-SMS booking list for verified mobile; optional ref filter after verify |
 
 ### 9.3 Security constraints
 
-- The `ref + email` pair is the **only** authentication for MB. Email must match exactly (case-insensitive).
-- Refs are 6-char random uppercase (`ICE-A3F9KX`) — 36^6 = ~2.2B combinations. Email is the second factor.
-- Rate limit MB lookup: 5 attempts per IP per 5 minutes. Lockout for 15 min after 5 failures.
-- All amend/cancel actions send a confirmation email to `driver.email`.
-- Voucher download is gated by the same `ref + email` session.
+- OTP: 6 digits, 5 min TTL, max 3 resends, 15 min lockout after 5 failed attempts.
+- Verified mobile stored on booking; MB lists all bookings matching that mobile.
+- 3DS required for card capture; abandoned 3DS = no booking created.
+- All amend/cancel actions send confirmation email to `driver.email`.
+- Ref+email retained as **secondary** lookup in confirmation emails — not the primary MB gate.
 
-### 9.4 Phase 2+ accounts (out of scope this round)
+### 9.4 Phase 2+ full accounts (deferred)
 
-When accounts are added (Phase 2+ per `backend/CLAUDE.md`):
-- Guest bookings can be "claimed" into an account by signing up with the same email.
-- MB then offers both "guest lookup" (ref + email) and "sign in" paths.
-- Saved payment methods, booking history, and preferences become possible.
-
-This is **not** designed this round. The Figma flow assumes guest-mode only.
+Password accounts / OAuth may be added later. SMS-session bookings can be claimed into an account by verifying the same mobile.
 
 ---
 
@@ -533,18 +572,18 @@ This is **not** designed this round. The Figma flow assumes guest-mode only.
 
 ---
 
-## 11. Open questions to ratify before Phase E
+## 11. Open questions — RATIFIED 2026-07-08 (see DECISIONS.md)
 
-1. **A6 field set** — confirm Phone + DOB + License Country + Flight Number are all in Phase 1 scope (Figma pattern wins per audit §5.1).
-2. **Payment methods in Phase 1** — confirm Card-only is wired in prototype; PayPal/Apple Pay/Google Pay are Figma visual placeholders for Phase 2+.
-3. **`Special requests` TxtArea** — remove from A6 entirely (recommended) or move to A5 extras as a "Notes for the rental desk" field?
-4. **ManageChangeLocation** — keep as separate MB state (recommended) or fold into Modify dates? Current prototype has it separate.
-5. **Light mode** — confirm dark-only for Phase 1. Light mode is a Phase 2+ concern.
-6. **`price_increase_percent` threshold** — confirm 10% as the point where the user must explicitly accept a price increase on amendment.
-7. **MB lookup rate limit** — confirm 5 attempts per IP per 5 minutes, 15-min lockout.
-8. **Past-pickup cutoff** — confirm: amend/cancel buttons hidden when `now > pickupDate + 2h` (2-hour grace period) vs. strictly `now > pickupDate`.
+All 8 questions were ratified with the documented recommendations:
 
-These are ratified in the next session before Phase E frames are designed.
+1. **A6 field set** — Phone + DOB + License Country + Flight Number (optional) are all Phase 1 scope. ✅
+2. **Payment methods in Phase 1** — Card-only wired in prototype; PayPal/Apple Pay/Google Pay are visual placeholders for Phase 2+. ✅
+3. **`Special requests` TxtArea** — removed from A6 entirely. ✅
+4. **ManageChangeLocation** — kept as a separate MB state. ✅
+5. **Light mode** — dark-only for Phase 1. ✅
+6. **`price_increase_percent` threshold** — 10%; above triggers explicit user accept (M4 Pay the Difference). ✅
+7. **MB lookup rate limit** — 5 attempts per IP per 5 minutes, 15-min lockout. ✅
+8. **Past-pickup cutoff** — 2-hour grace period (`now > pickupDate + 2h` locks amend/cancel). ✅
 
 ---
 

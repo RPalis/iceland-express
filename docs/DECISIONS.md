@@ -397,6 +397,78 @@ interaction states aligned by default.
 
 ---
 
+## 2026-07-08 — ux-logic §11 open questions ratified (Phase E unblocked)
+
+**What:** All 8 open questions in `docs/ux-logic.md` §11 are ratified with the documented recommendations:
+
+1. **A6 field set** — Figma's fuller set is canonical for Phase 1: First/Last name, Email, Phone, DOB, License Country, Flight Number (optional).
+2. **Payment methods** — Card-only is wired in the Phase 1 prototype. PayPal / Apple Pay / Google Pay are designed in Figma as visual placeholder tabs (Phase 2+ wiring).
+3. **Special requests** — removed from A6 entirely (not moved to A5).
+4. **Change Location** — remains a separate MB state (`changeLocation`), not folded into Modify Dates.
+5. **Light mode** — dark-only for Phase 1. Light mode is a Phase 2+ concern.
+6. **`price_increase_percent` threshold** — 10%. Any amendment re-price increase above 10% requires an explicit user accept.
+7. **MB lookup rate limit** — 5 attempts per IP per 5 minutes, 15-minute lockout after 5 failures.
+8. **Past-pickup cutoff** — 2-hour grace period: amend/cancel actions lock when `now > pickupDate + 2h`.
+
+**Why:** Phase E screen refinement and the prototype reconciliation both blocked on these. The recommendations were already documented in `design/audit-cars-2026-07-01.md` §9 and `docs/ux-logic.md` §11; adopting them as written keeps Figma and prototype converging on one canonical spec.
+
+**Alternatives rejected:**
+- Deferring ratification until user testing — blocks Phase E indefinitely; the test plan (Phase F) already assumes these flows.
+- Wiring all 4 payment methods in Phase 1 — adds provider integration work with no Phase 1 conversion benefit; tabs communicate the roadmap visually.
+
+---
+
+## 2026-07-08 — Amendments flow extended: M3a Change Driver + M4 Pay the Difference
+
+**What:** Two amendment use cases designed in the Figma `Amendments flow` section are adopted into the canonical spec:
+- **M3a — Change Driver**: guest can amend driver details (name, phone, license country) on an existing booking. New MB state `changeDriver`; new vertical-config flag `manage.hasModifyDriver` (cars: true).
+- **M4 — Pay the Difference**: when an amendment re-price increases the total, the user completes payment of the delta on a dedicated payment step (method pills + card form + `Pay €X & Update Booking` CTA) before the amendment is confirmed. Charged to the card used at booking by default.
+
+The MB state machine is now: `lookup → found → (changeDriver | changeDates | changeLocation | changeExtras) → reprice → (payDifference if delta > 0) → updated`, plus `cancelConfirm → cancelled`.
+
+**Why:** The Figma amendments flow (M3–M5 frames) surfaced these two real-world cases missing from `docs/ux-logic.md` §8: driver details change is Rentalcars Connect's most common amendment, and a price-increase amendment needs an explicit payment step — silently charging the card on file violates the never-silently-raise-the-price rule (ds-rules).
+
+**Alternatives rejected:**
+- Charging the delta automatically to the card on file with only a notice — violates explicit-consent pattern for price increases.
+- Treating driver change as a cancel + rebook — loses the original rate and free-cancellation window.
+
+---
+
+## 2026-07-09 — SMS OTP access auth + 3DS payment auth; minimal A6 driver form
+
+**What:** Phase 1 access model updated:
+- **SMS OTP** (mobile → 6-digit code) required before A6 checkout and before Manage Booking. Short-lived session (~15 min) keyed to verified E.164 mobile.
+- **3D Secure** elevated to mandatory **second factor** at card capture (not a second SMS).
+- **A6 driver form** slimmed to 4 fields only: first name, last name, email, mobile. DOB not collected when `search.ageConfirmed === true` on A1. License country and flight number removed from A6 Phase 1.
+- **MB** primary gate changes from ref+email lookup to post-SMS booking list for verified mobile.
+
+Search/explore (A1–A5) remains unauthenticated.
+
+**Why:** Best-practice security without full account friction: SMS verifies identity before sensitive actions; 3DS satisfies PSD2/SCA at payment. Age attestation on A1 removes redundant DOB on checkout. Minimal driver fields reduce drop-off while Rentalcars still collects license at pickup.
+
+**Alternatives rejected:**
+- Keep ref+email as sole MB gate — weaker than mobile OTP; superseded.
+- SMS OTP again at payment — redundant with 3DS; user chose 3DS only for pay step.
+- Full password accounts in Phase 1 — out of scope; SMS session sufficient for now.
+- Keep DOB on A6 when age already confirmed on A1 — duplicate friction.
+
+---
+
+## 2026-07-14 — SMS-auth Figma Gate 1 approved; prototype Gate 2 verified
+
+**What:** User approved Gate 1 for five SMS-auth Figma frames in Book a car Flows:
+`1035:5804`, `1035:6406`, `1035:7008`, `1035:7610`, `1039:14272`.
+Prototype parity verified at `/bookacar/` (SmsAuthGate, slim A6, MB booking list, 3DS modal).
+Slim A6 (`1039:14272`) promoted to canonical checkout frame; legacy `549:31190` superseded.
+
+**Why:** Workflow requires Figma approval before prototype sign-off and merge. SMS auth completes the pre-merge booking/payment/amendments scope on `nav-parity`.
+
+**Alternatives rejected:**
+- Merge before Gate 1 — rejected; user required Figma review first.
+- Keep legacy A6 as canonical — rejected; slim 4-field form matches ratified 2026-07-09 decision.
+
+---
+
 ## Update Rules for This File
 
 ```

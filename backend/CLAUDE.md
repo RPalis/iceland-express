@@ -20,7 +20,7 @@ backend/
 ├── routes/
 │   ├── bookings.js           POST /bookings · GET /bookings/:ref
 │   ├── search.js             GET /search/cars · /search/flights (Phase 2+)
-│   ├── auth.js               POST /auth/guest · POST /auth/account (Phase 2)
+│   ├── auth.js               POST /auth/sms/send · POST /auth/sms/verify
 │   └── language.js           GET /lang/detect
 ├── services/
 │   ├── bookingService.js     create · retrieve · modify · cancel
@@ -60,7 +60,10 @@ Frontend MB screen displays these same values — they must stay in sync.
 
 ```
 POST   /api/bookings              create booking
-GET    /api/bookings/:ref         retrieve (ref + email — guest mode)
+POST   /api/auth/sms/send         send 6-digit OTP to mobile
+POST   /api/auth/sms/verify       verify OTP → JWT session (~15 min)
+GET    /api/bookings              list bookings for authenticated mobile
+GET    /api/bookings/:ref         retrieve (authenticated session)
 PATCH  /api/bookings/:ref         modify (dates · extras · location)
 DELETE /api/bookings/:ref         cancel
 GET    /api/search/cars           search cars
@@ -91,8 +94,8 @@ async function createBooking(verticalId, data) {
 ```
 ✅ GET /api/lang/detect          needed for i18n on first load
 ✅ Transactional email           confirm · manage · cancel
+[ ] Auth                         SMS OTP send/verify + JWT session (Phase 1)
 [ ] Booking API                  use fixture data until car partner confirms endpoint
-[ ] Auth                         guest mode only — accounts in Phase 2
 ```
 
 ---

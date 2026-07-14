@@ -57,6 +57,7 @@ Each layer only imports from the layer below it. Never skip layers.
 | `InfoBanner`    | Info/warn/success/danger banner              | Ico + T.status[v]     |
 | `RatingChip`    | Stars + score + count                        | Stars (shared/ui.jsx) |
 | `FreeCancBadge` | Free cancellation signal — #1 conversion cue | Bdg, Ico              |
+| `Tab`           | Pill tab row — A6/M4 payment method pills    | Ico                   |
 
 **Molecules to add for new verticals:**
 - `DateRangePicker` — wraps IEPopover — Sprint 1G
@@ -77,7 +78,9 @@ Each layer only imports from the layer below it. Never skip layers.
 | `ManageActionCard`  | Clickable action row in MB                | Ico                                          |
 | `PageHero`          | Full-bleed hero + gradient                | image-slot                                   |
 | `EmptyState`        | No results                                | Ico Btn                                      |
-| `PriceSummaryCard`  | Price breakdown sidebar — calls computeTotals | PriceTag Btn Sep                         |
+| `PriceSummaryCard`  | Price breakdown sidebar — calls computeTotals · EUR + ISK secondary line | PriceTag Btn Sep                         |
+| `TrustBadges`       | Trust-signal row — checkout / confirmation    | Ico (Lock / Shield / Check)              |
+| `SmsAuthGate`       | SMS OTP gate before A6 checkout / MB          | Field · Btn · InfoBanner · EmptyState    |
 | `NavBar`            | **Canonical** global navigation — single source of truth | `.nav` frosted pill · two-color wordmark · btn-primary CTA |
 
 **`NavBar` — the one canonical nav. All consumers must match it:**
@@ -224,10 +227,10 @@ primitives (e.g. `color/input-bg` → `color/inner`).
 | `Field/state={s}` × 5                          | `Fld` (ds-atoms)          | default/focus/filled/error/disabled |
 | `Badge/{variant}` × 6                          | `Bdg` (ds-atoms)          | primary/soft/success/amber/outline/glass |
 | `FreeCancBadge/{variant}` × 2                  | `FreeCancBadge` (ds-molecules) | compact/full |
-| `TrustBadges`                                  | (new — code TBD)          | SSL / Free Cancellation / Secure Payment |
-| `StepHeader/step={n}` × 5                      | (new — code TBD)          | 5-step funnel progress |
-| `Tab/{method}/{selected}` × 8                  | `IETabs` (radix-primitives) | Card/PayPal/ApplePay/GooglePay × selected/unselected |
-| `DepositOption/{option}/{selected}` × 6        | (new — code TBD)          | full/deposit/pickup × selected/unselected |
+| `TrustBadges`                                  | `TrustBadges` (ds-organisms) | SSL / Free Cancellation / Secure Payment |
+| `StepHeader/step={n}` × 5                      | `StepHead` (ui.jsx)       | 5-step funnel progress |
+| `Tab/{method}/{selected}` × 8                  | `Tab` (ds-molecules)      | Card/PayPal/ApplePay/GooglePay × selected/unselected |
+| `DepositOption/{option}/{selected}` × 6        | `.pay-opt` (A6 inline)    | Pay in Full / Pay Deposit / Pay at Pickup |
 | `NavBar`                                       | `NavBar` (ds-organisms)   | Canonical — single source of truth |
 | `CarCard`                                      | `CarCardV2` (ds-organisms)| A2 results card |
 | `PriceBreakdownCard`                           | `PriceSummaryCard` (ds-organisms) | A3/A5/A6 sidebar |

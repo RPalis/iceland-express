@@ -9,6 +9,7 @@ const T = Object.freeze({
 
   // ── Surfaces ──────────────────────────────────────────────
   bg:          'var(--bg)',
+  background:  'var(--background)',
   bgGrad:      'var(--bg-grad-top)',
   card:        'var(--card)',
   card2:       'var(--card-2)',
@@ -27,8 +28,13 @@ const T = Object.freeze({
 
   // ── Text ─────────────────────────────────────────────────
   fg:    'var(--fg)',
+  foreground: 'var(--foreground)',
   muted: 'var(--muted)',
+  mutedForeground: 'var(--muted-foreground)',
   dim:   'var(--dim)',
+
+  secondary:   'var(--secondary)',
+  secondaryFg: 'var(--secondary-fg)',
 
   // ── Status ────────────────────────────────────────────────
   success:     'var(--success)',

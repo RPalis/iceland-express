@@ -585,6 +585,69 @@ function SmsAuthGate({ variant = 'checkout', onVerified, goBack }) {
   );
 }
 
+/* ── Platform landing organisms (Figma 974:10011) ─────────── */
+
+function PlatformVerticalCard({ icon, iconClass, title, desc, href, onClick }) {
+  const Tag = href ? 'a' : 'button';
+  const props = href
+    ? { href, className: 'platform-v-card' }
+    : { type: 'button', className: 'platform-v-card', onClick };
+  return (
+    <Tag {...props}>
+      <img className={`platform-v-card-icon ${iconClass || ''}`} src={icon} alt="" />
+      <div className="platform-v-card-body">
+        <h3 className="platform-v-card-title">{title}</h3>
+        <p className="platform-v-card-desc">{desc}</p>
+      </div>
+    </Tag>
+  );
+}
+
+function PlatformFooterColumn({ title, links, showChevron = true, brand = false }) {
+  return (
+    <div className={`platform-footer-col${brand ? ' platform-footer-brand' : ''}`}>
+      {brand ? (
+        <>
+          <p className="platform-footer-col-title logo" style={{ margin: 0 }}>
+            Iceland<span className="logo-accent">Express</span>
+          </p>
+          {links.map((l) => (
+            <a key={l.label} href={l.href} className="platform-footer-link">{l.label}</a>
+          ))}
+        </>
+      ) : (
+        <>
+          <p className="platform-footer-col-title">
+            {showChevron && <span className="mi" aria-hidden="true">keyboard_arrow_up</span>}
+            {title}
+          </p>
+          {links.map((l) => (
+            <a key={l.label} href={l.href} className="platform-footer-link">{l.label}</a>
+          ))}
+        </>
+      )}
+    </div>
+  );
+}
+
+function PlatformFooter() {
+  return (
+    <footer className="platform-footer">
+      <div className="platform-footer-cols">
+        <PlatformFooterColumn brand links={[{ label: 'About us', href: '#about' }]} showChevron={false} />
+        <PlatformFooterColumn title="Plan Your Trip" links={[{ label: 'Travel Guides', href: '/bookacar/' }]} />
+        <PlatformFooterColumn title="Book and Travel" links={[{ label: 'Car Rentals', href: '/bookacar/' }]} />
+        <PlatformFooterColumn title="Legal and Support" links={[{ label: 'FAQ', href: '#faq' }]} />
+        <PlatformFooterColumn title="Social Media" links={[{ label: 'Instagram', href: 'https://instagram.com' }]} showChevron={false} />
+      </div>
+      <div className="platform-footer-bottom">
+        <span>© 2026 Iceland Express. All rights reserved.</span>
+        <span>icelandexpress.com</span>
+      </div>
+    </footer>
+  );
+}
+
 /* ============================================================
    NavBar — canonical global navigation (single source of truth)
    Frosted-glass pill · two-color wordmark · btn-primary CTA.
@@ -626,7 +689,8 @@ function NavBarLink({ item, go, className, role, onNavigate }) {
   );
 }
 
-function NavBar({ go, items, manageRoute = 'manage' }) {
+function NavBar({ go, items, manageRoute = 'manage', variant = 'default' }) {
+  const isPlatform = variant === 'platform';
   const navItems = items || window.NAV_PLATFORM_ITEMS || NAV_PLATFORM_ITEMS;
   const [open, setOpen] = React.useState(false);
   const navRef = React.useRef(null);
@@ -639,9 +703,17 @@ function NavBar({ go, items, manageRoute = 'manage' }) {
     const navEl = navRef.current;
     if (!navEl) return;
 
-    const onScroll = () => navEl.classList.toggle('scrolled', scrollY > 50);
-    onScroll();
-    addEventListener('scroll', onScroll, { passive: true });
+    if (!isPlatform) {
+      const onScroll = () => navEl.classList.toggle('scrolled', scrollY > 50);
+      onScroll();
+      addEventListener('scroll', onScroll, { passive: true });
+      return () => removeEventListener('scroll', onScroll);
+    }
+  }, [close, isPlatform]);
+
+  React.useEffect(() => {
+    const navEl = navRef.current;
+    if (!navEl) return;
 
     const onKey = (e) => { if (e.key === 'Escape') close(); };
     document.addEventListener('keydown', onKey);
@@ -656,32 +728,64 @@ function NavBar({ go, items, manageRoute = 'manage' }) {
     mq.addEventListener('change', onMq);
 
     return () => {
-      removeEventListener('scroll', onScroll);
       document.removeEventListener('keydown', onKey);
       document.removeEventListener('click', onClick);
       mq.removeEventListener('change', onMq);
     };
   }, [close]);
 
+  const innerClass = isPlatform ? 'nav-inner nav-inner-platform' : 'shell nav-inner';
+
   return (
-    <nav className={`nav${open ? ' is-open' : ''}`} ref={navRef} id="nav">
-      <div className="shell nav-inner">
-        <a className="logo" href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-          Iceland<span className="logo-accent">Express</span>
-        </a>
-        <div className="nav-links" aria-label="Primary navigation">
-          {navItems.map((item) => (
-            <NavBarLink key={item.label} item={item} go={go} onNavigate={close} />
-          ))}
-        </div>
+    <nav className={`nav${open ? ' is-open' : ''}${isPlatform ? ' nav-platform' : ''}`} ref={navRef} id="nav">
+      <div className={innerClass}>
+        {isPlatform ? (
+          <div className="nav-brand-links">
+            <a className="logo" href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+              Iceland<span className="logo-accent">Express</span>
+            </a>
+            <div className="nav-links" aria-label="Primary navigation">
+              {navItems.map((item) => (
+                <NavBarLink key={item.label} item={item} go={go} onNavigate={close} />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>
+            <a className="logo" href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+              Iceland<span className="logo-accent">Express</span>
+            </a>
+            <div className="nav-links" aria-label="Primary navigation">
+              {navItems.map((item) => (
+                <NavBarLink key={item.label} item={item} go={go} onNavigate={close} />
+              ))}
+            </div>
+          </>
+        )}
         <div className="nav-spacer" />
-        <button
-          type="button"
-          className="btn btn-primary btn-sm nav-cta"
-          onClick={() => go && go(manageRoute)}
-        >
-          Manage Booking
-        </button>
+        {isPlatform ? (
+          <div className="nav-platform-actions">
+            <a href="#ai" className="btn-platform-outline">
+              <span className="mi" aria-hidden="true">auto_awesome</span>
+              AI travel Planner
+            </a>
+            <button
+              type="button"
+              className="btn-platform-secondary"
+              onClick={() => go && go(manageRoute)}
+            >
+              Manage booking
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-primary btn-sm nav-cta"
+            onClick={() => go && go(manageRoute)}
+          >
+            Manage Booking
+          </button>
+        )}
         <button
           type="button"
           className="nav-toggle"
@@ -711,7 +815,7 @@ function NavBar({ go, items, manageRoute = 'manage' }) {
             className="nav-drawer-cta"
             onClick={() => { close(); go && go(manageRoute); }}
           >
-            Manage Booking
+            {isPlatform ? 'Manage booking' : 'Manage Booking'}
           </button>
         </div>
       </div>
@@ -731,4 +835,5 @@ Object.assign(window, {
   // Organisms
   CarCardV2, ExtraCardV2, BlogCardV2, ManageActionCard,
   PageHero, EmptyState, PriceSummaryCard, NavBar, TrustBadges, SmsAuthGate,
+  PlatformVerticalCard, PlatformFooter, PlatformFooterColumn,
 });

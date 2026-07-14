@@ -304,10 +304,35 @@ function Tab({ items, active, onChange, style }) {
   );
 }
 
+/* ── AiPreviewInput — platform landing AI teaser (Figma 974:10165) ── */
+function AiPreviewInput({ placeholder, searchIcon, sendIcon, onSubmit }) {
+  const [value, setValue] = React.useState('');
+  function handleSubmit(e) {
+    e.preventDefault();
+    onSubmit?.(value.trim());
+  }
+  return (
+    <form className="ai-preview-input" onSubmit={handleSubmit} id="ai">
+      <img className="ai-preview-input-icon" src={searchIcon} alt="" />
+      <input
+        className="ai-preview-input-field"
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={placeholder}
+        aria-label="Ask your AI Iceland travel expert"
+      />
+      <button type="submit" className="ai-preview-send" aria-label="Send question">
+        <img src={sendIcon} alt="" />
+      </button>
+    </form>
+  );
+}
+
 Object.assign(window, {
   // Molecules
   InputGroup, SearchInput, FormField,
   SpecCell, SpecRow,
   PriceTag, MetaRow, SectionHdr,
-  InclList, InfoBanner, RatingChip, FreeCancBadge, Tab,
+  InclList, InfoBanner, RatingChip, FreeCancBadge, Tab, AiPreviewInput,
 });

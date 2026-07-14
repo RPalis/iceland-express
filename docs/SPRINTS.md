@@ -298,6 +298,15 @@
 - Canonical A6 promoted to slim variant; legacy `549:31190` superseded
 - Next: merge `nav-parity` → `master`
 
+### 2026-07-14 — Platform landing Figma Gate 1 + prototype (platform-landing-figma)
+
+- Gate 1 approved: Platform Landing — index.html (`974:10011`)
+- Prototype: React mount at `/` — hero + 3 vertical cards + AI teaser + 5-col footer
+- Tokens synced (`--bg` #05060a, platform-* vars); assets in `design/exports/illustrations/platform-landing/`
+- `NavBar variant="platform"` · `PlatformVerticalCard` · `AiPreviewInput` · `PlatformFooter`
+- `bash scripts/ds-audit.sh --strict` = 0 findings
+- Next: Gate 2 browser sign-off at http://localhost:3457/ → merge to master
+
 ---
 
 ## Update Rules for This File

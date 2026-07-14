@@ -8,9 +8,9 @@
 ```
 Phase:        1 — Relaunch
 Sprint:       2 — Claude API Chatbot (Sprint 1A complete)
-Task:         SMS auth Gate 1+2 complete — merge nav-parity → master
+Task:         Platform landing Gate 2 — browser sign-off
 Last session: 2026-07-14
-Branch:       nav-parity
+Branch:       platform-landing-figma
 ```
 
 ---
@@ -18,11 +18,11 @@ Branch:       nav-parity
 ## Session State ← check this before anything else
 
 ```
-Last completed task:   SMS auth Gate 1 approved (2026-07-14) + Gate 2 prototype parity verified
-NEXT TASK:             Merge nav-parity → master · then PM-1 production migration
+Last completed task:   Platform landing prototype 1:1 vs Figma 974:10011 (React at /)
+NEXT TASK:             Gate 2 browser sign-off → merge platform-landing-figma → master
 Stopped mid-step:      no
-Uncommitted changes:   docs + parity fixes pending commit
-Known issues:          3DS modal is prototype-only (no dedicated Figma frame)
+Uncommitted changes:   platform landing implementation pending commit
+Known issues:          No mobile Figma frame — desktop-first responsive only
 Blocker:               none
 Project path:          /Users/raquelsantospalis/Documents/GitHub/iceland-express/
 ```

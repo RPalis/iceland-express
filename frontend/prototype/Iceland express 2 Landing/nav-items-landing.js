@@ -1,13 +1,12 @@
 /* nav-items-landing.js — canonical NavBar config for root landing page
- * Uses href targets because landing is a static page (non-SPA).
+ * Figma 974:10014 — Platform Landing nav links
  */
 window.NAV_LANDING_ITEMS = [
-  { label: 'Book a car', href: '/bookacar/' },
-  { label: 'Flights', href: '/#vertical-flights' },
-  { label: 'Stays', href: '/#vertical-stays' },
-  { label: 'Experiences', href: '/#vertical-experiences' },
+  { label: 'Car Rentals', href: '/bookacar/' },
+  { label: 'Accommodation', href: '/#vertical-stays' },
   { label: 'Travel Guides', href: '/bookacar/' },
-  { label: 'Help', href: '/#ai' },
+  { label: 'Road Trips', href: '/#regions' },
+  { label: 'Flights', href: '/#vertical-flights' },
 ];
 
 window.LANDING_NAV_ROUTE_MAP = {

@@ -58,6 +58,7 @@ Each layer only imports from the layer below it. Never skip layers.
 | `RatingChip`    | Stars + score + count                        | Stars (shared/ui.jsx) |
 | `FreeCancBadge` | Free cancellation signal — #1 conversion cue | Bdg, Ico              |
 | `Tab`           | Pill tab row — A6/M4 payment method pills    | Ico                   |
+| `AiPreviewInput`| Platform landing AI teaser (Figma 974:10165) | `.ai-preview-input`   |
 
 **Molecules to add for new verticals:**
 - `DateRangePicker` — wraps IEPopover — Sprint 1G
@@ -81,7 +82,10 @@ Each layer only imports from the layer below it. Never skip layers.
 | `PriceSummaryCard`  | Price breakdown sidebar — calls computeTotals · EUR + ISK secondary line | PriceTag Btn Sep                         |
 | `TrustBadges`       | Trust-signal row — checkout / confirmation    | Ico (Lock / Shield / Check)              |
 | `SmsAuthGate`       | SMS OTP gate before A6 checkout / MB          | Field · Btn · InfoBanner · EmptyState    |
-| `NavBar`            | **Canonical** global navigation — single source of truth | `.nav` frosted pill · two-color wordmark · btn-primary CTA |
+| `PlatformVerticalCard` | Platform landing vertical card (Figma 974:10043) | CSS `.platform-v-card` · asset icons |
+| `PlatformFooter`    | Platform landing 5-column footer (Figma 974:10128) | `PlatformFooterColumn` |
+| `PlatformFooterColumn` | Footer link column with optional chevron   | CSS `.platform-footer-col` |
+| `NavBar`            | **Canonical** global navigation — `variant="platform"` for landing | `.nav` frosted pill · `.nav-platform` flat bar |
 
 **`NavBar` — the one canonical nav. All consumers must match it:**
 ```

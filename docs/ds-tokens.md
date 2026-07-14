@@ -19,7 +19,8 @@ Tiers 2 and 3 never contain raw values. Breaking this breaks the theme system.
 
 ### Tier 1: Surfaces
 ```css
---bg: #050610          --bg-grad-top: #070a18
+--bg: #05060a          --background: var(--bg)   --bg-grad-top: #070a18
+```
 --card: #111827        --card-2: #0e1626
 --inner: #0a0e18       --fill: #1e293b
 --fill-soft: #161f31   --border: #1e293b
@@ -35,7 +36,19 @@ Tiers 2 and 3 never contain raw values. Breaking this breaks the theme system.
 
 ### Tier 1: Text
 ```css
---fg: #f0f8ff    --muted: #94a3b8    --dim: #64748b
+--fg: #f0f8ff    --foreground: var(--fg)
+--muted: #94a3b8    --muted-foreground: var(--muted)
+--dim: #64748b
+--secondary: #1e293b    --secondary-fg: #e0f2fd
+```
+
+### Platform landing (Figma 974:10011)
+```css
+--platform-nav-h: 80px    --platform-pad-x: 80px    --platform-inner-max: 1344px
+--platform-subtitle: #9da1a9    --platform-ai-headline: #bce0ff
+--platform-card-from / --platform-card-to / --platform-card-glow
+--hero-platform-overlay    --ai-input-bg / --ai-input-glow
+--font-card-title: "Roboto"    --r-platform-btn: 6px
 ```
 
 ### Tier 1: Status

@@ -27,11 +27,13 @@ Iteration pages status (2026-07-08):
   Prototype & Test Plan      ✅ Phase F — wiring map + test plan documented
   Phase G specs              ✅ payment-logic.md · amendments-flow-spec.md · cars-flow-spec.md
 
-Platform landing iteration (live preview — no Figma gate)
+Platform landing (Gate 1 approved 2026-07-14)
 URL:     http://localhost:3457/
-Branch:  Home-screen @ RPalis/iceland-express
-Scope:   root index.html — responsive · hover/focus · WCAG labels · footer links
-Status:  ✅ complete (2026-06-24)
+Frame:   Platform Landing — index.html · node `974:10011`
+Figma:   https://www.figma.com/design/RGRxsEOrZbuJGDLJasrxby/Iceland-Express?node-id=974-10011
+Branch:  platform-landing-figma
+Scope:   root index.html — 1:1 Figma parity (hero · 3 vertical cards · AI teaser · footer)
+Status:  Gate 1 ✅ · Prototype in progress
 
 Design System reference (Figma Variables + Components)
 URL:     https://www.figma.com/design/RGRxsEOrZbuJGDLJasrxby/Iceland-Express
@@ -111,9 +113,8 @@ Current state:
 ```
 Screen               Figma            Prototype        Frontend
 ────────────────     ───────────────  ───────────────  ───────────────
-Platform Landing     no Figma file    ✅ approved      ✅ done
-(index.html)         (polish-to-done) (Home-screen     (accepted static
-                                      branch)          mirror — root)
+Platform Landing     ✅ approved      in progress      not started
+(index.html)         (974:10011)      (Gate 2 pending browser sign-off)
 A1 Homepage          ✅ approved      ✅ approved      not started
 A2 Car Results       ✅ approved      ✅ approved      not started
 A3 Car Detail        ✅ approved      ✅ approved      not started

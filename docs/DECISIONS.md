@@ -469,6 +469,18 @@ Slim A6 (`1039:14272`) promoted to canonical checkout frame; legacy `549:31190` 
 
 ---
 
+## 2026-07-14 — Platform landing Figma Gate 1 approved (974:10011)
+
+**What:** User approved Gate 1 for **Platform Landing — index.html** (`974:10011`). Scope replaces the legacy long-scroll root `index.html` with a 1:1 Figma design: flat platform nav, hero with satellite bg, 3 vertical cards, AI travel expert teaser, and 5-column Footer component. Prototype only — no `frontend/production/` work.
+
+**Why:** Platform landing previously had no Figma gate (`polish-to-done`). New frame is the canonical visual source; prototype must match before any production migration.
+
+**Alternatives rejected:**
+- Keep legacy multi-section index.html and patch incrementally — rejected; Figma is a full redesign.
+- Fork NavBar-A as a second nav — rejected (Law 13); extend canonical `NavBar` with `variant="platform"`.
+
+---
+
 ## Update Rules for This File
 
 ```

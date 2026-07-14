@@ -1,0 +1,31 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 192.325 163.455" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="whale-tail 1">
+<g id="Vector" filter="url(#filter0_ddd_0_66)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M121.571 50.4511C110.923 51.7873 100.039 53.153 96.1623 60.4935C92.2854 53.153 81.402 51.7873 70.7534 50.4511C67.973 50.1022 65.2086 49.7554 62.5891 49.3046C60.3127 48.913 58.2188 48.5527 56.4175 48.1924C51.7056 47.0144 48.4154 44.1303 45.9979 42.0112C43.4079 39.7409 41.8195 38.3485 40.5575 40.8725C38.1175 45.7525 39.3375 66.4924 51.5375 73.8124C54.6472 75.3673 57.8118 76.812 60.9146 78.2285C72.4196 83.4807 83.0741 88.3447 86.9175 96.9924C87.3099 97.8752 86.04 101.023 84.49 104.865C81.9008 111.284 78.53 119.64 80.8194 122.612C82.5836 124.903 83.8338 123.852 85.8598 122.148C87.9686 120.374 90.918 117.894 96.1624 117.74C101.407 117.894 104.356 120.374 106.465 122.148C108.491 123.852 109.741 124.903 111.505 122.612C113.795 119.64 110.424 111.284 107.835 104.865C106.285 101.023 105.015 97.8752 105.407 96.9924C109.251 88.3447 119.905 83.4807 131.41 78.2285C134.513 76.812 137.678 75.3673 140.787 73.8124C152.987 66.4924 154.207 45.7525 151.767 40.8725C150.505 38.3485 148.917 39.7409 146.327 42.0112C143.909 44.1303 140.619 47.0144 135.907 48.1924C134.106 48.5527 132.012 48.913 129.736 49.3046C127.116 49.7554 124.352 50.1022 121.571 50.4511Z" stroke="var(--stroke-0, #06B6D4)" stroke-width="3.05" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<defs>
+<filter id="filter0_ddd_0_66" x="9.53674e-07" y="-1.72853e-06" width="192.325" height="163.455" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="2" operator="dilate" in="SourceAlpha" result="effect1_dropShadow_0_66"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="3"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.72 0 0 0 0 0.93 0 0 0 0.9 0"/>
+<feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_66"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="4" operator="dilate" in="SourceAlpha" result="effect2_dropShadow_0_66"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="8"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.72 0 0 0 0 0.93 0 0 0 0.6 0"/>
+<feBlend mode="normal" in2="effect1_dropShadow_0_66" result="effect2_dropShadow_0_66"/>
+<feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+<feMorphology radius="6" operator="dilate" in="SourceAlpha" result="effect3_dropShadow_0_66"/>
+<feOffset/>
+<feGaussianBlur stdDeviation="16"/>
+<feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0.72 0 0 0 0 0.93 0 0 0 0.3 0"/>
+<feBlend mode="normal" in2="effect2_dropShadow_0_66" result="effect3_dropShadow_0_66"/>
+<feBlend mode="normal" in="SourceGraphic" in2="effect3_dropShadow_0_66" result="shape"/>
+</filter>
+</defs>
+</svg>
